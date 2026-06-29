@@ -114,6 +114,35 @@
 \section{Introducción}
 \label{sec:introduccion}
 
+En los últimos años, la Inteligencia Artificial (IA) ha dejado de ser un concepto puramente académico para convertirse
+en un pilar fundamental de la transformación tecnológica en la actualidad. Aunque para la mayoría, la IA se asocia
+inmediatamente con modelos generativos de texto como ChatGPT o Gemini, o imágenes llamativas que acaparan la atención mediática,
+pero su verdadero impacto en la ingeniería radica en tareas como como procesamiento de grandes volúmenes de datos, la  
+automatización de procesos complejos, o la toma de decisiones óptimas. Dentro de este entorno, existen diferentes
+vertientes como el aprendizaje supervisado, el no supervisado, o el aprendizaje por refuerzo, las cuales ofrecen
+herramientas muy versátiles que permiten resolver problemas analíticos de diversa naturaleza de una manera mucho más 
+dinámica que la programación tradicional.
+
+Uno de los campos donde la IA está demostrando cada vez más su excepcional valor estratégico es en la optimización
+combinatoria y la logística, las cuales son áreas fuertemente representadas por retos matemáticos clásicos como el Problema
+del Viajante (en inglés, TSP, \textit{Traveling Salesman Problem}). Tradicionalmente, la resolución de estos problemas
+de rutas ha dependido de algoritmos matemáticos exactos, y técnicas metaheurísticas rígidas, que requieren de una 
+configuración manual muy específica. Sin embargo, la integración de técnicas modernas de \textit{machine learning} permite
+abordar la optimización de este problema desde una nueva perspectiva, más híbrida e inteligente. Esto abre la puerta a 
+utilizar el aprendizaje automático para simplificar la complejidad de los mapas de datos, o para guiar la búsqueda de caminos 
+óptimos, permitiendo así la obtención de soluciones de alta calidad, sin la necesidad de depender de infraestructuras de 
+\textit{hardware} masivas.
+
+La motivación de este proyecto surge, precisamente, de la necesidad de analizar críticamente el rendimiento de estas 
+diferentes soluciones en entornos de computación convencionales (CPU), centrando el esfuerzo en la replicación y 
+comparación analítica de diversos algoritmos heurísticos y metaheurísticos consolidados en la literatura (tales como algoritmos 
+genéticos, recocido simulado o colonia de hormigas, entre otros). Bajo esta premisa, el presente trabajo plantea el 
+desarrollo de un estudio comparativo riguroso que evalúe variables clave como el tiempo de cómputo, la precisión y la tasa 
+de convergencia de estos métodos al enfrentarse a diferentes instancias del problema del viajante. El objetivo principal 
+es construir un marco de trabajo (\textit{framework}) ordenado y reproducible, que permita validar empíricamente los resultados 
+de la literatura científica actual, permitiendo además la posibilidad de explorar como técnicas de \textit{machine learning} 
+podrían integrarse en el futuro, para asistir a estos algoritmos en la toma de decisiones.
+
 \textit{En este apartado se describirá el contexto en el que se desenvolverá el
   TFG y sus antecedentes si existen. Recuerda que en el anteproyecto
   también se pueden poner referencias bibliográficas como \cite{moore2002}}.
@@ -122,38 +151,57 @@
 \section{Objetivos}
 \label{sec:objetivos-y-campo}
 
-\textit{En este apartado se delimitan y explican con claridad los objetivos
-  generales a conseguir con el TFG y la aplicación del mismo, así como los
-  objetivos específicos en su caso. Algo del tipo:}
-
-El objetivo fundamental de este proyecto es el diseño, implementación y
-evaluación de \ldots
-
-Los objetivos específicos de este proyecto son los siguientes:
+Para abordar este trabajo, combinando la investigación teórica con su posterior desarrollo práctico, se plantean los siguientes 
+objetivos:
 
 \begin{itemize}
-\item Realizar un  \ldots
-\item Diseñar, implementar y evaluar  \ldots, siguiendo la arquitectura
-  mostrada en la figura \ref{fig_arquitectura}, y que tendrá las
-  siguientes características:
-
-  \begin{enumerate}
-  \item Característica 1 \ldots
-  \item Característica 2 \ldots
-  \item  \ldots
-  \item Característica n \ldots
-  \end{enumerate}
-
-\item Analizar  \ldots
-
-\item Documentar  \ldots
-
+  \item Investigación, aprendizaje y análisis comparativo de los fundamentos teóricos de diferentes algoritmos heurísticos y 
+  metaheurísticos consolidados en la optimización combinatoria, comprendiendo su comportamiento y configuración matemática frente 
+  al problema del viajante.
+  \item Con los aspectos teóricos estudiados, y aplicando el lenguaje de programación Python, llevarlos a la práctica mediante el 
+  desarrollo de un marco de trabajo (\textit{framework}) ordenado y modular. Este sistema servirá como prototipo para evaluar el 
+  rendimiento de dichos algoritmos, utilizando diferentes instancias de datos estandarizadas. Se incluyen las siguientes etapas:
+  \begin{itemize}
+    \item Automatización de la lectura, procesamiento y carga de los conjuntos de datos de prueba del problema.
+    \item Implementación aislada e independiente de cada una de las metaheurísticas seleccionadas, para asegurar la flexibilidad 
+    del sistema.
+    \item Monitorización y registro preciso de métricas de rendimiento ejecutadas en entorno local, midiendo limpiamente el tiempo 
+    exacto de cómputo, el coste de la ruta obtenida, y la velocidad de convergencia de cada algoritmo.
+  \end{itemize}
+  \item Evaluación crítica del rendimiento de las soluciones desarrolladas frente a los resultados documentados en la literatura 
+  científica actual, con el fin de determinar la viabilidad y escalabilidad del prototipo, dejando planteada una pequeña base para 
+  integrar, de forma complementaria, técnicas ligeras de \textit{machine learning}.
 \end{itemize}
-
-\textit{Igualmente se deberá indicar si el trabajo está sometido a confidencialidad.}
 
 \section{Descripción del trabajo}
 \label{sec:descr-del-trab}
+
+Este trabajo tendrá como objetivo final el desarrollo de un marco de trabajo (\textit{framework}) modular para la réplica y evaluación 
+analítica de algoritmos metaheurísticos aplicados al Problema del Viajante. Para lograr esto, las etapas del proyecto se estructuran de 
+la siguiente manera: 
+
+\begin{enumerate}
+  \item \textbf{Estudio de algoritmos heurísticos y metaheurísticos}: consiste en la formación, estudio y comprensión de los fundamentos
+  de la optimización combinatoria. Se analizará a fondo el fundamento teórico de los algoritmos seleccionados, para asentar la bases 
+  antes de pasar a la fase práctica.
+  \item \textbf{Análisis de herramientas y librerías de desarrollo}: se evaluará el ecosistema del lenguaje Python para identificar las
+   librerías más eficientes que faciliten la estructuración del sistema, el procesamiento de datos, la medición precisa de tiempos de
+    computación, y la generación automática de gráficos comparativos.
+  \item \textbf{Selección y preparación de instancias de datos}: en lugar de crear un conjunto de datos desde cero, se seleccionarán y
+  descargarán problemas de prueba estandarizados, procedentes de la biblioteca pública TSPlib. Se desarrollará un módulo dedicado para
+  automatizar la lectura, limpieza y carga de estas instancias, garantizando así que todos los algoritmos compitan bajo las mismas 
+  condiciones.
+  \item \textbf{Desarrollo del \textit{framework} y pruebas iniciales}: se procederá a la implementación limpia y aislada de cada 
+  algoritmo dentro del sistema. En esta fase, se realizarán ejecuciones preliminares en entorno local, para verificar que el código
+  funciona correctamente, así como para calibrar los parámetros básicos de cada metaheurística y asegurar la estabilidad del
+  \textit{software}.
+  \item \textbf{Análisis comparativo de rendimiento}: con el sistema validado, se ejecutarán las pruebas a gran escala de forma 
+  controlada. Se recopilarán, de manera automática, las métricas clave en cada ejecución para realizar una comparación estadística 
+  rigurosa de los resultados.
+  \item \textbf{Documentación}: implica mantener el código fuente comentado de forma clara bajo buenas prácticas de programación, junto  
+  con la redacción final de la memoria del proyecto, donde se detallarán los fundamentos teóricos, la arquitectura del \textit{software}
+  desarrollado, y las conclusiones del análisis comparativo.
+\end{enumerate}
 
 \textit{Aquí se explicará en detalle qué se va a hacer, cómo y por qué. Sería interesante incluir un esquema/diagrama de bloques, si se puede (como el mostrado en la figura~\ref{fig:arquitectura}).}
 
@@ -217,7 +265,7 @@ El diagrama de Gantt asociado a esa definición es el mostrado en la figura~\ref
 
   \begin{ganttchart}[
     title height=1,
-    x unit=0.05cm, % Adjusts the width of the chart
+    x unit=0.08cm, % Adjusts the width of the chart
     y unit title=0.6cm, % Adjusts the height of titles
     y unit chart=0.5cm, % Adjusts the height of tasks
     group height=0.5,
@@ -232,24 +280,18 @@ El diagrama de Gantt asociado a esa definición es el mostrado en la figura~\ref
     group peaks height=0.3, % Increase the height of the vertical marks
     group peaks width=2, % Increase the width of the vertical marks
     group peaks tip position=0, % Center the vertical marks
-    ]{2025-01-23}{2025-06-30} % Adjust dates as needed
+    ]{2026-06-24}{2026-09-08} % Adjust dates as needed
 
     % Define months
     \gantttitlecalendar{year, month} \\
 
     % Tasks
-    \ganttbar{Formación inicial}{2025-02-01}{2025-02-28} \\
-    \ganttbar{Diseño del entorno}{2025-02-28}{2025-03-15} \\
-    \ganttgroup{Módulo 1}{2025-03-01}{2025-05-01} \\
-    \ganttbar{Definición}{2025-03-01}{2025-03-07} \\
-    \ganttbar{Implementación}{2025-03-07}{2025-04-20} \\
-    \ganttbar{Evaluación}{2025-03-20}{2025-05-01} \\
-    \ganttgroup{Módulo 2}{2025-04-01}{2025-06-01} \\
-    \ganttbar{Definición}{2025-04-01}{2025-04-07} \\
-    \ganttbar{Implementación}{2025-04-07}{2025-05-20} \\
-    \ganttbar{Evaluación}{2025-04-20}{2025-06-01} \\
-    \ganttbar{Integración y pruebas}{2025-04-15}{2025-06-15} \\
-    \ganttbar{Documentación}{2025-02-01}{2025-06-15}
+    \ganttbar{1. Formación inicial}{2026-07-01}{2026-07-14} \\
+    \ganttbar{2. Diseño de la arquitectura}{2026-07-15}{2026-07-21} \\
+    \ganttbar{3. Módulo de optimización}{2026-07-22}{2026-08-04} \\
+    \ganttbar{4. Módulo de benchmarking}{2026-08-05}{2026-08-19} \\
+    \ganttbar{5. Integración y análisis}{2026-08-20}{2026-09-01} \\
+    \ganttbar{6. Documentación}{2026-07-01}{2026-09-01}
   \end{ganttchart}
   \caption{Diagrama de Gantt de la planificación del trabajo.}
   \label{fig:diagrama-gantt}

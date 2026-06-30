@@ -114,39 +114,27 @@
 \section{Introducción}
 \label{sec:introduccion}
 
-En los últimos años, la Inteligencia Artificial (IA) ha dejado de ser un concepto puramente académico para convertirse
-en un pilar fundamental de la transformación tecnológica en la actualidad. Aunque para la mayoría, la IA se asocia
-inmediatamente con modelos generativos de texto como ChatGPT o Gemini, o imágenes llamativas que acaparan la atención mediática,
-pero su verdadero impacto en la ingeniería radica en tareas como como procesamiento de grandes volúmenes de datos, la  
-automatización de procesos complejos, o la toma de decisiones óptimas. Dentro de este entorno, existen diferentes
-vertientes como el aprendizaje supervisado, el no supervisado, o el aprendizaje por refuerzo, las cuales ofrecen
-herramientas muy versátiles que permiten resolver problemas analíticos de diversa naturaleza de una manera mucho más 
-dinámica que la programación tradicional.
+Cada vez que abrimos una aplicación en el móvil para buscar la ruta más rápida, o esperamos un paquete en la puerta de casa, 
+interactuamos directamente con uno de los mayores desafíos de la informática moderna. Detrás de estos gestos tan simples se 
+esconde la necesidad de resolver problemas de logística ciertamente complejos, donde calcular la mejor opción posible
+combinando todas las alternativas es, por pura fuerza bruta, una tarea inviable para cualquier ordenador.
 
-Uno de los campos donde la IA está demostrando cada vez más su excepcional valor estratégico es en la optimización
-combinatoria y la logística, las cuales son áreas fuertemente representadas por retos matemáticos clásicos como el Problema
-del Viajante (en inglés, TSP, \textit{Traveling Salesman Problem}). Tradicionalmente, la resolución de estos problemas
-de rutas ha dependido de algoritmos matemáticos exactos, y técnicas metaheurísticas rígidas, que requieren de una 
-configuración manual muy específica. Sin embargo, la integración de técnicas modernas de \textit{machine learning} permite
-abordar la optimización de este problema desde una nueva perspectiva, más híbrida e inteligente. Esto abre la puerta a 
-utilizar el aprendizaje automático para simplificar la complejidad de los mapas de datos, o para guiar la búsqueda de caminos 
-óptimos, permitiendo así la obtención de soluciones de alta calidad, sin la necesidad de depender de infraestructuras de 
-\textit{hardware} masivas.
+En el ámbito de la ingeniería y la algoritmia, el \textbf{Problema del Viajante} (TSP, por sus siglas en inglés) destaca como 
+el ejemplo idóneo de esta complejidad computacional, clasificada como \textbf{NP-completa}. A medida que añadimos paradas a una
+ruta, el número de caminos posibles crece de forma factorial, provocando que los métodos de cálculo tradicionales queden
+rápidamente obsoletos y requieran tiempos de cómputo inasumibles \cite{hoffman2001}.
 
-La motivación de este proyecto surge, precisamente, de la necesidad de analizar críticamente el rendimiento de estas 
-diferentes soluciones en entornos de computación convencionales (CPU), centrando el esfuerzo en la replicación y 
-comparación analítica de diversos algoritmos heurísticos y metaheurísticos consolidados en la literatura (tales como algoritmos 
-genéticos, recocido simulado o colonia de hormigas, entre otros). Bajo esta premisa, el presente trabajo plantea el 
-desarrollo de un estudio comparativo riguroso que evalúe variables clave como el tiempo de cómputo, la precisión y la tasa 
-de convergencia de estos métodos al enfrentarse a diferentes instancias del problema del viajante. El objetivo principal 
-es construir un marco de trabajo (\textit{framework}) ordenado y reproducible, que permita validar empíricamente los resultados 
-de la literatura científica actual, permitiendo además la posibilidad de explorar como técnicas de \textit{machine learning} 
-podrían integrarse en el futuro, para asistir a estos algoritmos en la toma de decisiones.
+Ante la imposibilidad de encontrar siempre la solución perfecta de manera exacta, el diseño de estrategias alternativas se 
+vuelve crucial. Es aquí donde cobran importancia las \textbf{heurísticas} y \textbf{metaheurísticas}: procedimientos algorítmicos
+orientados no a garantizar el óptimo matemático de forma infalible, sino a explorar el espacio de soluciones de manera inteligente,
+para ofrecer rutas altamente eficientes en cuestión de segundos \cite{halim2019}.
 
-\textit{En este apartado se describirá el contexto en el que se desenvolverá el
-  TFG y sus antecedentes si existen. Recuerda que en el anteproyecto
-  también se pueden poner referencias bibliográficas como \cite{moore2002}}.
-
+El propósito de este trabajo se enmarca en este enfoque puramente analítico y algorítmico. Se plantea el diseño y desarrollo de
+un marco de trabajo (\textit{framework}) modular que permita implementar, calibrar y evaluar, bajo las mismas condiciones, 
+diferentes algoritmos metaheurísticos consolidados (como algoritmos genéticos, recocido simulado o colonia de hormigas). A través
+de este sistema, se busca medir de forma empírica y rigurosa el rendimiento de estas técnicas frente a instancias de problemas 
+estandarizadas en la literatura científica, analizando el equilibrio entre el tiempo de ejecución empleado y la calidad de la
+solución hallada.
 
 \section{Objetivos}
 \label{sec:objetivos-y-campo}
@@ -188,7 +176,7 @@ la siguiente manera:
    librerías más eficientes que faciliten la estructuración del sistema, el procesamiento de datos, la medición precisa de tiempos de
     computación, y la generación automática de gráficos comparativos.
   \item \textbf{Selección y preparación de instancias de datos}: en lugar de crear un conjunto de datos desde cero, se seleccionarán y
-  descargarán problemas de prueba estandarizados, procedentes de la biblioteca pública TSPlib. Se desarrollará un módulo dedicado para
+  descargarán problemas de prueba estandarizados, procedentes de la biblioteca pública TSPlib \cite{tsplib}. Se desarrollará un módulo dedicado para
   automatizar la lectura, limpieza y carga de estas instancias, garantizando así que todos los algoritmos compitan bajo las mismas 
   condiciones.
   \item \textbf{Desarrollo del \textit{framework} y pruebas iniciales}: se procederá a la implementación limpia y aislada de cada 
@@ -203,62 +191,11 @@ la siguiente manera:
   desarrollado, y las conclusiones del análisis comparativo.
 \end{enumerate}
 
-\textit{Aquí se explicará en detalle qué se va a hacer, cómo y por qué. Sería interesante incluir un esquema/diagrama de bloques, si se puede (como el mostrado en la figura~\ref{fig:arquitectura}).}
-
-
-\begin{figure}[tphb]
-  \centering
-  \includegraphics[width=3in]{Diagrama2.pdf}
-  \caption{Arquitectura del sistema completo.}
-  \label{fig:arquitectura}
-\end{figure}
-
-
 \section{Metodología y plan de trabajo}
 \label{sec:metodologia-y-plan}
 
-\textit{Aquí se incluirá una descripción (puede ser incluso una enumeración)
-  clara de las etapas que se van a seguir, y si es posible se deberá
-  incluir un diagrama de Gantt. Por ejemplo algo del estilo a:}
-
-Estas son las fases de desarrollo que se van a seguir para la
-consecución de los objetivos del proyecto descritos en la sección~\ref{sec:objetivos-y-campo}:
-
-\begin{enumerate}
-  
-\item Formación inicial (1 mes)
-  
-  \begin{itemize}
-  \item Formación en \ldots
-  \item Consulta de la API \ldots
-  \item Consulta bibliográfica \ldots
-  \item Profundización en herramientas de soporte \ldots
-  \item  \ldots
-  \end{itemize}
-
-\item Diseño del entorno (0,5 meses)
-
-\item Diseño, implementación y evaluación del módulo 1 (2 meses)
-  \begin{itemize}
-  \item Definición del  \ldots
-  \item Implementación del  \ldots
-  \item Evaluación del  \ldots
-  \end{itemize}
-  
-\item Diseño, implementación y evaluación del módulo 2 (1 mes):
-  \begin{itemize}
-  \item Definición de  \ldots
-  \item Definición de  \ldots
-  \item Implementación y evaluación  \ldots
-  \end{itemize}
-
-\item Integración y pruebas (1 mes)
-
-\item Documentación (a lo largo de todo el proyecto)
-
-\end{enumerate}
-
-El diagrama de Gantt asociado a esa definición es el mostrado en la figura~\ref{fig:diagrama-gantt} (\textit{para lo que he usado la funcionalidad del paquete} \texttt{pgfgantt} \textit{pero que puedes hacer con cualquier otra herramienta}).
+Para lograr los objetivos descritos anteriormente, el proyecto se estructurará temporalmente en las siguientes fases consecutivas y 
+modulares, las cuales quedan reflejadas en el siguiente diagrama de Gantt:
 
 \begin{figure}[H]
   \centering
@@ -301,36 +238,21 @@ El diagrama de Gantt asociado a esa definición es el mostrado en la figura~\ref
 \section{Medios}
 \label{sec:medios}
 
-\textit{Aquí se describen de los medios necesarios para realizar el TFG. Por
-  ejemplo:}
-
-Las herramientas que van a ser necesarias para desarrollar este proyecto
-son las siguientes:
+En cuanto a los recursos y materiales que se emplearán para el desarrollo del proyecto, se dispone de los siguientes elementos de 
+forma inmediata:
 
 \begin{itemize}
-\item PC compatible
-\item Sensor  \ldots
-\item Sistema operativo GNU/Linux~\cite{gnulinux}
-\item Entorno de desarrollo Emacs/Vim~\cite{emacs}
-\item Procesador de textos \LaTeX~\cite{lamport94}
-\item Control de versiones CVS~\cite{cvs}
-\item Compilador C/C++ gcc~\cite{gcc}
-\item Gestor de compilaciones make~\cite{make}
-\item Robot con movilidad.
-\item  \ldots
+  \item \textbf{\textit{Hardware}}: un ordenador personal con conexión a internet, para realizar la investigación bibliográfica, con 
+  una capacidad de procesamiento estándar en CPU adecuada para la ejecución local, calibración y monitorización precisa del rendimiento 
+  de los algoritmos de optimización.
+  \item \textbf{Lenguajes y librerías de desarrollo}: el entorno de desarrollo de Python, haciendo uso de librerías de código abierto de 
+  análisis y visualización de datos (como \textit{NumPy}, \textit{Pandas} y \textit{Matplotlib}) para la construcción del \textit{framework}
+  y la generación de la estadística analítica.
+  \item \textbf{Conjuntos de datos de referencia}: acceso público e ilimitado a la biblioteca estándar \textbf{TSPlib} para la descarga y 
+  obtención de las instancias y problemas de prueba del Problema del Viajante. 
+  \item \textbf{Composición de textos y documentación}: el sistema de tipografía y composición de textos \LaTeX{} para el diseño, maquetación 
+  y redacción progresiva de la memoria final.
 \end{itemize}
-
-
-
-Otros recursos necesarios para la elaboración del proyecto son:
-
-\begin{itemize}
-\item Herramientas  \ldots
-\item Sistema de desarrollo  \ldots
-\item  \ldots
-\end{itemize}
-
-
 
 
 % 

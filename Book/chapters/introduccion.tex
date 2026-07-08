@@ -27,7 +27,7 @@
 
 \begin{FraseCelebre}
   \begin{Frase}
-    Desocupado lector, sin juramento me podrás creer que quisiera que este libro [...] fuera el más hermoso, el más gallardo y más discreto que pudiera imaginarse\footnote{Tomado de ejemplos del proyecto \texis{}.}.
+    Desocupado lector, sin juramento me podrás creer que quisiera que este libro [...] fuera el más hermoso, el más gallardo y más discreto que pudiera imaginarse.
   \end{Frase}
   \begin{Fuente}
     Miguel de Cervantes, Don Quijote de la Mancha
@@ -42,8 +42,8 @@ Detrás de cada búsqueda en Internet, cada recomendación en una plantaforma, o
 algoritmo tomando decisiones. Sin embargo, este término suele resultar más difícil de explicar de lo que realmente es, ya que su
 concepto se basa en una idea muy sencilla. Un algoritmo es, en esencia, una secuencia de pasos para resolver un problema o 
 realizar una tarea de forma ordenada \cite{acevedo}. La historia del pensamiento algorítmico se remonta a la Antigüedad.
-Civilizaciones como la antigua Babilonia ya empleaban reglas condicionales para resolver cuestiones legales (el conocido 
-\textit{Código de Hammurabi} \cite{hammurabi} es un ejemplo de ello). A lo largo de la historia, este tipo de procedimientos 
+Civilizaciones como la antigua Babilonia ya empleaban reglas condicionales para resolver cuestiones legales\footnote{El conocido 
+\textit{Código de Hammurabi} \cite{hammurabi} es un ejemplo de ello.}. A lo largo de la historia, este tipo de procedimientos 
 también se han utilizado para decidir tratamientos médicos, preparar alimentos y resolver problemas matemáticos, entre muchas 
 otras aplicaciones \cite{chabert2012}. No obstante, el término \textit{algoritmo} no apareció hasta el siglo XII, cuando el 
 nombre del matemático, astrónomo y geógrafo persa \textit{al-Khwarizmi} fue latinizado como \textit{Algoritmi}, dando origen al
@@ -70,8 +70,60 @@ Una vez establecido un modelo formal para describir los algoritmos, surgió una 
 de ellos. Aunque cualquier problema computable admite, en principio, una solución algorítmica, no todos los algoritmos presentan 
 el mismo rendimiento. Mientras unos resuelven un problema en tiempos razonables, otros requieren un número de operaciones que 
 crece de una forma tan rápida que su ejecución resulta impracticable, incluso con la tecnología actual. Esta necesidad de medir 
-y comparar la eficiencia de los algoritmos dio lugar al desarrollo de la teoría de la complejidad computacional.
+y comparar la eficiencia de los algoritmos dio lugar al desarrollo de la Teoría de la Complejidad Computacional. Esta teoría 
+estudia la cantidad de recursos necesarios para resolver un algoritmo, siendo estos recursos el tiempo\footnote{Número de 
+instrucciones ejecutadas.} y el espacio\footnote{Cantidad de memoria empleada.} \cite{cortez2004}.
 
+En la práctica, la complejidad temporal suele recibir más interés que la espacial, ya que, en la mayoría de aplicaciones, el 
+tiempo de ejecución destaca como el principal factor limitante del rendimiento. Por tanto, el análisis de algoritmos se centra,
+generalmente, en calcular cómo crece el número de instrucciones necesarias a medida que aumenta el tamaño del problema. Para 
+cuantificar dicha complejidad temporal se utiliza la notación asintótica, haciendo uso del término \textbf{O grande de}. Esta
+notación expresa el orden de crecimiento del tiempo de ejecución de un algoritmo en función del tamaño de entrada, sin tener en 
+cuenta constantes o términos de menor orden \cite{phalke2022}.
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Complejidades temporales más comunes.}
+    \label{tab:complejidades}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Notación} & \textbf{Nombre} \\
+            \hline
+            $O(1)$ & Constante \\
+            \hline
+            $O(\log n)$ & Logarítmica \\
+            \hline
+            $O(n)$ & Lineal \\
+            \hline
+            $O(n \log n)$ & Lineal-logarítmica \\
+            \hline
+            $O(n^2)$ & Polinómica \\
+            \hline
+            $O(2^n)$ & Exponencial \\
+            \hline
+            $O(n!)$ & Factorial \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+La tabla~\ref{tab:complejidades} recoge las complejidades temporales más habituales. A partir de ella, se pueden establecer 
+tres clases abstractas de problemas, según su complejidad: P, NP y NP-completo. Los problemas de tipo P\footnote{
+\textit{Polynomial time}.} son aquellos que se pueden resolver aplicando un algoritmo en tiempo polinómico, esto es, 
+desde $O(1)$ hasta $O(n^2)$\footnote{Para los casos de complejidad polinómica y exponencial, se utiliza como exponente y base
+respectivamente la constante 2, cuando realmente puede ser cualquier número entero. Por lo tanto, la complejidad polinómica se 
+debería notar como $O(n^p)$, y la exponencial como $O(p^n)$, siendo \textit{p} un entero.}. Los problemas de tipo NP\footnote{
+\textit{Non Polynomial time}.} son aquellos con una complejidad mayor a la polinómica pero inferior a la exponencial, cuya
+resolución suele basarse en un enfoque híbrido entre un algoritmo y una heurística. Finalmente, los problemas de tipo NP-completo
+son aquellos con una complejidad superior a la exponencial. Además, no cuentan con ningún algoritmo eficiente que corra en tiempo
+polinómico.
+
+El foco de atención de este trabajo va a ser esta última clase de problemas, los NP-completos, y su resolución a través de 
+diferentes técnicas heurísticas y metaheurísticas, equilibrando el balance entre la eficiencia computacional de la resolución, 
+y la proximidad de dicha solución al óptimo. Se va a tomar el problema del viajante como referencia de problema NP-completo.
+
+\newpage
 Esta plantilla\footnote{Asegúrate de compilar de nuevo el documento (como cuenta la sección~\ref{sec:compilacion}), para verificar que todo funciona y por si ha habido algún cambio en los fuentes que no está reflejado en los pdf de ejemplo precompilados.} pretende proporcionar un conjunto de estilos consistentes y unificados para cubrir las necesidades de generación de memorias \LaTeX{} para cada uno de los TFCs/TFMs/TFGs y tesis doctorales que se generen en la Escuela Politécnica Superior de la Universidad de Alcalá\footnote{También se incluye la definición para las tesis de la Escuela Técnica Superior de Ingenieros de Telecomunicación de la Universidad Politécnica de Madrid. La extensión a los TFGs de la misma es sencilla, aunque no se ha realizado por el momento.}.
 
 Para utilizar la plantilla se han generado algunos capítulos genéricos en los que se han incluido secciones ``tutoriales'', en la que se explican algunas de sus características y se muestran ejemplos de elementos típicos que pueden ser de utilidad (pero sin el objetivo de que esto sea una guía de \LaTeX{}).

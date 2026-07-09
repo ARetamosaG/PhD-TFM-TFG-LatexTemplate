@@ -25,19 +25,6 @@
 \chapter{Introducción}
 \label{cha:introduccion}
 
-\begin{FraseCelebre}
-  \begin{Frase}
-    Desocupado lector, sin juramento me podrás creer que quisiera que este libro [...] fuera el más hermoso, el más gallardo y más discreto que pudiera imaginarse.
-  \end{Frase}
-  \begin{Fuente}
-    Miguel de Cervantes, Don Quijote de la Mancha
-  \end{Fuente}
-\end{FraseCelebre}
-
-
-\section{Presentación}
-\label{sec:presentacion}
-
 Detrás de cada búsqueda en Internet, cada recomendación en una plantaforma, o cada sistema de inteligencia artificial, existe un 
 algoritmo tomando decisiones. Sin embargo, este término suele resultar más difícil de explicar de lo que realmente es, ya que su
 concepto se basa en una idea muy sencilla. Un algoritmo es, en esencia, una secuencia de pasos para resolver un problema o 
@@ -98,9 +85,9 @@ cuenta constantes o términos de menor orden \cite{phalke2022}.
             \hline
             $O(n \log n)$ & Lineal-logarítmica \\
             \hline
-            $O(n^2)$ & Polinómica \\
+            $O(n^k)$ & Polinómica \\
             \hline
-            $O(2^n)$ & Exponencial \\
+            $O(k^n)$ & Exponencial \\
             \hline
             $O(n!)$ & Factorial \\
             \hline
@@ -108,16 +95,22 @@ cuenta constantes o términos de menor orden \cite{phalke2022}.
     \end{center}
 \end{table}
 
-La tabla~\ref{tab:complejidades} recoge las complejidades temporales más habituales. A partir de ella, se pueden establecer 
-tres clases abstractas de problemas, según su complejidad: P, NP y NP-completo. Los problemas de tipo P\footnote{
-\textit{Polynomial time}.} son aquellos que se pueden resolver aplicando un algoritmo en tiempo polinómico, esto es, 
-desde $O(1)$ hasta $O(n^2)$\footnote{Para los casos de complejidad polinómica y exponencial, se utiliza como exponente y base
-respectivamente la constante 2, cuando realmente puede ser cualquier número entero. Por lo tanto, la complejidad polinómica se 
-debería notar como $O(n^p)$, y la exponencial como $O(p^n)$, siendo \textit{p} un entero.}. Los problemas de tipo NP\footnote{
-\textit{Non Polynomial time}.} son aquellos con una complejidad mayor a la polinómica pero inferior a la exponencial, cuya
-resolución suele basarse en un enfoque híbrido entre un algoritmo y una heurística. Finalmente, los problemas de tipo NP-completo
-son aquellos con una complejidad superior a la exponencial. Además, no cuentan con ningún algoritmo eficiente que corra en tiempo
-polinómico.
+A medida que fueron desarrollándose algoritmos para resolver problemas cada vez más complejos, surgió la necesidad de 
+clasificarlos según su dificultad computacional. Esta clasificación dio lugar a distintas clases de complejidad, las 
+cuales agrupan los problemas en función de los recursos necesarios para resolverlos y verificar sus soluciones. La primera 
+de ellas es la clase P\footnote{\textit{Polynomial time}.}, y abarca los problemas que se pueden resolver aplicando un
+algoritmo en tiempo polinómico, esto es, desde $O(1)$ hasta $O(n^k)$\footnote{Siendo \textit{k} un entero.}. La siguiente 
+clase es la NP\footnote{\textit{Non Polynomial time}.}, cuyos problemas son aquellos que se pueden verificar
+\footnote{Un problema verificable es aquel que, dada una solución candidata, se puede verificar dicha solución en tiempo 
+polinómico.} en tiempo polinómico, pero encontrar la solución correcta u óptima requiere un tiempo superior al polinómico, 
+aunque inferior al exponencial \cite{cormen2009}. La resolución de estos problemas suele basarse en un enfoque híbrido entre
+un algoritmo y una heurística. Finalmente, la clase NP-completo incluye aquellos problemas con una complejidad temporal 
+superior a la exponencial. Además, no cuentan con ningún algoritmo eficiente que corra en tiempo polinómico. 
+
+El concepto de NP-completitud apareció por primera vez en 1971, a manos del científico norteamericano Stephen Cook. En su 
+artículo \cite{cook1971} establece que el problema de satisfacibilidad booleana es NP-completo. Este problema consiste en 
+determinar si existe alguna asignación de valores de verdad\footnote{Verdadero o falso.} a las variables de una expresión 
+lógica booleana, que haga que dicha expresión sea verdadera o satisfacible \cite{academialab}.
 
 El foco de atención de este trabajo va a ser esta última clase de problemas, los NP-completos, y su resolución a través de 
 diferentes técnicas heurísticas y metaheurísticas, equilibrando el balance entre la eficiencia computacional de la resolución, 

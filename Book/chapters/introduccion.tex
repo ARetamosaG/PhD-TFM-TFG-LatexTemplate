@@ -100,21 +100,29 @@ clasificarlos según su dificultad computacional. Esta clasificación dio lugar 
 cuales agrupan los problemas en función de los recursos necesarios para resolverlos y verificar sus soluciones. La primera 
 de ellas es la clase P\footnote{\textit{Polynomial time}.}, y abarca los problemas que se pueden resolver aplicando un
 algoritmo en tiempo polinómico, esto es, desde $O(1)$ hasta $O(n^k)$\footnote{Siendo \textit{k} un entero.}. La siguiente 
-clase es la NP\footnote{\textit{Non Polynomial time}.}, cuyos problemas son aquellos que se pueden verificar
-\footnote{Un problema verificable es aquel que, dada una solución candidata, se puede verificar dicha solución en tiempo 
+clase es la NP\footnote{\textit{Nondeterministic Polynomial time}.}, cuyos problemas son aquellos que se pueden verificar\footnote{
+Un problema verificable es aquel que, dada una solución candidata, se puede verificar dicha solución en tiempo 
 polinómico.} en tiempo polinómico, pero encontrar la solución correcta u óptima requiere un tiempo superior al polinómico, 
 aunque inferior al exponencial \cite{cormen2009}. La resolución de estos problemas suele basarse en un enfoque híbrido entre
 un algoritmo y una heurística. Finalmente, la clase NP-completo incluye aquellos problemas con una complejidad temporal 
 superior a la exponencial. Además, no cuentan con ningún algoritmo eficiente que corra en tiempo polinómico. 
 
-El concepto de NP-completitud apareció por primera vez en 1971, a manos del científico norteamericano Stephen Cook. En su 
+El concepto de NP-completitud apareció por primera vez en 1971, introducido por el científico norteamericano Stephen Cook. En su 
 artículo \cite{cook1971} establece que el problema de satisfacibilidad booleana es NP-completo. Este problema consiste en 
 determinar si existe alguna asignación de valores de verdad\footnote{Verdadero o falso.} a las variables de una expresión 
-lógica booleana, que haga que dicha expresión sea verdadera o satisfacible \cite{academialab}.
+lógica booleana, que haga que dicha expresión sea verdadera o satisfacible \cite{academialab}. Un año más tarde, Richard 
+Karp, otro científico norteamericano, demostró en su artículo \cite{karp1972} la NP-completitud de otros 21 problemas, entre 
+ellos: la cobertura mínima de vértices \cite{vertices}, la coloración de grafos \cite{khanna2000}, el problema de la mochila
+\cite{mahapatra2011}, y el problema del camino hamiltoniano \cite{sipser2013}, el cual es un caso especial del problema 
+del viajante \cite{johnson2012}.
 
-El foco de atención de este trabajo va a ser esta última clase de problemas, los NP-completos, y su resolución a través de 
-diferentes técnicas heurísticas y metaheurísticas, equilibrando el balance entre la eficiencia computacional de la resolución, 
-y la proximidad de dicha solución al óptimo. Se va a tomar el problema del viajante como referencia de problema NP-completo.
+Es precisamente este último problema clásico, el problema del viajante, el foco de atención de este trabajo. Debido a su alta 
+complejidad computacional, la búsqueda de soluciones exactas deja de ser viable cuando aumenta el tamaño del problema. En este 
+contexto, toman especial relevancia las heurísticas y metaheurísticas, las cuales son estrategias diseñadas para obtener
+soluciones de alta calidad en tiempos de ejecución razonables, pero sin garantizar el óptimo global. A lo largo de este proyecto,
+se estudiarán los fundamentos teóricos de estas técnicas, y se evaluará experimentalmente su comportamiento mediante el 
+desarrollo de un marco de trabajo que permita comparar su rendimiento frente a instancias estandarizadas del problema del
+viajante.
 
 \newpage
 Esta plantilla\footnote{Asegúrate de compilar de nuevo el documento (como cuenta la sección~\ref{sec:compilacion}), para verificar que todo funciona y por si ha habido algún cambio en los fuentes que no está reflejado en los pdf de ejemplo precompilados.} pretende proporcionar un conjunto de estilos consistentes y unificados para cubrir las necesidades de generación de memorias \LaTeX{} para cada uno de los TFCs/TFMs/TFGs y tesis doctorales que se generen en la Escuela Politécnica Superior de la Universidad de Alcalá\footnote{También se incluye la definición para las tesis de la Escuela Técnica Superior de Ingenieros de Telecomunicación de la Universidad Politécnica de Madrid. La extensión a los TFGs de la misma es sencilla, aunque no se ha realizado por el momento.}.

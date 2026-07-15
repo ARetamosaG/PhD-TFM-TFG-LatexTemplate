@@ -36,7 +36,7 @@ práctica, su comportamiento suele ser exponencial, y considerablemente mejor qu
 Sin embargo, en el peor de los casos, puede alcanzar una complejidad factorial, al verse obligado a 
 explorar prácticamente todo el árbol de búsqueda \cite{thakoor2009}. 
 Por otro lado, la programación dinámica ofrece una estrategia diferente para reducir el número de cálculos
-necesarios, reutilizando soluciones de subproblemas previamente resueltos. Se establece el problema
+necesarios, reutilizando soluciones de subproblemas resueltos previamente. Se establece el problema
 mediante $2^n$
 posibles subconjuntos de $n$ ciudades o nodos, debiéndose resolver cada uno de los $n \cdot 2^n$ 
 subproblemas. Cada uno de ellos requiere evaluar, además, otro subconjunto de $n$ problemas más pequeños,
@@ -52,7 +52,7 @@ Una de las familias de heurísticas más sencillas y clásicas está formada por
 voraces\footnote{\textit{Greedy algorithms.}}. Este tipo de algoritmos construye la solución de 
 manera incremental, seleccionando en cada paso la opción que parece más beneficiosa, sin 
 reconsiderar las decisiones tomadas hasta ese momento. Dentro de esta familia se encuentran métodos
-como el algoritmo voraz basado en la selección de aristas\footnote{\textit{Greedy Edge.}} Esta estrategia
+como el algoritmo voraz basado en la selección de aristas\footnote{\textit{Greedy Edge.}}. Esta estrategia
 consiste en ordenar todas las aristas del grafo según su coste, e ir incorporando las más favorables,
 siempre que no generen ciclos ni violen las restricciones del propio Problema del Viajante. Presenta una
 complejidad de $O(n^2 \log n)$ y genera soluciones de buena calidad, pero sin garantizar el óptimo global 
@@ -83,9 +83,11 @@ exacta que ofrece el mejor balance entre la calidad de la solución proporcionad
 requerido para obtenerla. Sin embargo, su complejidad continúa siendo exponencial, lo que limita su 
 aplicación a instancias de gran tamaño.
 
-En este capítulo se cuenta tal y tal.
-
-El capítulo se estructura en $n$ apartados\ldots
+Aunque estas heurísticas ofrecen soluciones aceptables en tiempos mucho más reducidos que los métodos exactos,
+su naturaleza determinista hace que, a menudo, caigan en óptimos locales. Esta nueva limitación fue la que 
+supuso el desarrollo de estrategias más generales y flexibles, denominadas metaheurísticas. La principal 
+diferencia que presentan estos nuevos métodos es que no describen un algoritmo específico, sino un conjunto de
+ideas o principios que pueden adaptarse a varios problemas en el ámbito de la optimización combinatoria.
 
 
 \section{Estado del Arte}

@@ -28,27 +28,48 @@
 Las diferentes resoluciones del Problema del Viajante varían significativamente en función del método 
 empleado para ello. En el ámbito de las resoluciones exactas, existen métodos tan sencillos como la 
 fuerza bruta, la cual es capaz de encontrar la solución exacta en un espantoso $O(n!)$ \cite{baidoo2016}.
-Los algoritmos voraces, los cuales son el primer intento de optimización del problema, presentan una 
-complejidad de $O(n^2 \log n)$, aunque no garantizan el óptimo global \cite{abdulkarim2015}. El algoritmo
-de ramificación y acotamiento\footnote{Más conocido como \textit{branch and bound}, su término inglés.}
-obtiene una complejidad exponencial en la media, aunque puede empeorar a una factorial en el peor de los
-casos, lo cual implica, esencialmente, recorrer todo el árbol de búsqueda \cite{thakoor2009}. En cuanto a 
-la programación dinámica, se establece el problema mediante $2^n$ posibles subconjuntos de $n$ ciudades o
-nodos, debiéndose resolver cada uno de los $n \cdot 2^n$ subproblemas. Cada uno de ellos requiere evaluar,
-además, otro subconjunto de $n$ problemas más pequeños, llegando a una complejidad temporal media de 
-$O(n^2 \cdot 2^n)$ \cite{bouman2018}. Por último, el algoritmo del vecino más cercano\footnote{
-\textit{Nearest Neighbour} en inglés.} presenta una complejidad computacional de $O(n^2)$, debido a que el 
-recorrido por todos los nodos se hace en $n$ pasos, pero se debe realizar desde cada uno de los $n$ 
-nodos. Este resultado parece contradecir la premisa de que para un algoritmo NP-completo no existe ningún 
-algoritmo que lo solucione en tiempo polinómico, pero lo cierto es que este algoritmo no genera un 
-resultado óptimo. Se puede ver un caso práctico en \cite{sahalot2014}, donde un conjunto de datos muy 
-pequeño\footnote{5 nodos.} basta para afirmar que la fuerza bruta es una mejor técnica de resolución que
-el algoritmo del vecino más próximo. Aun así, esta técnica es un paso hacia los métodos más heurísticos y
-aproximados que se van a comentar en los siguientes apartados.
+Debido a este elevado coste computacional, surgieron métodos capaces de reducir el espacio de búsqueda. 
+Uno de ellos es el algoritmo
+de ramificación y acotamiento\footnote{Más conocido como \textit{Branch and Bound}, su término inglés.},
+el cual reduce significativamente el número de posibles soluciones mediante técnicas de poda. En la
+práctica, su comportamiento suele ser exponencial, y considerablemente mejor que el de la fuerza bruta.
+Sin embargo, en el peor de los casos, puede alcanzar una complejidad factorial, al verse obligado a 
+explorar prácticamente todo el árbol de búsqueda \cite{thakoor2009}. 
+Por otro lado, la programación dinámica ofrece una estrategia diferente para reducir el número de cálculos
+necesarios, reutilizando soluciones de subproblemas previamente resueltos. Se establece el problema
+mediante $2^n$
+posibles subconjuntos de $n$ ciudades o nodos, debiéndose resolver cada uno de los $n \cdot 2^n$ 
+subproblemas. Cada uno de ellos requiere evaluar, además, otro subconjunto de $n$ problemas más pequeños,
+llegando a una complejidad temporal de $O(n^2 \cdot 2^n)$ en el caso promedio \cite{bouman2018}.
 
-En \cite{baidoo2016} se lleva a cabo un estudio experimental con estos cinco métodos de resolución, donde
-se verifican las afirmaciones realizadas hasta el momento. Empleando un conjunto de datos aleatorizado, 
-y una implementación adaptada para cada algoritmo en Java, se concluyó lo siguiente:
+Aunque estos métodos garantizan la obtención del óptimo global, su coste computacional continúa siendo 
+demasiado elevado para instancias de gran tamaño. Por tanto, con el objetivo de superar estas limitaciones 
+prácticas, surgieron las heurísticas. Estas técnicas renuncian a garantizar la obtención de la solución 
+óptima, a cambio de reducir notablemente el tiempo de ejecución del algoritmo. De este modo, se 
+proporcionan soluciones de buena calidad en un coste computacional mucho más asumible. 
+
+Una de las familias de heurísticas más sencillas y clásicas está formada por los algoritmos 
+voraces\footnote{\textit{Greedy algorithms.}}. Este tipo de algoritmos construye la solución de 
+manera incremental, seleccionando en cada paso la opción que parece más beneficiosa, sin 
+reconsiderar las decisiones tomadas hasta ese momento. Dentro de esta familia se encuentran métodos
+como el algoritmo voraz basado en la selección de aristas\footnote{\textit{Greedy Edge.}} Esta estrategia
+consiste en ordenar todas las aristas del grafo según su coste, e ir incorporando las más favorables,
+siempre que no generen ciclos ni violen las restricciones del propio Problema del Viajante. Presenta una
+complejidad de $O(n^2 \log n)$ y genera soluciones de buena calidad, pero sin garantizar el óptimo global 
+\cite{abdulkarim2015}. Otra heurística muy utilizada es el algoritmo del vecino más 
+cercano\footnote{\textit{Nearest Neighbour}, o \textit{NN} en sus siglas más habituales.}, 
+la cual cuenta con una complejidad computacional de $O(n^2)$, debido a que el 
+recorrido por todos los nodos se hace en $n$ pasos, pero se debe realizar desde cada uno de los $n$ 
+nodos. La baja complejidad temporal de este algoritmo no contradice la dificultad computacional del 
+Problema del Viajante, ya que el algoritmo del vecino más cercano es una heurística, y por tanto, no
+garantiza la obtención de la solución óptima. Esta técnica es uno de los primeros ejemplos de algoritmo 
+heurístico para el Problema del Viajante, y sirve como punto de partida para métodos más sofisticados 
+que se van a comentar en los siguientes apartados.
+\cite{sahalot2014}
+
+En \cite{baidoo2016} se lleva a cabo un estudio experimental con estos cinco métodos de resolución.
+Empleando instancias aleatorias del Problema del Viajante, y una implementación en Java, los autores
+concluyen lo siguiente:
 \begin{itemize}
   \item El óptimo global se encuentra mediante fuerza bruta, con la clara desventaja de que es el método 
 más ineficiente.
@@ -57,8 +78,10 @@ más ineficiente.
   \item Ramificación y acotamiento, junto a programación dinámica, producen unos resultados excelentes, 
   pero no siempre son la mejor solución.
 \end{itemize}
-Como conclusión final de este estudio, y de esta primera sección, se establece el algoritmo de la
-programación dinámica como la mejor técnica tradicional para la resolución del Problema del Viajante.
+Bajo estas condiciones experimentales, los autores identifican la programación dinámica como la técnica
+exacta que ofrece el mejor balance entre la calidad de la solución proporcionada, y el tiempo de ejecución
+requerido para obtenerla. Sin embargo, su complejidad continúa siendo exponencial, lo que limita su 
+aplicación a instancias de gran tamaño.
 
 En este capítulo se cuenta tal y tal.
 

@@ -62,10 +62,7 @@ la cual cuenta con una complejidad computacional de $O(n^2)$, debido a que el
 recorrido por todos los nodos se hace en $n$ pasos, pero se debe realizar desde cada uno de los $n$ 
 nodos. La baja complejidad temporal de este algoritmo no contradice la dificultad computacional del 
 Problema del Viajante, ya que el algoritmo del vecino más cercano es una heurística, y por tanto, no
-garantiza la obtención de la solución óptima. Esta técnica es uno de los primeros ejemplos de algoritmo 
-heurístico para el Problema del Viajante, y sirve como punto de partida para métodos más sofisticados 
-que se van a comentar en los siguientes apartados.
-\cite{sahalot2014}
+garantiza la obtención de la solución óptima. 
 
 En \cite{baidoo2016} se lleva a cabo un estudio experimental con estos cinco métodos de resolución.
 Empleando instancias aleatorias del Problema del Viajante, y una implementación en Java, los autores
@@ -102,6 +99,15 @@ destino\footnote{En el caso de las hormigas, desde su nido hasta las fuentes de 
 rastros de feromonas sobre los caminos recorridos. Con el paso de las iteraciones, estos rastros favorecen la 
 exploración de aquellas rutas que hayan demostrado ser más prometeadoras a la hora de encontrar la mejor ruta, 
 favoreciendo así la convergencia hacia soluciones de alta calidad \cite{dorigo2005}.
+
+Por otro lado, las metaheurísticas basadas en trayectoria trabajan sobre una única solución, la cual se modifica
+de forma iterativa para mejorarse. Una de las técnicas más destacadas es el recocido 
+simulado\footnote{\textit{Simmulated Annealing}, o \textit{SA}.}, inspirado en el proceso físico de 
+enfriamento de los metales. En un contexto computacional, este método se encarga de explorar un espacio de soluciones con el 
+propósito de minimizar una función objetivo, evitando así la posibilidad de caer en un mínimo local \cite{gendreau2019}.
+Otra de las estrategias más reconocidas es la búsqueda tabú\footnote{\textit{Tabu Search}, o \textit{TS}.}, que 
+utiliza estructuras de memoria para no volver a visitar soluciones exploradas previamente, reduciendo las probabilidades
+de caer en óptimos locales \cite{basu2012}.
 
 
 \section{Estado del Arte}

@@ -25,7 +25,8 @@
 \chapter{Estado del arte}
 \label{cha:estudio-teorico}
 
-Las diferentes resoluciones del Problema del Viajante varían significativamente en función del método 
+Las diferentes resoluciones del Problema del Viajante\footnote{Abreviado como \textit{TSP} por sus siglas en inglés, 
+\textit{Travelling Salesman Problem}.} varían significativamente en función del método 
 empleado para ello. En el ámbito de las resoluciones exactas, existen métodos tan sencillos como la 
 fuerza bruta, la cual es capaz de encontrar la solución exacta en un espantoso $O(n!)$ \cite{baidoo2016}.
 Debido a este elevado coste computacional, surgieron métodos capaces de reducir el espacio de búsqueda. 
@@ -108,6 +109,26 @@ propósito de minimizar una función objetivo, evitando así la posibilidad de c
 Otra de las estrategias más reconocidas es la búsqueda tabú\footnote{\textit{Tabu Search}, o \textit{TS}.}, que 
 utiliza estructuras de memoria para no volver a visitar soluciones exploradas previamente, reduciendo las probabilidades
 de caer en óptimos locales \cite{basu2012}.
+
+La amplia variedad de metaheurísticas para resolver el Problema del Viajante ha dado lugar a múltiples estudios comparativos, 
+cuyo objetivo consiste en evaluar el rendimiento de estas técnicas bajo diferentes condiciones experimentales.
+En \cite{dacosta2021} se realiza un estudio comparativo entre cuatro métodos de diferentes 
+categorías para resolver el TSP utilizando como caso de estudio un conjunto de puntos de interés reales en Brasil: 
+fuerza bruta, algoritmos genéticos, colonia de hormigas, y \textit{2-opt}, una mejora de los algoritmos voraces.
+Los resultados muestran que que ACO obtiene las rutas de mayor calidad, mientras que \textit{2-opt} destaca por presentar 
+el menor tiempo de ejecución del experimento. En una línea muy similar, en \cite{tobi2025} se evalúa únicamente una serie de 
+diferentes metaheurísticas, seleccionando algoritmos genéticos, colonia de hormigas, recocido simulado, y optimización 
+mediante enjambre de partículas\footnote{\textit{Particle Swarm Optimization}, o \textit{PSO}.}. Como resultado final, 
+los autores concluyen que PSO y SA obtienen el mejor rendimiento en cuanto a la calidad de la solución, como al tiempo de 
+ejecución. Por otra parte, ACO genera soluciones de calidad intermedia, aunque con mayor tiempo de ejecución.
+
+En un marco más alejado de las metaheurísticas puras, son diversos los estudios realizados sobre diferentes técnicas 
+híbridas; esto es, variantes o mejoras de los algoritmos puros. Un ejemplo de esto se encuentra en \cite{jingyan2012}, donde
+se propone una variante de los algoritmos genéticos basada en el mapa logístico. En lugar de generar la población inicial 
+mediante procedimientos completamente aleatorios, los autores utilizan una secuencia caótica obtenida a partir de la
+ecuación logística para aumentar la diversidad de las soluciones candidatas. Los resultados de este experimento muestran
+que la modificación propuesta favorece una mayor exploración del espacio de búsqueda, retrasando una convergencia más 
+prematura, y mejorando la calidad de las soluciones frente a su contraparte más convencional.
 
 
 \section{Estado del Arte}

@@ -116,13 +116,23 @@ En \cite{dacosta2021} se realiza un estudio comparativo entre cuatro métodos de
 categorías para resolver el TSP utilizando como caso de estudio un conjunto de puntos de interés reales en Brasil: 
 fuerza bruta, algoritmos genéticos, colonia de hormigas, y \textit{2-opt}, una mejora de los algoritmos voraces.
 Los resultados muestran que que ACO obtiene las rutas de mayor calidad, mientras que \textit{2-opt} destaca por presentar 
-el menor tiempo de ejecución del experimento. En una línea muy similar, en \cite{tobi2025} se evalúa únicamente una serie de 
+el menor tiempo de ejecución del experimento. 
+
+En una línea muy similar, en \cite{tobi2025} se evalúa únicamente una serie de 
 diferentes metaheurísticas, seleccionando algoritmos genéticos, colonia de hormigas, recocido simulado, y optimización 
-mediante enjambre de partículas\footnote{\textit{Particle Swarm Optimization}, o \textit{PSO}.}. Como resultado final, 
-los autores concluyen que PSO y SA obtienen el mejor rendimiento en cuanto a la calidad de la solución, como al tiempo de 
+mediante enjambre de partículas\footnote{\textit{Particle Swarm Optimization}, o \textit{PSO}.}. El estudio demuestra
+ que PSO y SA obtienen el mejor rendimiento en cuanto a la calidad de la solución, como al tiempo de 
 ejecución. Por otra parte, ACO genera soluciones de calidad intermedia, aunque con mayor tiempo de ejecución.
 
-En un marco más alejado de las metaheurísticas puras, son diversos los estudios realizados sobre diferentes técnicas 
+En \cite{halim2019} se lleva a cabo un nuevo estudio comparativo entre las cinco metaheurísticas más conocidas (NN, GA, 
+SA, TS, ACO), incluyendo además la optimización mediante fisiología de árboles\footnote{\textit{Tree Phyisiology 
+Optimization}, o \textit{TPO}.}. A diferencia de otros estudios, la comparación se lleva a cabo sobre 15 instancias de 
+diferentes tamaños. De este modo, se evalúa no solo el tiempo de ejecución, sino también la calidad de las soluciones
+obtenidas y la convergencia de cada algoritmo. Los resultados muestran que ninguna técnica resulta superior en todos 
+los escenarios analizados. Mientras que NN destaca por su rapidez, TS obtiene, en promedio, las soluciones más próximas 
+al óptimo, y GA se comporta de forma especialmente consistente a medida que aumenta el tamaño de las instancias.
+
+Más allá de las  metaheurísticas clásicas o puras, son diversos los estudios realizados sobre diferentes técnicas 
 híbridas; esto es, variantes o mejoras de los algoritmos puros. Un ejemplo de esto se encuentra en \cite{jingyan2012}, donde
 se propone una variante de los algoritmos genéticos basada en el mapa logístico. En lugar de generar la población inicial 
 mediante procedimientos completamente aleatorios, los autores utilizan una secuencia caótica obtenida a partir de la
@@ -130,65 +140,36 @@ ecuación logística para aumentar la diversidad de las soluciones candidatas. L
 que la modificación propuesta favorece una mayor exploración del espacio de búsqueda, retrasando una convergencia más 
 prematura, y mejorando la calidad de las soluciones frente a su contraparte más convencional.
 
+En \cite{xu2023} se propone un nuevo enfoque híbrido, combinando la optimización mediante colonia de hormigas y el algoritmo 
+luciérnaga\footnote{\textit{Firefly Algorithm}, o \textit{FA}.}. En este caso, el FA no se emplea para resolver directamente 
+el TSP, sino para optimizar los parámetros del ACO, mejorando así su capacidad de exploración y reduciendo su convergencia 
+hacia óptimos locales. Los resultados del experimento afirman que una adecuada selección de dichos parámetros consigue 
+obtener recorridos de menor longitud y reducir el tiempo de ejecución respecto a configuraciones más estándar del ACO.
 
-\section{Estado del Arte}
-\label{sec:estadoarte}
+Una línea de investigación más reciente consiste en combinar metaheurísticas con diferentes técnicas de inteligencia 
+artificial. En \cite{vahdati2010}, los autores utilizan una red neuronal de Hopfield para una población inicial de 
+soluciones, y posteriormente, se refina mediante un algoritmo genético. De este modo, la red neuronal proporciona un conjunto
+de soluciones de mayor calidad que una inicialización totalmente aleatoria, mientras que el algoritmo genético se encarga de
+explorar el espacio de búsqueda y mejorar progresivamente estas soluciones.
 
-En el estado del arte se enumeran los trabajos más relevantes de otros grupos de investigación. A continuación se muestra un ejemplo del uso de viñetas que nos proporciona \texttt{itemize}:
+En \cite{kanda2016} se hace uso de la IA no para resolver directamente el TSP, sino para seleccionar automáticamente la
+metaheurística más adecuada para cada instancia. Los autores proponen un enfoque basado en meta-aprendizaje, mediante el 
+cual se extraen diferentes características de una instancia del problema, y se utilizan como entrada para diversos 
+modelos de aprendizaje automático. Los resultados muestran que esta estrategia permite recomendar algoritmos que, 
+generalmente, obtienen mejores soluciones que una selección fija de metaheurísticas, reduciendo además el coste 
+computacional de ejecutar todas ellas.
 
-\begin{itemize}
-  \item En el trabajo .....
-  \item En el siguiente trabajo.....
-\end{itemize}
-
-O citas en un párrafo real: Sin embargo, hay entornos acústicos donde las tasas de error conseguidas son todavía demasiado altas. En concreto, las aplicaciones en las que la captura de la señal de habla se hace usando micrófonos alejados del locutor (típicamente para distancias superiores a un metro) muestran una fuerte sensibilidad a los problemas de reverberación, ruido aditivo y baja relación señal a ruido (\cite{gelbart02},\cite{kochkin02}). En estos entornos, se ha propuesto el uso de arrays de micrófonos como un método para mejorar la calidad del habla capturada \cite{seltzer03}\cite{herbordt05}.
-
-Existen múltiples formas de insertar figuras en Latex. A continuación, se muestra un ejemplo del uso de \texttt{figure}. Como se puede ver en la Figura \ref{fig:fig1} también se pueden poner referencias a las figuras por medio de \texttt{ref} y la etiqueta \texttt{label} de la figura en particular.
-
-\begin{figure}[h] %el especificador [h] indica que ponga la figura aqui si es posible
-  \centering \includegraphics[width=4.7in]{Figure1}
-  % where an .eps filename suffix will be assumed under latex, and a .pdf suffix will be assumed for pdflatex
-  \caption{Departamento de Electrónica.}
-  \label{fig:fig1}
-\end{figure}
-
-Y ahora un ejemplo en el que ponemos el \texttt{caption} en el lateral:
-
-\begin{SCfigure}
-  \centering \includegraphics[width=0.5\textwidth]{Figure1}
-  \caption{Departamento de Electrónica en el lateral.}
-\end{SCfigure}
-
-
-
-\section{Técnicas utilizadas}
-\label{sec:tecnicas-utilizadas}
-
-Aquí vamos a probar todos los niveles de sección disponibles, para evaluar la asignación de \texttt{tocdepth}...
-
-Blah, blah, blah\ldots
-
-
-\subsection{Subsección}
-\label{sec:subseccion}
-
-
-\subsubsection{Subsubsección}
-\label{sec:subsubseccion}
-
-\paragraph{Paragraph}
-\label{sec:paragraph-1}
-
-
-\subparagraph{Subparagraph}
-\label{sec:subparagraph}
-
-
-
-\section{Conclusiones}
-\label{sec:conclusiones-teoria}
-
-Blah, blah, blah\ldots
+Como conclusión de esta sección, los trabajos revisados demuestran claramente la evolución que han experimentado las 
+diferentes técnicas de resolución del Problema del Viajante a lo largo de las últimas décadas. Mientras que los primeros 
+estudios se centraban en el desarrollo y comparación de métodos exactos y heurísticos, las investigaciones más recientes 
+exploran metaheurísticas cada vez más sofisticadas, enfoques híbridos y técnicas de inteligencia artificial. A pesar de 
+estos avances, continúa sin existir un consenso sobre la mejor técnica para resolver el Problema del Viajante de forma 
+general. El rendimiento de cada algoritmo depende de diversos factores, como el tamaño y características de cada instancia, 
+la configuración de sus parámetros, o los criterios empleados para evaluar la calidad de las soluciones. Esta diversidad 
+de métodos explica que la comparación objetiva entre algoritmos siga constituyendo una línea de investigación activa y 
+relevante. En este contexto, resulta de especial interés estudiar en profundidad el funcionamiento de las diferentes 
+metaheurísticas aplicadas al Problema del Viajante, analizando tanto sus fundamentos teóricos como su comportamiento 
+experimental bajo un mismo marco de evaluación.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

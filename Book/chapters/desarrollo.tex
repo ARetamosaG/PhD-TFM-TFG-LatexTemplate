@@ -22,19 +22,49 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Desarrollo}
+\chapter{El Problema del Viajante}
 \label{cha:desarrollo}
 
+Antes de comenzar con el desarrollo de las diferentes metaheurísticas propuestas, es importante realizar una explicación 
+previa sobre el problema en sí. El \ac{TSP} es uno de los problemas computacionales más estudiados de las últimas décadas.
+Se puede formular de la siguiente manera: dada una lista de ciudades, y las distancias entre todas ellas, se debe buscar la 
+ruta más corta que visite cada una de las ciudades y vuelva finalmente a la ciudad de inicio. Formalmente, se puede definir
+como un grafo ponderado completo:
 
-\begin{FraseCelebre}
-  \begin{Frase}
-    A fuerza de construir bien, se llega a buen arquitecto\footnote{Tomado de ejemplos del proyecto \texis{}.}.
-  \end{Frase}
-  \begin{Fuente}
-    Aristóteles
-  \end{Fuente}
-\end{FraseCelebre}
+\begin{equation}
+  \label{eq:eq1}
+  G = (V, E)
+\end{equation}
 
+Donde $V$ representa el conjunto de vértices o nodos del grafo, y $E$ el conjunto de aristas que conectan cada par de vértices.
+A cada arista $(i, j) \in E$ se le asocia un coste $c_{ij}$, que representa la distancia desde el vértice $i$ hasta el vértice 
+$j$.
+
+Sea $\pi = ({\pi}_{1}, {\pi}_{2}, \dots , {\pi}_{n})$ una permutación de vértices de $V$, el objetivo consiste en encontrar la 
+permutación que minimiza el coste total del recorrido, sujeta a que cada vértice sea visitado una única vez antes de volver al 
+punto de partida:
+
+\begin{equation}
+  \label{eq:eq2}
+    \min_{\pi}
+    \left\{
+    \sum_{i=1}^{n-1} c_{\pi_i,\pi_{i+1}}
+    +
+    c_{\pi_n,\pi_1}
+    \right\},\
+    \text{donde} \ \pi_i \neq \pi_j,\ \forall\, i\neq j.
+\end{equation}
+
+En otras palabras, se pretende obtener el ciclo hamiltoniano de coste mínimo del grafo. Un ciclo hamiltoniano es un recorrido
+cerrado que visita todos los vértices exactamente una vez y finaliza en el vértice en el que comenzó \cite{zambito2006}. La
+figura~\ref{fig:ham_cyc} muestra un ejemplo sencillo de un ciclo hamiltoniano:
+
+\begin{figure}[H]
+  \centering 
+  \includegraphics[width=0.3\linewidth]{hamiltonian-cycle.png}
+  \caption{Ciclo hamiltoniano sobre un conjunto de cinco ciudades.}
+  \label{fig:ham_cyc}
+\end{figure}
 
 \section{Introducción}
 \label{sec:introduccion-desarrollo}
@@ -56,7 +86,7 @@ Blah, blah, blah\ldots
 También resulta útil poder introducir ecuaciones que se encuentran tanto en línea con el texto (como por ejemplo $\sigma=0.75$), como en un párrafo aparte (como en la ecuación \ref{eq:eq1}). Al igual que ocurre con las figuras, también se pueden referenciar las ecuaciones.
 
 \begin{equation}
-  \label{eq:eq1}
+  \label{eq:eq100}
   p[q_t=\sigma_t|q_{t-1}=\sigma_{t-1}]
 \end{equation}
 

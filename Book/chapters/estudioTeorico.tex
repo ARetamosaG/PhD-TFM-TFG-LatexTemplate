@@ -136,7 +136,8 @@ Más allá de las  metaheurísticas clásicas o puras, son diversos los estudios
 híbridas; esto es, variantes o mejoras de los algoritmos puros. Un ejemplo de esto se encuentra en \cite{jingyan2012}, donde
 se propone una variante de los algoritmos genéticos basada en el mapa logístico. En lugar de generar la población inicial 
 mediante procedimientos completamente aleatorios, los autores utilizan una secuencia caótica obtenida a partir de la
-ecuación logística para aumentar la diversidad de las soluciones candidatas. Los resultados de este experimento muestran
+ecuación logística \cite{logistic} para aumentar la diversidad de las soluciones candidatas. Los resultados de este experimento
+muestran
 que la modificación propuesta favorece una mayor exploración del espacio de búsqueda, retrasando una convergencia más 
 prematura, y mejorando la calidad de las soluciones frente a su contraparte más convencional.
 
@@ -147,7 +148,7 @@ hacia óptimos locales. Los resultados del experimento afirman que una adecuada 
 obtener recorridos de menor longitud y reducir el tiempo de ejecución respecto a configuraciones más estándar del ACO.
 
 Una línea de investigación más reciente consiste en combinar metaheurísticas con diferentes técnicas de inteligencia 
-artificial. En \cite{vahdati2010}, los autores utilizan una red neuronal de Hopfield para una población inicial de 
+artificial. En \cite{vahdati2010}, los autores utilizan una red neuronal de Hopfield \cite{wen2009} para una población inicial de 
 soluciones, y posteriormente, se refina mediante un algoritmo genético. De este modo, la red neuronal proporciona un conjunto
 de soluciones de mayor calidad que una inicialización totalmente aleatoria, mientras que el algoritmo genético se encarga de
 explorar el espacio de búsqueda y mejorar progresivamente estas soluciones.

@@ -69,17 +69,17 @@ figura~\ref{fig:ham_cyc} muestra un ejemplo sencillo de un ciclo hamiltoniano:
 \section{Variantes del problema}
 \label{sec:variantes}
 
-Es conveniente destacar que el \ac{TSP} admite distintas variantes, en función de las características del grafo y de las 
+Es conveniente destacar que el TSP admite distintas variantes, en función de las características del grafo y de las 
 restricciones al recorrido. Aunque todas ellas tienen el mismo objetivo, las diferencias entre estas formulaciones 
 condicionan la dificultad del problema y las técnicas empleadas para resolverlo. 
 
-La variente más ampliamente conocida y estudiada es la del \ac{STSP}, donde el coste de desplazamiento entre dos ciudades
-es el mismo en ambos sentidos, cumpliéndose:
+La formulación más habitual es la del \ac{STSP}, donde el coste de desplazamiento entre dos ciudades es el mismo en ambos
+sentidos, cumpliéndose:
 
 \begin{equation}
   \label{eq:eq3}
     c_{ij} = c_{ji},\
-    \forall\, i\neq j.
+    \forall\, (i,j)\in E.
 \end{equation}
 
 Esta situación es la habitual cuando se toman las distancias euclídeas entre las ciudades. Por el contrario, en el \ac{ATSP}
@@ -87,23 +87,166 @@ los costes dependen del sentido del desplazamiento, de modo que:
 
 \begin{equation}
   \label{eq:eq4}
-    c_{ij} \neq c_{ji}.
+    c_{ij} \neq c_{ji},\
+    \exists\,(i,j)\in E.
 \end{equation}
 
-Esta variante aparece con frecuencia en aplicaciones reales, tales como calles con un único sentido, diferencias de pendiente, 
+Esta variante aparece con frecuencia en aplicaciones reales, por ejemplo: calles con un único sentido, diferencias de pendiente, 
 o condiciones de tráfico.
 
 Además de estas dos variantes, la literatura recoge otras diferentes para contextos específicos. Entre ellas destacan el 
 \ac{TSPTW}, en el que cada ciudad debe visitarse dentro de un determinado intervalo de tiempo \cite{dumas1995}; o el \ac{MTSP},
-donde varios viajantes colaboran para visitar el conjunto de ciudades \cite{bektas2006}.
+donde varios viajantes colaboran para visitar el conjunto de ciudades \cite{bektas2006}. Otra variante más reciente pero muy
+interesante es la del \ac{DG-TSP}, cuyo objetivo consiste en minimizar simultáneamente el coste del recorrido y el impacto 
+medioambiental, considerando factores dinámicos como el tráfico, el gradiente de la carretera o el consumo energético 
+del vehículo \cite{benjelloun2025}.
 
-Una variante muy interesante es la del \ac{DG-TSP}, donde el objetivo reside en minimizar el uso de combustible y la emisión de
-gases de efecto invernadero, teniendo en cuenta diversos elementos, tales como los costes de desplazamiento variables según los 
-gradientes de la carretera, y los modelos de consumo de energía. Bajo este contexto, se incorpora el factor dinámico, donde
-los datos del problema pueden variar en tiempo real \cite{benjelloun2025}.
+En este trabajo se va a considerar exclusivamente el Problema del Viajante simétrico, ya que se corresponde con
+la formulación más clásica del problema y la más utilizada para evaluar y comparar algoritmos de optimización.
 
-En este trabajo se va a considerar exclusivamente el Problema del Viajante simétrico (\ac{STSP}), ya que presenta la formulación
-más clásica del problema y la más utilizada para evaluar y comparar algoritmos de optimización.
+\section{Número de soluciones posibles}
+\label{sec:solutions}
+
+La mayor dificultad del Problema del Viajante reside en el enorme número de recorridos posibles que pueden generarse, incluso 
+para instancias de tamaño medio. Este crecimiento del espacio de búsqueda es el principal motivo por el que la resolución
+exacta del problema resulta inviable cuando aumenta el número de ciudades.
+
+Supongamos una instancia formada por $n$ ciudades. Si se selecciona arbitrariamente una de ellas como ciudad de origen, 
+$n-1$ ciudades pueden visitarse en cualquier orden, dando lugar a:
+
+\begin{equation}
+  \label{eq:eq5}
+    (n-1)!
+\end{equation}
+
+posibles recorridos diferentes. Sin embargo, en el caso del Problema del Viajante simétrico, recorrer un ciclo en sentido 
+contrario produce exactamente la misma solución, ya que el coste de desplazamiento entre dos ciudades es idéntico en ambos
+sentidos. Por tanto, cada recorrido se contabiliza dos veces, obteniéndose finalmente:
+
+\begin{equation}
+  \label{eq:eq6}
+    N=\frac{(n-1)!}{2}
+\end{equation}
+
+La tabla~\ref{tab:esp_busq} indica como evoluciona el número de posibles soluciones conforme aumenta el número de
+ciudades. Se puede observar que el crecimiento factorial del espacio de búsqueda hace que incluso instancias relativamente
+pequeñas sean imposibles de explorar exhaustivamente mediante fuerza bruta.
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Número de recorridos posibles para instancias simétricas.}
+    \label{tab:esp_busq}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Número de ciudades} & \textbf{Recorridos posibles} \\
+            \hline
+            5 & 12 \\
+            \hline
+            10 & 181\,440 \\
+            \hline
+            15 & 43\,589\,145\,600 \\
+            \hline
+            20 & $6.08 \times 10^{16}$ \\
+            \hline
+            25 & $3.10 \times 10^{23}$ \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+La figura~\ref{fig:esp_busq} muestra una comparativa de este crecimiento factorial del TSP frente a la complejidad
+cuadrática y la exponencial, para reflejar de un modo más visual la diferencia abismal entre ellas.
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.85\linewidth]{tsp_factorial_growth.png}}
+  \caption{Crecimiento factorial del TSP.}
+  \label{fig:esp_busq}
+\end{figure}
+
+Este crecimiento factorial explica por qué los algoritmos exactos únicamente resultan prácticos para instancias de tamaño 
+muy reducido. A medida que aumenta el número de ciudades, el tiempo necesario para explorar todas las soluciones posibles se 
+vuelve prohibitivo, incluso para equipos de altas prestaciones. Como consecuencia, una parte de la investigación en optimización
+combinatoria se ha orientado hacia el desarrollo de algoritmos aproximados, capaces de obtener soluciones de alta calidad sin 
+necesidad de recorrer todo el espacio de búsqueda. Entre estas técnicas destacan las metaheurísticas, cuyo funcionamiento se 
+va a desarrollar en los capítulos siguientes.
+
+\section{Representación de una solución}
+\label{sec:soluciones}
+
+Una vez formulado el problema, es necesario definir cómo se representa una solución candidata. Esta representación constituye
+la estructura sobre la que operan la mayoría de algoritmos de optimización, con especial interés en las heurísticas y 
+metaheurísticas desarrolladas en los capítulos posteriores. 
+
+En el Problema del Viajante, una solución puede representarse mediante una permutación de los vértices del grafo. Cada elemento
+de la secuencia indica el orden en el que se visita una ciudad, asumiendo que, una vez alcanzado el último vértice, el recorrido
+vuelva automáticamente al punto de partida:
+
+\begin{equation}
+  \label{eq:eq7}
+    \pi = (1,4,2,5,3)
+\end{equation}
+
+O también utilizando flechas:
+
+\begin{equation}
+  \label{eq:eq8}
+    1 \xrightarrow{} 4 \xrightarrow{} 2 \xrightarrow{} 5 \xrightarrow{} 3 \xrightarrow{} 1
+\end{equation}
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.4\linewidth]{tsp_perm.png}}
+  \caption{Solución candidata de una instancia pequeña.}
+  \label{fig:tsp_perm}
+\end{figure}
+
+A diferencia de otros problemas de optimización, cualquier solución válida debe contener exactamente una aparición de cada 
+ciudad. Por tanto, las operaciones realizadas por los algoritmos de optimización no pueden modificar arbitrariamente la 
+secuencia, sino que deben preservar siempre esta propiedad.
+
+Otro factor importante es la calidad de la solución, la cual viene determinada por su función objetivo definida en la
+ecuación~\ref{eq:eq2} como la suma de los costes asociados a todas las aristas recorridas.
+
+Sobre esta representación se construyen la mayoría de operadores utilizados en optimización combinatoria. Intercambiar dos
+ciudades, invertir un segmento del recorrido o combinar dos soluciones distintas son ejemplos de operaciones fundamentales
+que se utilizan en numerosas heurísticas y metaheurísticas para explorar el espacio de búsqueda.
+
+\section{Aplicaciones del problema}
+\label{sec:aplicaciones}
+
+Aunque el Problema del Viajante nació como un problema puramente matemático, en la actualidad es uno de los modelos de
+optimización combinatoria con mayor número de aplicaciones prácticas. Muchas situaciones reales pueden formularse como un TSP o
+alguna de sus variantes, siempre que exista la necesidad de determinar el orden óptimo en el que deben visitarse un conjunto de
+ubicaciones y minimizando un determinado coste.
+
+Una de sus aplicaciones más conocidas se encuentra en el entorno de la logística y el transporte. Problemas como la distribución 
+de mercancías, la planificación de autobuses escolares, la recogida de depósitos bancarios o la asignación de múltiples equipos
+de trabajo pueden modelarse mediante variantes del problema, especialmente el MTSP. En estos escenarios, el objetivo 
+consiste en minimizar, de forma paralela, la distancia recorrida y los costes operativos asociados a cada recorrido.
+
+Otra aplicación aparece en los procesos industriales. En la fabricación de \ac{PCB}, por ejemplo, la cabeza de perforación debe
+recorrer cientos o miles de posiciones realizando el menor número posible de desplazamientos improductivos. Del mismo modo, la 
+generación de máscaras fotográficas para circuitos integrados, o el control de máquinas de corte y grabado pueden establecerse 
+como problemas equivalentes al TSP, donde optimizar el recorrido implica una reducción directa del tiempo de fabricación.
+
+Las aplicaciones del problema también se extienden a campos como la robótica, la topografía mediante \ac{GNSS}, la inspección
+automática y las telecomunicaciones. En todos estos casos, resulta necesario planificar el recorrido óptimo de uno o varios 
+agentes que deben visitar un conjunto de ubicaciones, manteniendo así un equilibrio entre la calidad de la solución y el tiempo
+de cálculo requerido \cite{matai2010}. 
+
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.7\linewidth]{tsp_applications.png}}
+  \caption{Algunas aplicaciones prácticas del TSP.}
+  \label{fig:applications}
+\end{figure}
+
+Esta amplia diversidad de aplicaciones explica el interés continuo que el Problema del Viajante sigue despertando en la comunidad
+científica, así como el constante desarrollo de nuevas técnicas heurísticas y metaheurísticas capaces de resolver instancias 
+cada vez mayores.
+
 
 
 %%% Local Variables:

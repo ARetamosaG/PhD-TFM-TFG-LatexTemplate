@@ -33,7 +33,7 @@ como un grafo ponderado completo:
 
 \begin{equation}
   \label{eq:eq1}
-  G = (V, E)
+  G = (V, E, c)
 \end{equation}
 
 Donde $V$ representa el conjunto de vértices o nodos del grafo, y $E$ el conjunto de aristas que conectan cada par de vértices.
@@ -66,35 +66,44 @@ figura~\ref{fig:ham_cyc} muestra un ejemplo sencillo de un ciclo hamiltoniano:
   \label{fig:ham_cyc}
 \end{figure}
 
-\section{Introducción}
-\label{sec:introduccion-desarrollo}
+\section{Variantes del problema}
+\label{sec:variantes}
 
-En este capítulo se incluirá la descripción del desarrollo del trabajo.
+Es conveniente destacar que el \ac{TSP} admite distintas variantes, en función de las características del grafo y de las 
+restricciones al recorrido. Aunque todas ellas tienen el mismo objetivo, las diferencias entre estas formulaciones 
+condicionan la dificultad del problema y las técnicas empleadas para resolverlo. 
 
-El capítulo se estructura en n apartados....
-
-
-\section{Desarrollo del sistema de experimentación}
-\label{sec:desarr-del-sist}
-
-Blah, blah, blah\ldots
-
-
-\section{Planteamiento matemático}
-\label{sec:libr-desarr}
-
-También resulta útil poder introducir ecuaciones que se encuentran tanto en línea con el texto (como por ejemplo $\sigma=0.75$), como en un párrafo aparte (como en la ecuación \ref{eq:eq1}). Al igual que ocurre con las figuras, también se pueden referenciar las ecuaciones.
+La variente más ampliamente conocida y estudiada es la del \ac{STSP}, donde el coste de desplazamiento entre dos ciudades
+es el mismo en ambos sentidos, cumpliéndose:
 
 \begin{equation}
-  \label{eq:eq100}
-  p[q_t=\sigma_t|q_{t-1}=\sigma_{t-1}]
+  \label{eq:eq3}
+    c_{ij} = c_{ji},\
+    \forall\, i\neq j.
 \end{equation}
 
-\section{Conclusiones}
-\label{sec:conclusiones-desarrollo}
+Esta situación es la habitual cuando se toman las distancias euclídeas entre las ciudades. Por el contrario, en el \ac{ATSP}
+los costes dependen del sentido del desplazamiento, de modo que:
 
-Blah, blah, blah\ldots
+\begin{equation}
+  \label{eq:eq4}
+    c_{ij} \neq c_{ji}.
+\end{equation}
 
+Esta variante aparece con frecuencia en aplicaciones reales, tales como calles con un único sentido, diferencias de pendiente, 
+o condiciones de tráfico.
+
+Además de estas dos variantes, la literatura recoge otras diferentes para contextos específicos. Entre ellas destacan el 
+\ac{TSPTW}, en el que cada ciudad debe visitarse dentro de un determinado intervalo de tiempo \cite{dumas1995}; o el \ac{MTSP},
+donde varios viajantes colaboran para visitar el conjunto de ciudades \cite{bektas2006}.
+
+Una variante muy interesante es la del \ac{DG-TSP}, donde el objetivo reside en minimizar el uso de combustible y la emisión de
+gases de efecto invernadero, teniendo en cuenta diversos elementos, tales como los costes de desplazamiento variables según los 
+gradientes de la carretera, y los modelos de consumo de energía. Bajo este contexto, se incorpora el factor dinámico, donde
+los datos del problema pueden variar en tiempo real \cite{benjelloun2025}.
+
+En este trabajo se va a considerar exclusivamente el Problema del Viajante simétrico (\ac{STSP}), ya que presenta la formulación
+más clásica del problema y la más utilizada para evaluar y comparar algoritmos de optimización.
 
 
 %%% Local Variables:

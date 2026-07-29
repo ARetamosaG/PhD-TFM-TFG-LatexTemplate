@@ -104,8 +104,8 @@ del vehículo \cite{benjelloun2025}.
 En este trabajo se va a considerar exclusivamente el Problema del Viajante simétrico, ya que se corresponde con
 la formulación más clásica del problema y la más utilizada para evaluar y comparar algoritmos de optimización.
 
-\section{Número de soluciones posibles}
-\label{sec:solutions}
+\section{Espacio de búsqueda}
+\label{sec:esp_busqueda}
 
 La mayor dificultad del Problema del Viajante reside en el enorme número de recorridos posibles que pueden generarse, incluso 
 para instancias de tamaño medio. Este crecimiento del espacio de búsqueda es el principal motivo por el que la resolución
@@ -167,7 +167,7 @@ cuadrática y la exponencial, para reflejar de un modo más visual la diferencia
 
 Este crecimiento factorial explica por qué los algoritmos exactos únicamente resultan prácticos para instancias de tamaño 
 muy reducido. A medida que aumenta el número de ciudades, el tiempo necesario para explorar todas las soluciones posibles se 
-vuelve prohibitivo, incluso para equipos de altas prestaciones. Como consecuencia, una parte de la investigación en optimización
+vuelve inasequible, incluso para equipos de altas prestaciones. Como consecuencia, una parte de la investigación en optimización
 combinatoria se ha orientado hacia el desarrollo de algoritmos aproximados, capaces de obtener soluciones de alta calidad sin 
 necesidad de recorrer todo el espacio de búsqueda. Entre estas técnicas destacan las metaheurísticas, cuyo funcionamiento se 
 va a desarrollar en los capítulos siguientes.
@@ -202,6 +202,16 @@ O también utilizando flechas:
   \label{fig:tsp_perm}
 \end{figure}
 
+Consecuentemente, dos permutaciones distintas pueden representar el mismo recorrido. Por ejemplo:
+
+\begin{equation}
+  \label{eq:eq9}
+    \pi = (4,2,5,3,1)
+\end{equation}
+
+Y la permutación~\ref{eq:eq8} describen exactamente el mismo ciclo, ya que únicamente cambia el vértice desde el que comienza
+el recorrido.
+
 A diferencia de otros problemas de optimización, cualquier solución válida debe contener exactamente una aparición de cada 
 ciudad. Por tanto, las operaciones realizadas por los algoritmos de optimización no pueden modificar arbitrariamente la 
 secuencia, sino que deben preservar siempre esta propiedad.
@@ -211,7 +221,7 @@ ecuación~\ref{eq:eq2} como la suma de los costes asociados a todas las aristas 
 
 Sobre esta representación se construyen la mayoría de operadores utilizados en optimización combinatoria. Intercambiar dos
 ciudades, invertir un segmento del recorrido o combinar dos soluciones distintas son ejemplos de operaciones fundamentales
-que se utilizan en numerosas heurísticas y metaheurísticas para explorar el espacio de búsqueda.
+que se utilizan en muchas heurísticas y metaheurísticas para explorar el espacio de búsqueda.
 
 \section{Aplicaciones del problema}
 \label{sec:aplicaciones}

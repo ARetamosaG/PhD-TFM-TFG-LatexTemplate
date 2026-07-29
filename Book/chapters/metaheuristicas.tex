@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Generic template for TFC/TFM/TFG/Tesis
+%
+% $Id: desarrollo.tex,v 1.4 2015/06/05 00:05:18 macias Exp $
+%
+% By:
+%  + Javier Macías-Guarasa.
+%    Departamento de Electrónica
+%    Universidad de Alcalá
+%  + Roberto Barra-Chicote.
+%    Departamento de Ingeniería Electrónica
+%    Universidad Politécnica de Madrid
+% 
+% Based on original sources by Roberto Barra, Manuel Ocaña, Jesús Nuevo, Pedro Revenga, Fernando Herránz and Noelia Hernández. Thanks a lot to all of them, and to the many anonymous contributors found (thanks to google) that provided help in setting all this up.
+%
+% See also the additionalContributors.txt file to check the name of additional contributors to this work.
+%
+% If you think you can add pieces of relevant/useful examples, improvements, please contact us at (macias@depeca.uah.es)
+%
+% You can freely use this template and please contribute with comments or suggestions!!!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Metaheurísticas}
+\label{cha:metah}
+
+\section{Introducción}
+\label{sec:intro}
+
+Las metaheurísticas forman una de las familias de técnicas de optimización más utilizadas para resolver problemas complejos de 
+optimización combinatoria. Estos métodos no definen una secuencia de pasos para abordar un problema concreto, sino que 
+proporcionan una estrategia general de búsqueda que puede adaptarse a diferentes contextos, definiendo una representación de la 
+solución, una función objetivo, y un mecanismo para generar y evaluar soluciones nuevas. Esta flexibilidad permite que una misma
+metaheurística pueda emplearse para resolver problemas tan diferentes como el Problema del Viajante, la planificación de tareas, 
+la asignación de recursos, o el diseño de redes.
+
+Aunque existen muchas metaheurísticas, y cada una presenta un funcionamiento diferente, todas comparten una misma estructura 
+básica. El proceso comienza con una o varias soluciones iniciales, a partir de las cuales se generan nuevas soluciones candidatas
+mediante distintos mecanismos de búsqueda. Cada una de estas soluciones se evalúa mediante una función objetivo, que determina 
+su calidad y decide cuáles se deben conservar para continuar el proceso. Este proceso se repite de forma iterativa hasta alcanzar
+un cierto criterio de parada, como un número máximo de iteraciones, un límite de tiempo, o la ausencia de mejoras durante un 
+determinado período. 
+
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.7\linewidth]{metah_clasif.png}}
+  \caption{Clasificación de las metaheurísticas.}
+  \label{fig:metah_clasif}
+\end{figure}
+
+Las principales diferencias entre unas metaheurísticas y otras residen en la forma de explorar el espacio de búsqueda, y en los
+mecanismos utilizados para evitar caer en óptimos locales. Algunas incorporan elementos probabilísticos o estructuras de memoria, 
+mientras que otras se inspiran en procesos biológicos o en el comportamiento colectivo observado en la naturaleza. Aun así, todas
+tienen como objetivo obtener soluciones de alta calidad en un tiempo de ejecución razonable.
+
+En las próximas secciones se van a desarrollar las metaheurísticas empleadas en este trabajo, describiendo tanto sus fundamentos
+teóricos, como los aspectos necesarios para su posterior implementación y evaluación experimental.
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../book"
+%%% End:

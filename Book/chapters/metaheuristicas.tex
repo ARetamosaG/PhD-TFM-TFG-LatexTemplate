@@ -148,8 +148,24 @@ individuo.
   \label{fig:rep_soluc}
 \end{figure}
 
+\subsection{Funcionamiento general del algoritmo}
+\label{subsec:gen_funct}
 
+Una vez definida la representación de las soluciones, el algoritmo genético comienza generando una población inicial de individuos.
+Cada uno de ellos se evalúa mediante una función de adaptación, que mide la calidad de la solución representada. A continuación,
+los individuos con mejor rendimiento son seleccionados para reproducirse mediante diferentes operadores de cruce y mutación, dando
+lugar a una nueva generación de soluciones. Este proceso se repite de forma iterativa hasta alcanzar un criterio de parada, como
+un número máximo de generaciones, o la ausencia de mejoras durante varias iteraciones consecutivas.
 
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.6\linewidth]{ga_steps.png}}
+  \caption{Pasos del algoritmo genético.}
+  \label{fig:ga_steps}
+\end{figure}
+
+\subsection{Evaluación de la población}
+\label{subsec:fitness}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

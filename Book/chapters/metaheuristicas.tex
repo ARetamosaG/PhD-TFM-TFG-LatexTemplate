@@ -57,6 +57,98 @@ tienen como objetivo obtener soluciones de alta calidad en un tiempo de ejecuci�
 En las próximas secciones se van a desarrollar las metaheurísticas empleadas en este trabajo, describiendo tanto sus fundamentos
 teóricos, como los aspectos necesarios para su posterior implementación y evaluación experimental.
 
+\section{Algoritmos genéticos}
+\label{sec:ga}
+
+\subsection{Introducción}
+\label{subsec:ga_intro}
+
+Los \ac{GA} son una de las metaheurísticas basadas en la biología más conocidas y utilizadas en optimización combinatoria. Su 
+funcionamiento está inspirado en los procesos de la evolución biológica, mediante el uso de conceptos como la selección natural, 
+la reproducción, o la mutación. Este paradigma Apareció por primera vez en 1975, en la obra del científico y profesor 
+universitario estadounidense John Holland \cite{holland1975}. 
+
+Su funcionamiento parte de una población inicial de soluciones candidatas. A lo largo de varias generaciones,
+estas soluciones se evalúan mediante una función de adaptación o \textit{fitness function}, que determina su calidad. 
+Posteriormente, los individuos con mejor rendimiento tienen una mayor probabilidad de transmitir sus características a la siguiente
+generación, mediante diferentes operadores evolutivos, resultando en nuevas soluciones que, idealmente, tendrán una mayor calidad
+que la de sus predecesoras.
+
+En el contexto del Problema del Viajante, cada individuo representa una ruta completa entre las ciudades, y la función de
+adaptación evalúa el coste total del recorrido. A partir de esta representación, los operadores genéticos generan nuevas rutas, 
+combinando o modificando soluciones existentes, con el objetivo de aproximarse progresivamente al recorrido de menor coste.
+
+\subsection{Conceptos básicos}
+\label{subsec:ga_concepts}
+
+En esta pequeña sección se incluyen y describen una serie de conceptos básicos y fundamentales en el entorno de la biología y 
+los algoritmos genéticos:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Conceptos fundamentales de los algoritmos genéticos.}
+    \label{tab:g_concepts}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Biología} & \textbf{Algoritmo genético} & \textbf{TSP} \\
+            \hline
+            Individuo & Solución candidata & Una ruta entre las ciudades \\
+            \hline
+            Cromosoma & Codificación de la solución & Permutación de ciudades \\
+            \hline
+            Gen & Elemento del cromosoma & Una ciudad \\
+            \hline
+            Población & Conjunto de individuos & Conjunto de rutas \\
+            \hline
+            \textit{Fitness} & Calidad del individuo & Distancia total de la ruta \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Representación de una solución}
+\label{subsec:ga_rep}
+
+Una de las primeras decisiones que debe tomarse al diseñar un algoritmo genético es cómo representar cada una de las soluciones
+candidatas. En esta familia de algoritmos, las soluciones no se manipulan directamente, sino que se emplea una codificación 
+denominada cromosoma. La forma en la que se codifica esta representación es fundamental, ya que condiciona el funcionamiento del 
+resto de operadores evolutivos, tales como el cruce y la mutación.
+
+En el Problema del Viajante, la representación más habitual consiste en una permutación de ciudades, tal y como se describía en 
+la sección~\ref{sec:soluciones}. Cada individuo de la población representa un recorrido completo, conde cada ciudad aparece 
+exactamente una vez. De esta manera, cada gen representa una ciudad concreta, mientras que el orden en el que aparecen describe 
+la ruta seguida por el viajante.
+
+Como ejemplo, si se considera el siguiente cromosoma:
+
+\begin{equation}
+  \label{eq:eq20}
+    [1, 4, 2, 5, 3]
+\end{equation}
+
+Esta representación equivale al recorrido:
+
+\begin{equation}
+  \label{eq:eq21}
+    1 \xrightarrow{} 4 \xrightarrow{} 2 \xrightarrow{} 5 \xrightarrow{} 3 \xrightarrow{} 1
+\end{equation}
+
+Donde la última ciudad vuelve nuevamente a la ciudad inicial, para completar el ciclo hamiltoniano.
+
+El coste asociado a cada individuo se calcula aplicando la función objetivo definida anteriormente en la 
+sección~\ref{cha:desarrollo}, es decir, sumando los costes de todas las aristas recorridas, sin olvidar la que conecta 
+la última ciudad con la primera. Cuanto menor sea este coste, mayor será la calidad de la solución representada por ese 
+individuo.
+
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.7\linewidth]{rep_soluc.png}}
+  \caption{Correspondencia entre un cromosoma y el recorrido que representa en el TSP.}
+  \label{fig:rep_soluc}
+\end{figure}
+
+
 
 
 %%% Local Variables:

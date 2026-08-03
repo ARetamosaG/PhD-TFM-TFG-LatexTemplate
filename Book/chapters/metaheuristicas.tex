@@ -65,7 +65,7 @@ teóricos, como los aspectos necesarios para su posterior implementación y eval
 
 Los \ac{GA} son una de las metaheurísticas basadas en la biología más conocidas y utilizadas en optimización combinatoria. Su 
 funcionamiento está inspirado en los procesos de la evolución biológica, mediante el uso de conceptos como la selección natural, 
-la reproducción, o la mutación. Este paradigma Apareció por primera vez en 1975, en la obra del científico y profesor 
+la reproducción, o la mutación. Este paradigma apareció por primera vez en 1975, en la obra del científico y profesor 
 universitario estadounidense John Holland \cite{holland1975}. 
 
 Su funcionamiento parte de una población inicial de soluciones candidatas. A lo largo de varias generaciones,
@@ -166,6 +166,105 @@ un número máximo de generaciones, o la ausencia de mejoras durante varias iter
 
 \subsection{Evaluación de la población}
 \label{subsec:fitness}
+
+Después de generar la población inicial de soluciones, se debe determinar cuáles de ellas presentan una mayor calidad. Para ello,
+se utiliza una función de adaptación, o \textit{fitness function}, que asigna una puntuación a cada individuo de la población. 
+Esta puntuación permite comparar las soluciones entre sí y decidir las que tendrán una mayor probabilidad de transmitir su 
+información genética a las siguientes generaciones. En consecuencia, el objetivo del algoritmo genético consiste en maximizar el 
+valor de la función \textit{fitness}.
+
+En el caso del TSP, la función objetivo definida en la sección~\ref{cha:desarrollo} representa el coste de una ruta, al calcular 
+la suma de las distancias recorridas entre las ciudades consecutivas:
+
+\begin{equation}
+  \label{eq:eq22}
+    L(\pi) = 
+    \sum_{i=1}^{n-1} c_{\pi_i,\pi_{i+1}}
+    +
+    c_{\pi_n,\pi_1}
+\end{equation}
+
+No obstante, un detalle a tener en cuenta en el contexto del TSP es que se busca minimizar dicha función; esto es, encontrar el 
+camino más corto. Por tanto, la \textit{fitness} se debe calcular de la siguiente manera:
+
+\begin{equation}
+  \label{eq:eq23}
+    F(\pi) = \frac{1}{L(\pi)}
+\end{equation}
+
+Como $L(\pi) > 0$ para cualquier ruta válida, se cumple que $F(\pi) > 0$. Además, esta transformación establece una relación 
+inversamente proporcional entre ambas funciones. De este modo, se consigue obtener un mayor valor de \textit{fitness} cuando 
+meno sea el coste de la ruta. En la tabla~\ref{tab:fit_ex} se muestra un ejemplo sencillo comparativo entre diferentes rutas:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Coste de diferentes rutas y su valor de \textit{fitness}.}
+    \label{tab:fit_ex}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Ruta} & \textbf{Distancia} & \textbf{\textit{Fitness}} & \textbf{Calidad} \\
+            \hline
+            A & 120 & 0.0083 & Mejor \\
+            \hline
+            B & 200 & 0.0050 & Intermedia \\
+            \hline
+            C & 310 & 0.0032 & Peor \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Con esta transformación, se obtiene el resultado esperado: una ruta más corta, y por tanto mejor, obtiene una mayor puntuación
+de \textit{fitness}.
+
+Es importante realizar esta distinción entre función objetivo y función de adaptación. La función objetivo describe el problema de 
+optimización que se quiere resolver, mientras que la segunda representa una transformación de dicha función, con el propósito
+de facilitar el proceso evolutivo del algoritmo genético. Es precisamente esta última, la función de adaptación, la que será 
+utilizada por los operadores evolutivos para favorecer la supervivencia y reproducción de las soluciones más prometedoras.
+
+\subsection{Operador de selección}
+\label{subsec:selec}
+
+Una vez evaluada la población mediante la función de adaptación, el siguiente paso consiste en seleccionar los individuos que
+participarán en la reproducción. El objetivo de este operador es favorecer la transmisión de las características presentes en 
+las mejores soluciones, pero sin eliminar completamente la diversidad genética de la población. De esta manera, las rutas de 
+mayor calidad tienen una mayor probabilidad de generar descendencia, aunque los individuos con menor adaptación también pueden
+llegar a ser seleccionados, para evitar una convergencia prematura hacia óptimos locales.
+
+Un aspecto fundamental durante la selección consiste en mantener un equilibrio adecuado entre explotación y exploración del 
+espacio de búaqueda. La explotación consiste en favorecer la reproducción de los individuos con mayor \textit{fitness}, haciendo
+uso de las mejores soluciones encontradas hasta el momento. Por el contrario, la exploración busca preservar la diversidad 
+genética de la población, mediante la selección ocasional de individuos de menor calidad.
+
+Existen diversos mecanismos para realizar la selección. Destacan, principalmente, los siguientes: la selección proporcional o 
+ruleta, la selección por torneo, y la selección basada en clasificación o \textit{ranking}.
+
+\begin{itemize}
+  \item La \textbf{selección proporcional}, también conocida como \textit{roulette wheel selection}, asigna a cada individuo una
+probabilidad de ser seleccionado proporcional a su valor de \textit{fitness}. De este modo, las mejores soluciones tienen una 
+mayor probabilidad de reproducirse, sin excluir completamente al resto de individuos. 
+  \item La \textbf{selección por torneo}, o \textit{tournament selection}, consiste en escoger aleatoriamente un pequeño grupo de
+individuos de la población, y seleccionar como progenitor aquel que presente el mayor valor de \textit{fitness}. Este proceso se
+repite hasta obtener todos los individuos necesarios para la reproducción.
+  \item La \textbf{selección basada en clasificación}, o \textit{rank-based selection}, ordena previamente la población según su valor 
+de \textit{fitness}, y a continuación asigna la probabilidad de selección en función de la posición ocupada por cada individuo,
+en lugar de utilizar directamente la función de adaptación \cite{razali2011}.
+\end{itemize}
+
+En este trabajo se va a utilizar la \textbf{selección por torneo}, debido a su simplicidad de implementación y a su buen rendimiento en 
+problemas de optimización combinatoria como el TSP. Si bien operadores como la selección proporcional respetan una probabilidad de 
+selección en proporción al \textit{fitness}, se puede dar el caso de que un individuo muy superior a los demás domine por completo
+la población, perdiéndose la diversidad genética. En cambio, el método de selección por torneo no depende de la escala de los
+valores del \textit{fitness}, y permite controlar fácilmente la presión selectiva modificando el tamaño del torneo. En 
+\cite{razali2011} se realiza una comparación experimental entre estos tres operadores de selección, manteniendo fijos el resto de 
+parámetros. Como conclusión, se concluye que la selección por torneo genera los mejores resultados para instancias pequeñas, 
+mientras que la selección basada en \textit{rankings} obtiene un comportamiento más estable, y acaba generando mejores soluciones, 
+para instancias grandes. Al margen de estas dos, la selección por ruleta presenta el peor rendimiento. Dado que en este trabajo se
+van a considerar instancias de tamaño moderado, la selección por torneo sigue siendo una elección adecuada.
+
+\subsection{Operador de cruce}
+\label{subsec:cross}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

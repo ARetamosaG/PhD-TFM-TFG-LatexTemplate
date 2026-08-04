@@ -282,8 +282,9 @@ Entre los más utilizados se encuentran: \textit{Partially Mapped Crossover}, \t
 \begin{itemize}
   \item \textbf{\ac{PMX}} funciona de la siguiente manera. Se comienza escogiendo dos puntos de corte de forma arbitraria, y el
   segmento entre dichos puntos de corte se copia del primer progenitor al primer descendiente. La parte faltante del primer 
-  descendiente se rellena con elementos del segundo progenitor, teniendo en cuenta los posibles conflictos de mapeado. Para el 
-  segundo progenitor, se procede de igual manera pero de forma opuesta. Se incluye un ejemplo a continuación:
+  descendiente se rellena con elementos del segundo progenitor, resolviendo los posibles conflictos mediante las correspondencias
+  establecidas entre ambos segmentos. Para el segundo progenitor, se procede de igual manera pero de forma opuesta. Se incluye un
+  ejemplo a continuación:
   \begin{align*}
     \text{Progenitor 1:}   &\quad [\textbf{5\ 4}\ * \ \textbf{6\ 9\ 2\ 1}\ *\ \textbf{7\ 8\ 3}] \\
     \text{Progenitor 2:}   &\quad [1\ 2\ *\ 3\ 4\ 5\ 6\ *\ 7\ 8\ 9] \\[1em]
@@ -320,28 +321,45 @@ Entre los más utilizados se encuentran: \textit{Partially Mapped Crossover}, \t
     \text{Progenitor 2:}   &\quad [2\ 4\ 3\ 1\ 6\ 5] \\[1em]
     \text{Descendiente:}   &\quad [1\ 6\ 5\ 4\ 2\ 3]
   \end{align*}
-  Este operador es más complejo de comprender solamente con el ejemplo, así que es conveniente revisar el funcionamiento con el 
-  caso práctico. Se comienza escogiendo el primer elemento del primer progenitor (1). Este elemento tiene tres vecinos (2,\ 3,\ 6)
-  entre los dos progenitores. A su vez, cada uno de estos vecinos tiene una serie de vecinos ($2\xrightarrow{}1,3,4,5$;\ 
-  $3\xrightarrow{}1,2,4$;\ $6\xrightarrow{}1,5$). Se elige el elemento con menos vecinos (6) y se incluye en la cadena del descendiente.
-  Se repite este proceso hasta completar la cadena.
+  %Este operador es más complejo de comprender solamente con el ejemplo, así que es conveniente revisar el funcionamiento con el 
+  %caso práctico. Se comienza escogiendo el primer elemento del primer progenitor (1). Este elemento tiene tres vecinos (2,\ 3,\ 6)
+  %entre los dos progenitores. A su vez, cada uno de estos vecinos tiene una serie de vecinos ($2\xrightarrow{}1,3,4,5$;\ 
+  %$3\xrightarrow{}1,2,4$;\ $6\xrightarrow{}1,5$). Se elige el elemento con menos vecinos (6) y se incluye en la cadena del descendiente.
+  %Se repite este proceso hasta completar la cadena.
   \item \textbf{\ac{AEX}} construye los descendientes mediante ciclos de arcos o segmentos. Se selecciona un primer arco o 
   segmento, por ejemplo, los dos primeros elementos del primer progenitor. El siguiente arco se toma del segundo progenitor,
   comenzando por el último elemento que se tiene, y añadiendo un elemento a la cadena, alternando así entre ambos
-  progenitores, para completar el cromosoma. Si la elección de un arco es imposible, debido a que ya se encuentra en la 
-  cadena, se toma el elemento con menor índice que todavía no se ha utilizado. En este caso, la descendencia cuenta con una 
-  particularidad, ya que comparten el  primer arco seleccionado. Para el caso del segundo descendiente, se toma como segundo arco
-  (después del inicial) el mismo progenitor, pero con el cuarto elemento ya se salta al segundo progenitor:
+  progenitores, para completar el cromosoma. Cuando el siguiente arco ya contiene ciudades visitadas previamente, se toma el 
+  elemento con menor índice que todavía no se ha utilizado. En este caso, la descendencia cuenta con una  particularidad, ya que
+  comparten el  primer arco seleccionado. Para el caso del segundo descendiente, se toma como segundo arco (después del inicial) 
+  el mismo progenitor, pero con el cuarto elemento ya se salta al segundo progenitor \cite{curkovic2025}:
   \begin{align*}
     \text{Progenitor 1:}   &\quad [5\ 1\ 7\ 8\ 4\ 9\ 6\ 2\ 3] \\
     \text{Progenitor 2:}   &\quad [3\ 6\ 2\ 5\ 1\ 9\ 8\ 4\ 7] \\[1em]
     \text{Descendiente 1:} &\quad [5\ 1\ 9\ 6\ 2\ 3\ 4\ 7\ 8] \\
     \text{Descendiente 2:} &\quad [5\ 1\ 7\ 3\ 6\ 2\ 4\ 9\ 8]
   \end{align*}
-
-
-
 \end{itemize}
+
+La decisión de qué operador de cruce utilizar es más compleja que en el caso del operador de selección. Uno de los motivos es la 
+amplia variedad de operadores existentes, habiéndose explicado cinco de los más utilizados. En \cite{curkovic2025}, además de 
+discutir el funcionamiento de cada uno de ellos, se realiza un análisis comparativo de estos operadores de cruce, sin variar
+el resto de parámetros del algoritmo genético. Tras analizar tres instancias muy diferentes, los resultados demuestran que
+OX es el operador de cruce con mejor rendimiento, al obtener siempre la mejor solución media, entre otros parámetros de 
+evaluación.
+
+Por tanto, en este trabajo se va a utilizar el \textbf{Order Crossover} (OX) como operador de cruce. Además de presentar el 
+mejor rendimiento medio en el estudio comaprativo, OX también conserva el orden relativo de las ciudades, siempre genera 
+permutaciones válidas, y requiere una implementación más sencilla que otros operadores como CX o ERX. Además, un detalle a tener
+en cuenta con CX es el siguiente: cuando los progenitores comparten muchos valores en las mismas posiciones, o cuando la
+estructura de ciclos es poco ``fragmentada'', este operador puede producir descendientes que apenas se diferencien de los
+progenitores. Si se hubiera aplicando este operador en el mismo par de cadenas de ejemplo de PMX y OX:
+\begin{align*}
+[5\ 4\ \ 6\ 9\ 2\ 1\ \ 7\ 8\ 3] \\
+[1\ 2\ \ 3\ 4\ 5\ 6\ \ 7\ 8\ 9] \\
+\end{align*}
+La descendencia hubiera sido exactamente igual, es decir, el operador apenas introduciría variabilidad genética.
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

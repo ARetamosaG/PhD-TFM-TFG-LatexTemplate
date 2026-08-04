@@ -266,6 +266,83 @@ van a considerar instancias de tamaño moderado, la selección por torneo sigue 
 \subsection{Operador de cruce}
 \label{subsec:cross}
 
+El objetivo del operador de cruce consiste en combinar la información genética de dos individuos para generar nuevos
+descendientes. La idea fundamental se basa en que las mejores características presentes en ambos progenitorse puedan heredarse
+a la vez, aumentando así la probabilidad de obtener soluciones de mayor calidad que las ya existentes. 
+
+En el contexto del TSP, este proceso es considerablemente más complejo que en otros problemas de optimización. Debido a que cada
+cromosoma representa una permutación de ciudades, el operador de cruce debe garantizar que cada ciudad aparezca exactamente una 
+vez en la descendencia. Por este motivo, los operadores de uno o varios puntos empleados en cromosomas binarios no son adecuados
+para el problema.
+
+A lo largo de los últimos años, se han propuesto diferentes operadores de cruce específicos para el Problema del Viajante. 
+Entre los más utilizados se encuentran: \textit{Partially Mapped Crossover}, \textit{Order Crossover}, \textit{Cycle Crossover}, 
+\textit{Edge Recombination Crossover} y \textit{Alternating Edges Crossover}.
+
+\begin{itemize}
+  \item \textbf{\ac{PMX}} funciona de la siguiente manera. Se comienza escogiendo dos puntos de corte de forma arbitraria, y el
+  segmento entre dichos puntos de corte se copia del primer progenitor al primer descendiente. La parte faltante del primer 
+  descendiente se rellena con elementos del segundo progenitor, teniendo en cuenta los posibles conflictos de mapeado. Para el 
+  segundo progenitor, se procede de igual manera pero de forma opuesta. Se incluye un ejemplo a continuación:
+  \begin{align*}
+    \text{Progenitor 1:}   &\quad [\textbf{5\ 4}\ * \ \textbf{6\ 9\ 2\ 1}\ *\ \textbf{7\ 8\ 3}] \\
+    \text{Progenitor 2:}   &\quad [1\ 2\ *\ 3\ 4\ 5\ 6\ *\ 7\ 8\ 9] \\[1em]
+    \text{Descendiente 1:} &\quad [3\ 5\ *\ \textbf{6\ 9\ 2\ 1}\ *\ 7\ 8\ 4] \\
+    \text{Descendiente 2:} &\quad [\textbf{2\ 9}\ *\ 3\ 4\ 5\ 6\ *\ \textbf{7\ 8\ 1}]
+  \end{align*}
+  \item \textbf{\ac{OX}} funciona como sigue. Se seleccionan, nuevamente, dos puntos de corte aleatorios, y se copia el 
+  segmento intermedio del primer progenitor al primer descendiente. A continuación, comenzando por el segundo punto de corte
+  del segundo progenitor, se copian de izquierda a derecha, y al primer descendiente, los elementos que todavía no existan:
+  \begin{align*}
+    \text{Progenitor 1:}   &\quad [\textbf{5\ 4}\ * \ \textbf{6\ 9\ 2\ 1}\ *\ \textbf{7\ 8\ 3}] \\
+    \text{Progenitor 2:}   &\quad [1\ 2\ *\ 3\ 4\ 5\ 6\ *\ 7\ 8\ 9] \\[1em]
+    \text{Descendiente 1:} &\quad [4\ 5\ *\ \textbf{6\ 9\ 2\ 1}\ *\ 7\ 8\ 3] \\
+    \text{Descendiente 2:} &\quad [\textbf{2\ 1}\ *\ 3\ 4\ 5\ 6\ *\ \textbf{7\ 8\ 9}]
+  \end{align*}
+  \item \textbf{\ac{CX}} se preocupa, especialmente, de mantener la máxima información posible de la posición absoluta en
+  la que aparecen los elementos. Se empieza en la primera posición del primer progenitor. Se busca, en esta posición, el
+  elemento del segundo progenitor. Este nuevo elemento, del segundo progenitor, se busca en el primer progenitor, y se anota
+  su posición. Se repite esta secuencia de pasos, hasta terminar el ciclo. Una vez se completa un ciclo, se continúa con el
+  resto de elementos faltantes, hasta completar nuevamente la secuencia para ambos progenitores:
+  \begin{align*}
+    \text{Progenitor 1:}   &\quad [\textbf{8\ 4\ 7\ 3\ 6\ 2\ 5\ 1}] \\
+    \text{Progenitor 2:}   &\quad [3\ 6\ 1\ 8\ 5\ 4\ 2\ 7] \\[1em]
+    \text{Descendiente 1:} &\quad [\textbf{8}\ 6\ \textbf{7\ 3}\ 5\ 4\ 2\ \textbf{1}] \\
+    \text{Descendiente 2:} &\quad [3\ \textbf{4}\ 1\ 8\ \textbf{6\ 2\ 5}\ 7]
+  \end{align*}
+  \item \textbf{\ac{ERX}} es algo diferente al resto de operadores, ya que su funcionamiento se basa en la adyacencia entre
+  las ciudades. Para ello, se debe construir una tabla de adyacencias, donde se anota, para cada elemento, los vecinos que 
+  tiene en cada uno de los dos progenitores. Se comienza desde un nodo al azar, y en cada paso, se selecciona uno de los vecinos,
+  con preferencia al nodo con menos vecinos. Si no quedan vecinos disponibles, o hay empate, se escoge uno aleatoriamente. Una 
+  vez seleccionado el vecino, se elimina de las tablas de adyacencia y se repite la secuencia de pasos hasta completar la cadena:
+  \begin{align*}
+    \text{Progenitor 1:}   &\quad [1\ 2\ 3\ 4\ 5\ 6] \\
+    \text{Progenitor 2:}   &\quad [2\ 4\ 3\ 1\ 6\ 5] \\[1em]
+    \text{Descendiente:}   &\quad [1\ 6\ 5\ 4\ 2\ 3]
+  \end{align*}
+  Este operador es más complejo de comprender solamente con el ejemplo, así que es conveniente revisar el funcionamiento con el 
+  caso práctico. Se comienza escogiendo el primer elemento del primer progenitor (1). Este elemento tiene tres vecinos (2,\ 3,\ 6)
+  entre los dos progenitores. A su vez, cada uno de estos vecinos tiene una serie de vecinos ($2\xrightarrow{}1,3,4,5$;\ 
+  $3\xrightarrow{}1,2,4$;\ $6\xrightarrow{}1,5$). Se elige el elemento con menos vecinos (6) y se incluye en la cadena del descendiente.
+  Se repite este proceso hasta completar la cadena.
+  \item \textbf{\ac{AEX}} construye los descendientes mediante ciclos de arcos o segmentos. Se selecciona un primer arco o 
+  segmento, por ejemplo, los dos primeros elementos del primer progenitor. El siguiente arco se toma del segundo progenitor,
+  comenzando por el último elemento que se tiene, y añadiendo un elemento a la cadena, alternando así entre ambos
+  progenitores, para completar el cromosoma. Si la elección de un arco es imposible, debido a que ya se encuentra en la 
+  cadena, se toma el elemento con menor índice que todavía no se ha utilizado. En este caso, la descendencia cuenta con una 
+  particularidad, ya que comparten el  primer arco seleccionado. Para el caso del segundo descendiente, se toma como segundo arco
+  (después del inicial) el mismo progenitor, pero con el cuarto elemento ya se salta al segundo progenitor:
+  \begin{align*}
+    \text{Progenitor 1:}   &\quad [5\ 1\ 7\ 8\ 4\ 9\ 6\ 2\ 3] \\
+    \text{Progenitor 2:}   &\quad [3\ 6\ 2\ 5\ 1\ 9\ 8\ 4\ 7] \\[1em]
+    \text{Descendiente 1:} &\quad [5\ 1\ 9\ 6\ 2\ 3\ 4\ 7\ 8] \\
+    \text{Descendiente 2:} &\quad [5\ 1\ 7\ 3\ 6\ 2\ 4\ 9\ 8]
+  \end{align*}
+
+
+
+\end{itemize}
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

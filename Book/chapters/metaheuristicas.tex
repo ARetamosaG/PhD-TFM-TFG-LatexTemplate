@@ -348,18 +348,98 @@ el resto de parámetros del algoritmo genético. Tras analizar tres instancias m
 OX es el operador de cruce con mejor rendimiento, al obtener siempre la mejor solución media, entre otros parámetros de 
 evaluación.
 
-Por tanto, en este trabajo se va a utilizar el \textbf{Order Crossover} (OX) como operador de cruce. Además de presentar el 
+Por tanto, en este trabajo se va a utilizar \textbf{Order Crossover} (OX) como operador de cruce. Además de presentar el 
 mejor rendimiento medio en el estudio comaprativo, OX también conserva el orden relativo de las ciudades, siempre genera 
-permutaciones válidas, y requiere una implementación más sencilla que otros operadores como CX o ERX. Además, un detalle a tener
-en cuenta con CX es el siguiente: cuando los progenitores comparten muchos valores en las mismas posiciones, o cuando la
-estructura de ciclos es poco ``fragmentada'', este operador puede producir descendientes que apenas se diferencien de los
-progenitores. Si se hubiera aplicando este operador en el mismo par de cadenas de ejemplo de PMX y OX:
+permutaciones válidas, y requiere una implementación más sencilla que otros operadores como CX o ERX. 
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.8\linewidth]{ox.png}}
+  \caption{Pasos del operador \textit{Order Crossover}.}
+  \label{fig:ox}
+\end{figure}
+Además, un detalle a tener en cuenta con CX es el siguiente: cuando los progenitores comparten muchos valores en las mismas 
+posiciones, o cuando la estructura de ciclos es poco ``fragmentada'', este operador puede producir descendientes que apenas 
+se diferencien de los progenitores. Si se hubiera aplicando este operador en el mismo par de cadenas de ejemplo de PMX y OX:
 \begin{align*}
 [5\ 4\ \ 6\ 9\ 2\ 1\ \ 7\ 8\ 3] \\
 [1\ 2\ \ 3\ 4\ 5\ 6\ \ 7\ 8\ 9] \\
 \end{align*}
 La descendencia hubiera sido exactamente igual, es decir, el operador apenas introduciría variabilidad genética.
 
+\subsection{Operador de mutación}
+\label{subsec:mutation}
+
+El operador de mutación introduce modificaciones pequeñas y aleatorias sobre los descendientes que se han generado con el 
+cruce. Su objetivo consiste en incrementar la diversidad genética de la población y evitar una convergencia prematura del 
+algoritmo hacia mínimos locales. Recuperando los conceptos de explotación y exploración, el operador de cruce se encarga de 
+explotar la información contenida en las mejores soluciones, mientras que la mutación explora regiones del espacio de búsqueda
+que, de otro modo, podrían no visitarse durante el proceso de evolución. Sin embargo, en la práctica se suele aplicar la 
+mutación con una probabilidad reducida, ya que un exceso de mutaciones pueden destruir estructuras de alta calidad obtenidas
+mediante el operador de cruce.
+
+En la literatura se describen numerosos operadores de mutación. A continuación, se van a mencionar los más predominantes:
+\begin{itemize}
+  \item \textbf{Swap Mutation}, también conocido como \textit{Twors Mutation} o \textit{Exchange Mutation}, consiste en 
+  intercambiar, aleatoriamente, la posición de dos genes:
+  \begin{align*}
+  \text{Antes:}     &\quad [1\ 2\ \textbf{3}\ 4\ \textbf{5}] \\
+  \text{Después:}   &\quad [1\ 2\ \textbf{5}\ 4\ \textbf{3}] \\
+  \end{align*}
+  \item \textbf{Inversion Mutation}, o \ac{RSM}, selecciona dos puntos arbitrarios del cromosoma e invierte el segmento de 
+  genes entre dichos puntos:
+  \begin{align*}
+  \text{Antes:}     &\quad [1\ \textbf{2\ 3\ 4}\ 5\ 6] \\
+  \text{Después:}   &\quad [1\ \textbf{4\ 3\ 2}\ 5\ 6] \\
+  \end{align*}
+  \item \textbf{Insertion Mutation} selecciona un gen aleatoriamente y lo inserta en una posición también aleatoria:
+  \begin{align*}
+  \text{Antes:}     &\quad [1\ 2\ 3\ 4\ \textbf{5}\ 6] \\
+  \text{Después:}   &\quad [1\ \textbf{5}\ 2\ 3\ 4\ 6] \\
+  \end{align*}
+  \item \textbf{Partial Shuffle Mutation} itera sobre el cromosoma y utiliza un valor determinado como probabilidad 
+  de mutación para determinar si el gen debe ser seleccionado. En ese caso, se selecciona otro gen aleatoriamente e 
+  intercambian las posiciones:
+  \begin{align*}
+  \text{Antes de aplicar la mutación:}     &\quad [1\ 2\ 3\ 4\ 5\ 6] \\
+  \text{Después de la primera mutación:}   &\quad [\textbf{4}\ 2\ 3\ \textbf{1}\ 5\ 6] \\
+  \text{Después de la segunda mutación:}   &\quad [4\ \textbf{3}\ \textbf{2}\ 1\ 5\ 6] \\
+  \end{align*}
+\end{itemize}
+
+La decisión sobre qué operador de mutación escoger tampoco es para nada sencilla, teniendo en cuenta que existen más operadores
+diferentes. En \cite{abdoun2012} se lleva a cabo un análisis comparativo entre diferentes operadores de mutación: \textit{Swap},
+\textit{Inversion} y \ac{CIM} (similar a \textit{Inversion}, aunque divide el cromosoma en dos sectores, e invierte cada uno
+de ellos por separado). Los autores concluyen que RSM obtiene los mejores resultados, seguido muy de cerca por PSM. Ambos operadores 
+modifican únicamente un segmento del cromosoma, preservando mejor la estructura de la solución que el resto de operadores. 
+
+En \cite{bye2021} se realiza otro estudio, donde se comparan combinaciones de operadores de cruce y mutación. Los autores 
+utilizan PMX y OX como operadores de cruce, mientras que los operadores de mutación seleccionados son \textit{Swap}, CIM, RSM y
+PSM. Los resultados de este experimento muestran que la combinación OX-CIM ofrece el mejor rendimiento para las instancias 
+analizadas. No obstante, los propios autores señalan que estos resultados dependen de la configuración concreta del algoritmo 
+genético, y del conjunto de datos empleado.
+
+En \cite{deep2011} se lleva a cabo un experimento similar con seis operadores de mutación, entre los que se encuentran: 
+\textit{Inversion}, \textit{Swap}, \textit{Insertion}, \textit{Displacement} (similar a \textit{Insertion} pero selecciona un 
+segmento en lugar de un solo elemento), y dos propuestos por los autores, \textit{Inverted Exchange} (combinación de 
+\textit{Swap} e \textit{Inversion}), e \textit{Inverted Displacement} (combinación de \textit{Displacement} e \textit{Inversion}).
+Los resultados muestran que \textit{Inversion} es el mejor de los operadores clásicos, esto es, excluyendo los propuestos por los
+autores. Si también se consideran los propuestos por los autores, el ganador es \textit{Inverted Displacement}, el cual obtiene
+el mejor resultado en siete de las diez instancias, mientras que \textit{Inversion} gana en las otras tres.
+
+Teniendo en cuenta los estudios comparativos revisados, y el comportamiento observado de estos operadores, se va a 
+emplear \textbf{Inversion Mutation} como operador de mutación. Este operador obtiene un comportamiento más consistente en 
+diferentes instancias del TSP, mostrando un rendimiento consistente en diferentes estudios y conjuntos de instancias.
+
+\begin{figure}[H]
+  \centering 
+  \fbox{\includegraphics[width=0.8\linewidth]{inversion.png}}
+  \caption{Pasos del operador \textit{Inversion Mutation}.}
+  \label{fig:inversion}
+\end{figure}
+
+Resulta especialmente interesante observar que los tres estudios revisados utilizan Order Crossover como operador de cruce
+principal. Esta coincidencia aporta una mayor consistencia a la configuración adoptada en este trabajo, ya que las 
+decisiones tomadas respecto a los operadores de cruce y mutación están respaldadas por metodologías experimentales similares.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

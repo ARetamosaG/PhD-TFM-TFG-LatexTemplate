@@ -480,6 +480,58 @@ anterior a la nueva generación.
 \item En \cite{bye2021} se indica explícitamente una tasa de elitismo empleado de $0.20$, o $20\%$.
 \end{itemize}
 
+\subsection{Parámetros del algoritmo}
+\label{subsec:params}
+
+Además de los operadores descritos hasta el momento, el funcionamiento de un algoritmo genético depende de una serie de 
+parámetros que influyen directamente en su comportamiento. Estos parámetros determinan el equilibrio entre la exploración
+del espacio de búsqueda, la explotación de las mejores soluciones, y el tiempo de ejecución del algoritmo. Por tanto, una
+configuración adecuada es fundamental para obtener un buen rendimiento.
+
+Uno de los parámetros más importantes es el \textbf{tamaño de la población}, que indica el número de individuos presentes
+en cada generación. Una población reducida permite ejecutar el algoritmo más rápidamente, aunque puede disminuir la diversidad
+genética. Por otro lado, una población demasiado grande incrementa el coste computacional y no siempre supone una mejora en 
+la calidad de las soluciones. 
+
+Otro parámetro fundamental es la \textbf{probabilidad de cruce}, que establece la frecuencia con la que dos individuos
+intercambian información genética para generar nuevos descendientes. Generalmente, unos valores elevados favorecen la 
+combinación de soluciones, y permiten aprovechar mejor la información disponible en la población.
+
+Por otra parte, la \textbf{probabilidad de mutación} determina la frecuencia con la que se introducen modificaciones aleatorias
+en los cromosomas. Si este valor es demasiado bajo, la población puede perder diversidad y converger de forma prematura. 
+Por el contrario, una probabilidad excesivamente alta hace que la búsqueda se vuelva demasiado aleatoria, con lo cual se 
+dificulta la conservación de las mejores soluciones.
+
+Finalmente, el \textbf{número de generaciones} determina el tiempo durante el que evoluciona la población. Aumentar este 
+valor permite más oportunidades para mejorar las soluciones, aunque también incrementa el tiempo de ejecución. Además de este
+criterio, algunos algoritmos utilizan condiciones de parada adicionales, como la ausencia de mejoras durante varias 
+generaciones consecutivas.
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Parámetros de los algoritmos genéticos.}
+    \label{tab:ga_params}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Parámetro} & \textbf{Factor de influencia} \\
+            \hline
+            Tamaño de la población & Diversidad genética y coste computacional \\
+            \hline
+            Probabilidad de cruce & Combinación de información genética \\
+            \hline
+            Probabilidad de mutación & Diversidad y exploración \\
+            \hline
+            Número de generaciones & Tiempo de ejecución y calidad de la solución \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Los valores concretos para cada uno de estos parámetros dependen del problema considerado y de la configuración experimental.
+En este trabajo, su elección se realizará durante la fase de evaluación y \textit{benchmarking}, donde se analizará la 
+influencia de diferentes configuraciones sobre el rendimiento del algoritmo.
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

@@ -532,6 +532,95 @@ Los valores concretos para cada uno de estos parámetros dependen del problema c
 En este trabajo, su elección se realizará durante la fase de evaluación y \textit{benchmarking}, donde se analizará la 
 influencia de diferentes configuraciones sobre el rendimiento del algoritmo.
 
+\subsection{Ventajas y limitaciones}
+\label{subsec:ga_proscons}
+
+Tras explicar el funcionamiento de los algoritmos genéticos, conviene destacar sus principales ventajas y las limitaciones
+que presentan. Como ocurre con cualquier metaheurística, no existe un algoritmo universalmente superior para todos los 
+problemas, por lo que su rendimiento depende, en gran medida, de la configuración empleada y de las características de la 
+instancia evaluada.
+
+Una de las principales ventajas de los algoritmos genéticos es su capacidad para explorar regiones muy diferentes del
+espacio de búsqueda, gracias al uso de una población de soluciones, y reduciendo así la posibilidad de quedar atrapados 
+en óptimos locales. Además, se trata de una técnica muy flexible, ya que puede adaptarse con relativa facilidad a diferentes
+problemas, realizando cambios en la representación de las soluciones, o en los operadores genéticos.
+
+Sin embargo, los algoritmos genéticos también presentan algunas limitaciones. En primer lugar, su rendimiento depende de 
+un gran número de parámetros, discutidos en la sección anterior. Asimismo, una pérdida excesiva de diversidad genética 
+puede provocar una convergencia prematura hacia soluciones subóptimas. En el caso concreto del TSP, también es necesario
+diseñar operadores específicos que respeten el componente permutacional de los cromosomas, resultando en una implementación
+algo más compleja que en otros problemas de optimización.
+
+\subsection{Resumen}
+\label{subsec:ga_summary}
+
+En esta última sección se incluye una tabla resumen de los operadores y criterios establecidos para la futura implementación
+del algoritmo genético:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Operadores y criterios seleccionados para el algoritmo genético.}
+    \label{tab:ga_decisions}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Parámetro/Operador} & \textbf{Elección} \\
+            \hline
+            Representación de la solución & Permutación de ciudades \\
+            \hline
+            Inicialización de la población & Aleatoria \\
+            \hline
+            Operador de selección & Torneo \\
+            \hline
+            Operador de cruce & \textit{Order Crossover} (OX) \\
+            \hline
+            Operador de mutación & \textit{Inversion Mutation} \\
+            \hline
+            Criterio de reemplazo & Elitista \\
+            \hline
+            Criterio de parada & Nº de generaciones, invariabilidad en las soluciones, y convergencia \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+A continuación se incluye, además, un breve esquema, en forma de pseudocódigo, del funcionamiento completo del algoritmo:
+
+\vspace{1.5em}
+
+\begin{algorithm}[H]
+\caption{Pseudocódigo del algoritmo genético propuesto para el TSP}
+\label{alg:ga}
+\DontPrintSemicolon
+
+\KwData{Población inicial $P$, número máximo de generaciones $G_{max}$.}
+\KwResult{Mejor solución encontrada.}
+
+\Begin{
+
+Generar la población inicial\;
+
+Evaluar el \textit{fitness} de todos los individuos\;
+
+\For{$g \leftarrow 1$ \KwTo $G_{max}$}{
+
+    Seleccionar los progenitores mediante selección por torneo\;
+
+    Aplicar \textit{Order Crossover} con probabilidad $p_c$\;
+
+    Aplicar \textit{Inversion Mutation} con probabilidad $p_m$\;
+
+    Evaluar el \textit{fitness} de los descendientes\;
+
+    Aplicar reemplazo generacional con elitismo\;
+
+}
+
+Devolver el mejor individuo de la población\;
+
+}
+\end{algorithm}
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

@@ -441,6 +441,45 @@ Resulta especialmente interesante observar que los tres estudios revisados utili
 principal. Esta coincidencia aporta una mayor consistencia a la configuración adoptada en este trabajo, ya que las 
 decisiones tomadas respecto a los operadores de cruce y mutación están respaldadas por metodologías experimentales similares.
 
+\subsection{Criterio de reemplazo}
+\label{subsec:replacement}
+
+Una vez se han generado los descendientes mediante los operadores de selección, cruce y mutación, es necesario decidir los
+individuos que formarán la población de la siguiente generación. Este proceso recibe el nombre de reemplazo, y determina
+las soluciones que permanencen en la población, y las que son descartadas. La estrategia elegida influye en la velocidad 
+de convergencia del algoritmo y en el mantenimiento de la diversidad genética.
+
+Principalmente existen las siguientes dos estrategias:
+
+\begin{itemize}
+  \item \textbf{Reemplazo Generacional} (\textit{Generational Replacement}): se reemplaza la anterior población al completo.
+  Esta estragegia, aunque es el esquema más sencillo, puede causar que el mejor miembro de la población no consiga reproducirse
+  en la siguiente generación. Por tanto, se suele combinar con una estrategia elitista, donde el mejor cromosoma, o varios de 
+  los mejores, se copian a la siguiente generación. 
+  \item \textbf{Reemplazo Estacionario} (\textit{Steady-State Replacement}): se reemplazan unos pocos cromosomas en cada 
+  generación. Generalmente, los nuevos descendientes sustituyen a los individuos con peor calidad de la población. En la
+  práctica, se suelen reemplazar uno o dos cromosomas en cada generación \cite{tang1996}. 
+\end{itemize}
+
+Independientemente del método de reemplazo utilizado, es habitual la incorporación de una estrategia de elitismo. Consiste en
+copiar directamente uno o varios de los mejores individuos de la generación actual a la siguiente. De este modo, se garantiza
+que las mejores soluciones encontradas hasta el momento nunca se pierdan. Este componente elitista puede favorecer la rápida
+dominación de un supercromosoma sobre la población, pero generalmente mejora el rendimiento \cite{tang1996}.
+
+En este trabajo se va a emplear un criterio de reemplazo \textbf{generacional} combinado con \textbf{elitismo}. Esta elección
+permite mantener un algoritmo sencillo de implementar, y garantiza que la mejor solución permanezca en la población. Esta 
+configuración es la más habitual en la literatura, hasta el punto de que muchos trabajos la adoptan sin realizar una 
+justificación específica. 
+
+Esta elección también es coherente con los estudios revisados previamente: 
+
+\begin{itemize}
+\item En \cite{curkovic2025} se utiliza, precisamente, reemplazo generacional y elitismo.
+\item En \cite{abdoun2012} se emplea una estrategia elitista, que consiste en copiar el mejor cromosoma de la población 
+anterior a la nueva generación.
+\item En \cite{bye2021} se indica explícitamente una tasa de elitismo empleado de $0.20$, o $20\%$.
+\end{itemize}
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

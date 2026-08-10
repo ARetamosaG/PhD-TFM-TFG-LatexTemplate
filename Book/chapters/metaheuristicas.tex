@@ -634,7 +634,7 @@ Devolver el mejor individuo de la población\;
 La \ac{ACO} es otra de las metaheurísticas bioinspiradas más utilizadas en optimización combinatoria. Su funcionamiento se
 basa en el comportamiento de las colonias de hormigas, especialmente en la forma en la que estos insectos son capaces de 
 encontrar caminos eficientes entre su colonia y una fuente de alimento. La idea original fue propuesta por Marco Dorigo a
-principios de los años 90, como parte de su trabajo sobre sistemas de hormigas \cite{dorigo1996}.
+principios de los años 90, como parte de su trabajo sobre sistemas de hormigas \cite{dorigo1991}.
 
 El funcionamiento de ACO se basa en una colonia de hormigas artificiales que construyen diferentes soluciones de forma 
 iterativa. Durante este proceso, las hormigas depositan una sustancia, denominada feromona, sobre los caminos que recorren.
@@ -697,8 +697,38 @@ A diferencia de los algoritmos genéticos, esta representación no es un cromoso
 de cruce o mutación. En ACO, la ruta se construye de forma progresiva, seleccionando en cada paso la siguiente ciudad entre 
 aquellas que todavía no han sido visitadas.
 
-\subsection{Matriz de feromonas}
-\label{subsec:aco_fmatrix}
+\subsection{Feromona}
+\label{subsec:aco_pheromone}
+
+La información de feromona es uno de los elementos fundamentales de ACO, al permitir que las hormigas compartan información
+sobre las soluciones que han ido construyendo. En el caso del TSP, se asocia una cantidad de feromona a cada conexión entre
+dos ciudades. Esta cantidad se representa mediante $\tau_{ij}$, siendo $i$ y $j$ dos ciudades conectadas. De esta forma, 
+cada conexión mantiene información sobre su utilización durante el proceso de búsqueda.
+
+Inicialmente, las conexiones entre ciudades parten de unos valores determinados de feromona. A medida que las hormigas 
+construyen sus soluciones, las conexiones que forman parte de rutas de mejor calidad reciben una mayor cantidad de feromona. 
+Esto hace que dichas conexiones sean más atractivas para las hormigas de las siguientes iteraciones, permitiendo que la 
+información obtenida por una hormiga pueda influir en el comportamiento de las demás.
+
+Sin embargo, la feromona no se mantiene indefinidamente. Una parte se pierde progresivamente mediante un proceso llamado
+evaporación. Este mecanismo reduce la influencia de decisiones tomadas en iteraciones anteriores, y permite que la colonia
+siga explorando soluciones nuevas. Por tanto, el nivel de feromona de una conexión queda como un balance entre el depósito
+realizado por las hormigas, y la evaporación producida durante el proceso de búsqueda.
+
+La información de feromona se utiliza, posteriormente, en la construcción de soluciones nuevas. Cuando una hormiga se 
+encuentra en una determinada ciudad, debe seleccionar la siguiente ciudad que va a visitar. Esta elección se realiza
+mediante un mecanismo estocástico, en el que los valores de feromona asociados a las conexiones disponibles influyen
+directamente en la probabilidad de seleccionar cada una de ellas \cite{dorigo2006}.
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.55\linewidth]{phero_mech.png}}
+  \caption{Mecanismo estocástico para decidir la siguiente ciudad a visitar \cite{dorigo2006}.}
+  \label{fig:aco_phero_mech}
+\end{figure}
+
+Como se muestra la figura, las diferentes conexiones disponibles desde una ciudad presentan distintos niveles de feromona,
+que condicionan la elección de la siguiente ciudad.
 
 
 %%% Local Variables:

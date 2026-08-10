@@ -668,7 +668,7 @@ de los algoritmos de colonias de hormigas:
             \hline
             Evaporación & Reducción progresiva de la cantidad de feromona \\
             \hline
-            Información heurística & Preferencia basada en características del problema \\
+            Información heurística & Información basada en características del problema \\
             \hline
             Colonia & Conjunto de hormigas que construyen soluciones \\
             \hline
@@ -680,7 +680,7 @@ de los algoritmos de colonias de hormigas:
 \label{subsec:aco_rep}
 
 En ACO, la representación de una solución para el Problema del Viajante presenta la misma forma que en los algoritmos genéticos.
-Esto es, una permutación de ciudades. Por ejemplo, para un problema de cinco ciudades, una posible solución sería:
+Esto es, una permutación de las ciudades. Por ejemplo, para un problema de cinco ciudades, una posible solución sería:
 
 \begin{equation}
   \pi = (1, 4, 2, 5, 3)  
@@ -702,32 +702,32 @@ aquellas que todavía no han sido visitadas.
 
 La información de feromona es uno de los elementos fundamentales de ACO, al permitir que las hormigas compartan información
 sobre las soluciones que han ido construyendo. En el caso del TSP, se asocia una cantidad de feromona a cada conexión entre
-dos ciudades. Esta cantidad se representa mediante $\tau_{ij}$, siendo $i$ y $j$ dos ciudades conectadas. De esta forma, 
+dos ciudades. Esta cantidad se representa mediante $\tau_{ij}$, donde $i$ y $j$ son dos ciudades conectadas. De esta forma, 
 cada conexión mantiene información sobre su utilización durante el proceso de búsqueda.
 
 Inicialmente, las conexiones entre ciudades parten de unos valores determinados de feromona. A medida que las hormigas 
 construyen sus soluciones, las conexiones que forman parte de rutas de mejor calidad reciben una mayor cantidad de feromona. 
 Esto hace que dichas conexiones sean más atractivas para las hormigas de las siguientes iteraciones, permitiendo que la 
-información obtenida por una hormiga pueda influir en el comportamiento de las demás.
+información obtenida por una hormiga pueda influir en el comportamiento de las demás \cite{dorigo2006}.
 
 Sin embargo, la feromona no se mantiene indefinidamente. Una parte se pierde progresivamente mediante un proceso llamado
-evaporación. Este mecanismo reduce la influencia de decisiones tomadas en iteraciones anteriores, y permite que la colonia
+evaporación. Este mecanismo reduce la influencia de decisiones tomadas en iteraciones anteriores y permite que la colonia
 siga explorando soluciones nuevas. Por tanto, el nivel de feromona de una conexión queda como un balance entre el depósito
-realizado por las hormigas, y la evaporación producida durante el proceso de búsqueda.
+realizado por las hormigas, y la evaporación producida durante el proceso de búsqueda \cite{dorigo2006}.
 
 La información de feromona se utiliza, posteriormente, en la construcción de soluciones nuevas. Cuando una hormiga se 
 encuentra en una determinada ciudad, debe seleccionar la siguiente ciudad que va a visitar. Esta elección se realiza
 mediante un mecanismo estocástico, en el que los valores de feromona asociados a las conexiones disponibles influyen
-directamente en la probabilidad de seleccionar cada una de ellas \cite{dorigo2006}.
+en la probabilidad de seleccionar cada una de ellas \cite{dorigo2006}.
 
 \begin{figure}[H]
   \centering 
   {\includegraphics[width=0.55\linewidth]{phero_mech.png}}
-  \caption{Mecanismo estocástico para decidir la siguiente ciudad a visitar \cite{dorigo2006}.}
+  \caption{Ejemplo del mecanismo estocástico para seleccionar la siguiente ciudad \cite{dorigo2006}.}
   \label{fig:aco_phero_mech}
 \end{figure}
 
-Como se muestra la figura, las diferentes conexiones disponibles desde una ciudad presentan distintos niveles de feromona,
+Como se muestra en la figura, las diferentes conexiones disponibles desde una ciudad presentan distintos niveles de feromona,
 que condicionan la elección de la siguiente ciudad.
 
 

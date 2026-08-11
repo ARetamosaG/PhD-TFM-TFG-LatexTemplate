@@ -730,6 +730,36 @@ en la probabilidad de seleccionar cada una de ellas \cite{dorigo2006}.
 Como se muestra en la figura, las diferentes conexiones disponibles desde una ciudad presentan distintos niveles de feromona,
 que condicionan la elección de la siguiente ciudad.
 
+\subsection{Variantes}
+\label{subsec:aco_variants}
+
+Es importante destacar que ACO no se refiere a un único algoritmo, sino a un conjunto de algoritmos basados en el comportamiento
+colectivo de las hormigas. Desde la propuesta original de Marco Dorigo, se han desarrollado diferentes variantes que modifican,
+principalmente, la forma en la que se construyen las soluciones y se actualiza la información de feromona. 
+
+Entre las variantes más relevantes se encuentran las siguientes:
+
+\begin{itemize}
+  \item \textbf{\ac{AS}}: es el primer algoritmo ACO desarrollado. En este método, todas las hormigas construyen una solución
+  utilizando la información de feromona y la información heurística del problema. Al finalizar la construcción de las 
+  soluciones, la feromona se actualiza en función de las rutas obtenidas.
+  \item \textbf{\ac{ACS}}: introduce dos modificaciones importantes sobre el \textit{Ant  System}. 
+  \begin{itemize}
+    \item Una actualización local de la feromona durante la construcción de las soluciones, cuyo objetivo es diversificar el
+    espacio de búsqueda para las siguientes hormigas. Se reduce temporalmente la cantidad de pheromona de las conexiones 
+    recorridas para que las siguientes hormigas exploren rutas diferentes.
+    \item Una regla de decisión pseudoaleatoria para seleccionar la siguiente ciudad.
+  \end{itemize}
+  \item \textbf{\ac{MMAS}}: modifica principalmente el proceso de actualización de feromona mediante un límite inferior y un
+  límite superior para los valores que puede alcanzar. De esta forma, se evita que algunas conexiones acumulen cantidades
+  demasiado altas o bajas de feromona, y se intenta controlar la convergencia del algoritmo \cite{dorigo2006}. 
+\end{itemize}
+
+En este trabajo se va a utilizar \textbf{\textit{Ant System}} (AS) como variante de ACO. La elección se debe, principalmente,
+a que se trata de la propuesta original y mantiene de forma sencilla los fundamentos de la optimización por colonia de 
+hormigas. Además, su estructura permite estudiar de forma clara la influencia de la feromona, la información heurística y 
+la evaporación, sin la necesidad de añadir elementos o mecanismos de variantes más avanzadas.
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

@@ -760,6 +760,81 @@ a que se trata de la propuesta original y mantiene de forma sencilla los fundame
 hormigas. Además, su estructura permite estudiar de forma clara la influencia de la feromona, la información heurística y 
 la evaporación, sin la necesidad de añadir elementos o mecanismos de variantes más avanzadas.
 
+\subsection{Construcción de soluciones}
+\label{subsec:aco_sol_const}
+
+Una vez definida la representación de la solución y la información de feromona, se debe decidir cómo debe construir 
+cada hormiga una ruta completa. Para ello, parte de una ciudad inicial y selecciona progresivamente la siguiente, entre 
+aquellas que todavía no han sido visitadas. Este proceso continúa hasta que todas las ciudades han sido incluidas en la 
+ruta.
+
+La elección de la siguiente ciudad no se realiza de forma completamente determinista, ya que cada posible conexión tiene
+asociada una probabilidad de selección. Esta probabilidad depende de dos factores: la cantidad de feromona en la conexión
+y la distancia entre las ciudades. De esta forma, las conexiones con mayor cantidad de feromona y las que unen ciudades
+cercanas tienen, en general, una mayor probabilidad de ser escogidas.
+
+Para representar la preferencia por conexiones de menor distancia se utiliza la información heurística, definida como:
+
+\begin{equation}
+  \eta_{ij} = \frac{1}{d_{ij}}
+\end{equation}
+
+Donde $d_{ij}$ es la distancia entre las ciudades $i$ y $j$. Por tanto, cuanto menor sea la distancia $d_{ij}$, mayor
+será el valor de $\eta_{ij}$.
+
+La influencia de ambas fuentes de información se controla mediante dos parámetros. El parámetro $\alpha$ determina la 
+importancia de la feromona, mientras que $\beta$ determina la importancia de la información heurística. A partir de 
+estos parámetros, la probabilidad de que una hormiga $k$, situada en la ciudad $i$, seleccione la ciudad $j$ puede
+expresarse como:
+
+\begin{equation}
+  p_{ij}^{k} = \frac{\tau_{ij}^{\alpha}\eta_{ij}^{\beta}}
+  {\displaystyle\sum_{l\in N_i^k}\tau_{il}^{\alpha}\eta_{il}^{\beta}}
+\end{equation}
+
+Donde $l$ es una ciudad que todavía no ha sido visitada por la hormiga $k$, y $N_i^k$ representa el conjunto de ciudades 
+que todavía no han sido visitadas por la misma hormiga $k$ \cite{dorigo2006}. Así, las ciudades con una mejor combinación 
+de feromona e información heurística obtienen una mayor probabilidad de ser seleccionadas.
+
+Una vez seleccionada una ciudad, esta se incorpora a la ruta y deja de formar parte del conjunto de ciudades disponibles
+para esa hormiga. El proceso se repite hasta visitar todas las ciudades, momento en el que la hormiga vuelve a la 
+ciudad inicial y obtiene una solución completa para el TSP.
+
+\subsection{Actualización de feromonas}
+\label{subsec:aco_fupdate}
+
+Una vez que todas las hormigas han construido una solución durante una iteración, se actualizan los niveles de feromona
+de las conexiones utilizadas. En \textit{Ant System}, esta actualización se realiza en cada iteración, y tiene en cuenta
+la evaporación de la feromona existente junto al depósito realizado por las hormigas que han construido una solución en
+dicha iteración.
+
+La actualización de la feromona asociada a la conexión entre las ciudades $i$ y $j$ se define como:
+
+\begin{equation}
+\tau_{ij} \leftarrow (1-\rho) \cdot \tau_{ij} + \sum_{k=1}^{m}\Delta\tau_{ij}^{k}
+\end{equation}
+
+Donde $\rho$ es la tasa de evaporación, $m$ es el número de hormigas y $\Delta\tau_{ij}^{k}$ es la cantidad de feromona
+depositada por la hormiga $k$ sobre la conexión $(i, j)$. 
+
+Esta cantidad de feromona depositada depende de la longitud de la ruta construida por cada hormiga:
+
+\begin{equation}
+\Delta\tau_{ij}^{k} =
+\begin{cases}
+\frac{Q}{L_k} & \text{si la hormiga } k \text{ utiliza la conexión } (i,j)\\
+0 & \text{en caso contrario}
+\end{cases}
+\end{equation}
+
+Donde $Q$ es una constante y $L_k$ representa la longitud total de la ruta construida por la hormiga $k$ \cite{dorigo2006}.
+
+Por tanto, las hormigas que construyen rutas de menor longitud depositan una mayor cantidad de feromona sobre las
+conexiones que han utilizado. De esta forma, las soluciones buenas obtenidas en una iteración tienen mayor influencia 
+sobre las decisiones de las hormigas en las iteraciones posteriores. Mientras tanto, la evaporación reduce progresivamente
+la cantidad de feromona acumulada, proceso con el que se evita que la información de iteraciones anteriores domine 
+permanentemente el proceso de búsqueda.
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

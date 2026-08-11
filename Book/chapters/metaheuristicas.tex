@@ -835,6 +835,35 @@ sobre las decisiones de las hormigas en las iteraciones posteriores. Mientras ta
 la cantidad de feromona acumulada, proceso con el que se evita que la información de iteraciones anteriores domine 
 permanentemente el proceso de búsqueda.
 
+\subsection{Ventajas y limitaciones}
+\label{subsec:aco_proscons}
+
+Tras explicar el funcionamiento de la optimización por colonia de hormigas, conviene destacar sus ventajas y limitaciones. 
+
+Una de las principales ventajas de ACO es su capacidad para explorar diferentes regiones del espacio de búsqueda, mediante
+la construcción simultánea de múltiples soluciones. Además, el uso de la información de feromona permite aprovechar las
+soluciones obtenidas anteriormente, reforzando progresivamente las conexiones más prometedoras. Con este mecanismo, se 
+combina la explotación de la información acumulada durante el proceso, con la exploración de nuevas soluciones.
+
+Otra ventaja muy importante es su adaptación al Problema del Viajante. La estructura del algoritmo permite incorporar, de 
+forma natural, información específica del problema como la distancia entre ciudades, mediante la información heurística.
+Asimismo, la representación de las soluciones es sencilla, ya que cada hormiga construye una ruta válida sin necesidad de 
+utilizar operadores específicos como en los algoritmos genéticos.
+
+No obstante, ACO presenta también una serie de limitaciones. En primer lugar, su rendimiento depende de varios parámetros,
+como el número de hormigas, $\alpha$, $\beta$, $\rho$ y $Q$. Su configuración puede afectar notablemente al comportamiento
+del algoritmo, por lo que una elección inadecuada puede dificultar la exploración del espacio de búsqueda o retrasar la 
+convergencia.
+
+Además, una acumulación excesiva de feromona en determinadas conexiones puede provocar una convergencia prematura. De ser 
+así, las hormigas seguirían repetidamente soluciones muy similares, resultando en una reducción de la diversidad de la 
+búsqueda. Aunque la evaporación de la feromona ayuda a evitar este problema, no lo elimina completamente.
+
+Por último, el proceso de construir y evaluar diferentes soluciones en cada iteración puede suponer un elevado coste
+computacional, especialmente cuando aumenta el número de hormigas, de ciudades o de iteraciones.
+
+
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

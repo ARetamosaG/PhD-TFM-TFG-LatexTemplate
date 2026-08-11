@@ -862,7 +862,79 @@ búsqueda. Aunque la evaporación de la feromona ayuda a evitar este problema, n
 Por último, el proceso de construir y evaluar diferentes soluciones en cada iteración puede suponer un elevado coste
 computacional, especialmente cuando aumenta el número de hormigas, de ciudades o de iteraciones.
 
+\subsection{Resumen}
+\label{subsec:aco_summary}
 
+En esta última sección se incluye una tabla resumen de los principales criterios y parámetros establecidos para la futura
+implementación del algoritmo de colonia de hormigas:
+
+\begin{table}[ht]
+\renewcommand{\arraystretch}{1.3}
+\caption{Criterios y parámetros seleccionados para el algoritmo de colonia de hormigas.}
+\label{tab:aco_decisions}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Parámetro/Criterio} & \textbf{Elección} \\
+\hline
+Representación de la solución & Permutación de ciudades \\
+\hline
+Variante de ACO & \textit{Ant System} (AS) \\
+\hline
+Información heurística & Inversa de la distancia \\
+\hline
+Actualización de feromonas & Evaporación y depósito de todas las hormigas \\
+\hline
+Criterio de parada & Nº de iteraciones, invariabilidad en las soluciones, y convergencia \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+A continuación se incluye, además, un breve esquema, en forma de pseudocódigo, del funcionamiento completo del algoritmo:
+
+\vspace{1.5em}
+
+\begin{algorithm}[H]
+\caption{Pseudocódigo del algoritmo de colonia de hormigas propuesto para el TSP}
+\label{alg:aco}
+\DontPrintSemicolon
+
+\KwData{Matriz de distancias $D$, número de hormigas $m$, número máximo de iteraciones $G_{max}$.}
+\KwResult{Mejor solución encontrada.}
+
+\Begin{
+
+Inicializar los valores de feromona\;
+
+\For{$g \leftarrow 1$ \KwTo $G_{max}$}{
+
+\For{$k \leftarrow 1$ \KwTo $m$}{
+
+Construir una ruta mediante mecanismo estocástico de selección de la siguiente ciudad\;
+
+Evaluar la longitud de la ruta\;
+
+}
+
+Actualizar los niveles de feromona mediante evaporación y depósito\;
+
+Actualizar la mejor solución encontrada\;
+
+}
+
+Devolver la mejor solución encontrada\;
+
+}
+\end{algorithm}
+
+\newpage
+
+\section{Recocido simulado}
+\label{sec:sa}
+
+\subsection{Introducción}
+\label{subsec:sa_intro}
 
 
 %%% Local Variables:

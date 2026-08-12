@@ -936,6 +936,25 @@ Devolver la mejor solución encontrada\;
 \subsection{Introducción}
 \label{subsec:sa_intro}
 
+El \ac{SA} es una metaheurística basada en el proceso físico de enfriamiento de materiales. Su funcionamiento se inspira en
+el proceso de recocido, en el que un material se calienta hasta alcanzar una temperatura elevada, y posteriormente se enfría
+de forma controlada para obtener una estructura estable. La aplicación de esta idea a problemas de optimización fue desarrollada
+a principios de los años 80. Entre los primeros trabajos destacan el de Kirkpatrick, Gelatt y Vecchi en 1983 
+\cite{kirkpatrick1983}, quienes presentaron formalmente este enfoque, y el de Cerny en 1985 \cite{cerny1985}, que aplicó el 
+método específicamente al Problema del Viajante.
+
+El funcionamiento del recocido simulado parte de una solución candidata, a partir de la cual se generan nuevas soluciones
+mediante pequeñas modificaciones, denominadas soluciones vecinas. Si una nueva solución mejora la solución actual, se acepta
+directamente. Sin embargo, a diferencia de otros métodos de búsqueda local, el recocido simulado sí permite ocasionalmente
+soluciones de peor calidad. Esta caracerística permite escapar de óptimos locales y continuar explorando otras regiones del 
+espacio de búsqueda. La probabilidad de aceptar una solución peor depende de la temperatura actual del algoritmo, siendo mayor
+al principio y reduciéndose progresivamente durante el proceso de enfriamiento.
+
+En el contexto del Problema del Viajante, una solución representa una ruta completa entre las ciudades. A partir de ella
+se generan soluciones vecinas mediante pequeñas modificaciones de la secuencia de ciudades, como el intercambio o la inversión
+de determinados elementos. Durante las primeras etapas, la elevada temperatura permite aceptar soluciones peores con mayor
+frecuencia, con lo cual se favorece la exploración del espacio de búsqueda. A medida que la temperatura disminuye, el algoritmo
+se vuelve más selectivo y se centra, progresivamente, en mejorar la solución encontrada.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

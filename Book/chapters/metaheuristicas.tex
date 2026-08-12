@@ -956,6 +956,69 @@ de determinados elementos. Durante las primeras etapas, la elevada temperatura p
 frecuencia, con lo cual se favorece la exploración del espacio de búsqueda. A medida que la temperatura disminuye, el algoritmo
 se vuelve más selectivo y se centra, progresivamente, en mejorar la solución encontrada.
 
+\subsection{Conceptos básicos}
+\label{subsec:sa_concepts}
+
+En esta pequeña sección se incluyen y describen una serie de conceptos básicos y fundamentales para comprender el funcionamiento 
+del recocido simulado:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Conceptos fundamentales del recocido simulado.}
+    \label{tab:sa_concepts}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Concepto} & \textbf{Descripción en SA} \\
+            \hline
+            Solución actual & Solución utilizada como referencia en cada iteración \\
+            \hline
+            Solución vecina & Solución candidata generada a partir de la solución actual \\
+            \hline
+            Función de coste & Medida de la calidad de una solución \\
+            \hline
+            Temperatura & Parámetro que controla la probabilidad de aceptar soluciones peores \\
+            \hline
+            Enfriamiento & Reducción progresiva de la temperatura durante la búsqueda \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Representación de una solución}
+\label{subsec:sa_rep}
+
+En el recocido simulado, la solución se representa de la misma forma que en algoritmos genéticos y en optimización por 
+colonia de hormigas: mediante una permutación de ciudades. Por tanto, una solución como:
+
+\begin{equation}
+  \pi = (1, 4, 2, 5, 3)
+\end{equation}
+
+Representa el recorrido:
+
+\begin{equation}
+  1 \xrightarrow{} 4 \xrightarrow{} 2 \xrightarrow{} 5 \xrightarrow{} 3 \xrightarrow{} 1
+\end{equation}
+
+Sin embargo, existe una diferencia importante respecto a las metaheurísticas anteriores. Mientras que los algoritmos 
+genéticos trabajan con una población de soluciones, y ACO utiliza un conjunto de hormigas para construir diferentes
+soluciones en cada iteración, el recocido simulado trabaja con \textbf{una única solución en cada momento}.
+
+A partir de esta solución, se genera una nueva solución candidata mediante una pequeña modificación en la ruta. Esta
+nueva solución, denominada solución vecina, se compara con la solución actual y se decide si debe sustituirla. Por tanto,
+en lugar de mantener y evolucionar un conjunto de soluciones de forma simultánea, el algoritmo realiza una búsqueda
+progresiva a partir de una única ruta que se va modificando durante el proceso.
+
+En el caso del TSP, estas modificaciones deben mantener la validez de la permutación, como ocurría en GA. Por tanto,
+resulta necesario utilizar operadores de vecindad específicos que permitan modificar el orden de las ciudades sin 
+repetir ni omitir ninguna ciudad. 
+
+\subsection{Generación de soluciones vecinas}
+\label{subsec:sa_neighbour_sol_gen}
+
+
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

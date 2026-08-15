@@ -1017,7 +1017,34 @@ repetir ni omitir ninguna ciudad.
 \subsection{Generación de soluciones vecinas}
 \label{subsec:sa_neighbour_sol_gen}
 
+En cada iteración del recocido simulado, es necesario generar una nueva solución a partir de la actual. Esta nueva 
+solución recibe el nombre de solución vecina, y se obtiene mediante una modificación de la ruta. La estructura de 
+vecindad utilizada es una decisión importante, puesto que determina las regiones del espacio de búsqueda que pueden
+ explorarse.
 
+En el caso del TSP, existen diferentes movimientos que permiten generar soluciones vecinas manteniendo la validez de la
+ruta. Entre los más utilizados se encuentran:
+
+\begin{itemize}
+  \item \textbf{\textit{Inversion}}: selecciona dos posiciones e invierte el orden de las ciudades entre ellas.
+  \item \textbf{\textit{Insertion}}: extrae una ciudad de su posición actual y la inserta en una posición diferente.
+  \item \textbf{\textit{Swap}}: intercambia las posiciones de dos ciudades seleccionadas aleatoriamente.
+\end{itemize}
+
+Como se puede observar, la nomenclatura empleada es prácticamente idéntica a los operadores de mutación de los algoritmos 
+genéticos. No obstante, se debe tener en cuenta que en el caso del recocido simulado, estos movimientos no modifican
+cromosomas para generar descendientes, sino que definen la vecindad de la solución actual.
+
+En \cite{zhan2016} se lleva a cabo un análisis experimental entre estos tres operadores, utilizando también un cuarto operador 
+híbrido, cuyo funcionamiento consiste en generar una solución con cada uno de los tres operadores individuales y escoger 
+la mejor de ellas. Los resultados muestran que el operador híbrido obtiene los mejores resultados para las cuatro
+instancias evaluadas, seguido por el operador de inversión. Además, cuando utilizan el operador híbrido, observan que las 
+soluciones aceptadas en una de las instancias proceden, aproximadamente, en un 65\% de los casos de \textit{inversion}, un
+31\% de \textit{insertion} y un 4\% de \textit{swap}.
+
+Por tanto, en este trabajo se va a utilizar \textbf{\textit{inversion}} como operador de generación de soluciones vecinas.
+Esta elección permite aprovechar la eficacia mostrada por este operador en el estudio anterior, manteniendo al 
+mismo tiempo una implementación más sencilla que el operador híbrido.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

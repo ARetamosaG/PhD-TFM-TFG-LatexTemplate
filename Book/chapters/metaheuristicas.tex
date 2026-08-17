@@ -1115,6 +1115,114 @@ del recocido simulado. La justificación de esta decisión reside en dos motivos
 de recocido simulado \cite{nourani1998}, y su sencilla implementación, ya que la actualización de la temperatura únicamente 
 requiere aplicar el factor $\alpha$. Asimismo, se evita la lentitud asociada al esquema logarítmico.
 
+\subsection{Ventajas y limitaciones}
+\label{subsec:sa_proscons}
+
+Tras explicar el funcionamiento del recocido simulado, conviene destacar sus principales ventajas y las limitaciones que
+presenta. En este caso, una de sus características más importantes es que se trabaja con una única solución en cada momento,
+lo que permite mantener una estructura sencilla y utilizar una menor cantidad de memoria.
+
+Una de las principales ventajas del recocido simulado es su capacidad para escapar de óptimos locales. A diferencia de una
+búsqueda local tradicional, el algoritmo puede aceptar soluciones de peor calidad, especialmente durante las primeras etapas
+de su ejecución. Esto permite explorar diferentes regiones del espacio de búsqueda antes de centrarse progresivamente en las
+soluciones de mayor calidad. Además, su funcionamiento es relativamente sencillo y puede adaptarse a diferentes problemas
+mediante un mecanismo adecuado para generar soluciones vecinas.
+
+Sin embargo, el recocido simulado también presenta algunas limitaciones. En primer lugar, su rendimiento depende en gran
+medida de la configuración de la temperatura y del esquema de enfriamiento utilizado. Un enfriamiento demasiado rápido puede
+reducir la exploración y provocar una convergencia prematura, mientras que un enfriamiento demasiado lento puede aumentar
+notablemente el tiempo de ejecución.
+
+Asimismo, la calidad de las soluciones obtenidas depende del mecanismo utilizado para generar soluciones vecinas. En el
+caso del TSP, es necesario utilizar movimientos que mantengan la validez de la ruta y que permitan recorrer de forma adecuada
+el espacio de búsqueda. Una vecindad demasiado limitada puede dificultar la exploración, mientras que una demasiado amplia
+puede hacer que la búsqueda resulte menos eficiente.
+
+\subsection{Resumen}
+\label{subsec:sa_summary}
+
+En esta última sección se incluye una tabla resumen de los principales elementos y criterios establecidos para la futura
+implementación del algoritmo de recocido simulado:
+
+\begin{table}[ht]
+\renewcommand{\arraystretch}{1.3}
+\caption{Elementos y criterios seleccionados para el recocido simulado.}
+\label{tab:sa_decisions}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Parámetro/Operador} & \textbf{Elección} \\
+\hline
+Representación de la solución & Permutación de ciudades \\
+\hline
+Solución inicial & Ruta generada aleatoriamente \\
+\hline
+Generación de soluciones vecinas & \textit{Inversion} \\
+\hline
+Regla de aceptación & Función de Boltzmann \\
+\hline
+Esquema de enfriamiento & Exponencial/Geométrico \\
+\hline
+Criterio de parada & Nº de iteraciones, invariabilidad en las soluciones, y convergencia \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+A continuación se incluye, además, un breve esquema, en forma de pseudocódigo, del funcionamiento completo del algoritmo:
+
+\vspace{1.5em}
+
+\begin{algorithm}[H]
+\caption{Pseudocódigo del recocido simulado propuesto para el TSP}
+\label{alg:sa}
+\DontPrintSemicolon
+
+\KwData{Solución inicial $S$, temperatura inicial $T_0$, temperatura final $T_f$ y factor de enfriamiento $\alpha$.}
+\KwResult{Mejor solución encontrada.}
+
+\Begin{
+
+Generar la solución inicial $S$\;
+
+$S_{best} \longleftarrow S$\;
+
+$T \longleftarrow T_0$\;
+
+\While{$T > T_f$}{
+
+Generar una solución vecina $S'$ mediante \textit{Inversion}\;
+
+Evaluar el coste de $S'$ respecto a $S$\;
+
+\If{$S'$ mejora $S$}{
+    Aceptar $S'$ como solución actual\;
+}
+\Else{
+    Calcular la probabilidad de aceptación según la temperatura actual\;
+
+    Aceptar $S'$ con dicha probabilidad\;
+}
+
+Actualizar la mejor solución encontrada\;
+
+Reducir la temperatura mediante el esquema de enfriamiento\;
+
+}
+
+Devolver $S_{best}$\;
+
+}
+\end{algorithm}
+
+\newpage
+
+\section{Búsqueda tabú}
+\label{sec:ts}
+
+\subsection{Introducción}
+\label{subsec:ts_intro}
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

@@ -1081,6 +1081,40 @@ en la solución actual, permitiendo continuar la búsqueda desde una región dif
 el algoritmo puede escapar de óptimos locales durante las primeras etapas de búsqueda, cuando la temperatura es elevada
 \cite{peralta2015}.
 
+\subsection{Esquema de enfriamiento}
+\label{subsec:cooling_scheme}
+
+La temperatura utilizada en el recocido simulado no permanece constante durante la ejecución. Después de un determinado número
+de iteraciones, su valor se reduce mediante el denominado esquema de enfriamiento. El objetivo es reducir progresivamente la 
+probabilidad de aceptar soluciones peores, pasando de una fase inicial de mayor exploración a una fase final centrada en la 
+explotación de las soluciones con mejor calidad.
+
+Existen diferentes esquemas de enfriamiento, entre los que se encuentran los esquemas lineal, exponencial y logarítmico
+\cite{nourani1998} \cite{property2026}:
+
+\begin{itemize}
+  \item \textbf{Esquema lineal}: la temperatura se reduce de forma constante durante la ejecución del algoritmo.
+  \item \textbf{Esquema exponencial} o \textbf{geométrico}: la temperatura se reduce según un factor multiplicativo constante.
+  La fórmula utilizada es la siguiente:
+  \begin{equation}
+    T_{k+1} = \alpha \cdot T_k
+  \end{equation}
+  Donde $T_k$ es la temperatura en la iteración $k$, y $\alpha$ es la tasa o factor de enfriamiento, cuyo valor cumple 
+  $0 < \alpha < 1$. Un valor de $\alpha$ cercano a 1 produce un enfriamiento más lento, con lo que se  consigue mantener una
+  mayor probabilidad de aceptar soluciones peores durante más tiempo. Por el contrario, valores de $\alpha$ más pequeños 
+  implican una disminución más rápida de la temperatura, reduciendo antes la capacidad de exploración del algoritmo.
+  \item \textbf{Esquema logarítmico}: la temperatura se reduce de forma mucho más lenta que en los esquemas anteriores. Este
+  esquema presenta una importancia especial desde el punto de vista teórico, ya que puede conducir al mínimo global en el 
+  límite de tiempo infinito bajo ciertas condiciones. Sin embargo, su lentitud hace que resulte poco práctico para aplicaciones
+  reales \cite{nourani1998}.
+\end{itemize}
+
+La decisión sobre qué esquema utilizar es ciertamente importante, puesto que determina, en gran medida, el rendimiento del 
+algoritmo. En este trabajo se va a utilizar el esquema \textbf{exponencial} o \textbf{geométrico} como técnica de enfriamiento
+del recocido simulado. La justificación de esta decisión reside en dos motivos principales: por su amplio uso en algoritmos
+de recocido simulado \cite{nourani1998}, y su sencilla implementación, ya que la actualización de la temperatura únicamente 
+requiere aplicar el factor $\alpha$. Asimismo, se evita la lentitud asociada al esquema logarítmico.
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

@@ -1046,6 +1046,42 @@ Por tanto, en este trabajo se va a utilizar \textbf{\textit{inversion}} como ope
 Esta elección permite aprovechar la eficacia mostrada por este operador en el estudio anterior, manteniendo al 
 mismo tiempo una implementación más sencilla que el operador híbrido.
 
+\subsection{Regla de aceptación}
+\label{subsec:acceptance_rule}
+
+Una vez generada la solución vecina, el algoritmo debe decidir si esta solución va a sustituir a la actual. Esta decisión
+es una de las principales diferencias respecto a los algoritmos trdicionales de búsqueda local, debido a que no se aceptan 
+únicamente las soluciones que mejoran la actual.
+
+Si la solución vecina presenta un coste menor que la solución actual, se acepta directamente. En cambio, cuando la nueva 
+solución presenta un coste mayor, existe la posibilidad de aceptarla. Para determinar dicha posibilidad, se define la 
+diferencia de coste entre ambas soluciones como:
+
+\begin{equation}
+  \Delta E = E_{nueva} - E_{actual}  
+\end{equation}
+
+Cuando $\Delta E \leq 0$, la solución mejora o mantiene el coste actual, y por tanto se, acepta. Cuando $\Delta E > 0$,
+la solución es peor, y su aceptación depende de una probabilidad determinada por la temperatura del algoritmo.
+
+La probabilidad de aceptar una solución peor se define mediante la expresión:
+
+\begin{equation}
+  P(aceptar) = e^{-\Delta E / T}
+\end{equation}
+
+Siendo $T$ la temperatura, la cual controla la facilidad con la que se aceptan soluciones peores. Cuando la temperatura
+es alta, la probabilidad de aceptación es mayor, por lo que se permite la exploración de diferentes regiones del espacio
+de búsqueda. A medida que la temperatura disminuye, la aceptación de soluciones peores se vuelve menos probable, 
+haciendo que el algoritmo se centre en soluciones de mejor calidad.
+
+Para realizar esta decisión, se toma un valor aleatorio $r$ en el intervalo $[0, 1]$. Si la solución es peor, se acepta
+cuando $r < P(aceptar)$. En caso contrario, la solución se descarta. Cuando una solución peor es aceptada, pasa a convertirse
+en la solución actual, permitiendo continuar la búsqueda desde una región difernte del espacio de soluciones. De esta forma, 
+el algoritmo puede escapar de óptimos locales durante las primeras etapas de búsqueda, cuando la temperatura es elevada
+\cite{peralta2015}.
+
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

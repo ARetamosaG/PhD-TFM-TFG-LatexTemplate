@@ -1241,6 +1241,56 @@ disponibles y selecciona uno de los que no se encuentran restringidos por la lis
 permite continuar la búsqueda incluso si la solución actual se corresponde con un óptimo local, y se evita volver 
 inmediatamente a regiones que ya han sido exploradas.
 
+\subsection{Conceptos básicos}
+\label{subsec:ts_concepts}
+
+En esta pequeña sección se incluyen y describen una serie de conceptos básicos y fundamentales para comprender el funcionamiento 
+de la búsqueda tabú:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Conceptos fundamentales de la búsqueda tabú.}
+    \label{tab:ts_concepts}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Concepto} & \textbf{Descripción en TS} \\
+            \hline
+            Solución actual & Solución desde la que se generan los movimientos vecinos \\
+            \hline
+            Solución vecina & Solución obtenida mediante un movimiento sobre la solución actual \\
+            \hline
+            Movimiento & Modificación que transforma una solución en otra \\
+            \hline
+            Lista tabú & Estructura que almacena temporalmente movimientos prohibidos \\
+            \hline
+            Tenencia tabú & Número de iteraciones de un movimiento prohibido \\
+            \hline
+            Criterio de aspiración & Condición que permite aceptar un movimiento tabú \\
+            \hline
+            Mejor solución & Mejor solución encontrada durante toda la búsqueda \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Representación de una solución}
+\label{subsec:ts_rep}
+
+Al igual que en las metaheurísticas anteriores, la solución en el Problema del Viajante se representa mediante una 
+permutación de ciudades, tal y como se describe en la sección~\ref{sec:soluciones}. Por tanto, una solución como
+$\pi = (1,4,2,5,3)$ representa el recorrido $1 \xrightarrow{} 4 \xrightarrow{} 2 \xrightarrow{} 5 \xrightarrow{}
+3 \xrightarrow{} 1$. 
+
+Sin embargo, la búsqueda tabú trabaja con una única solución en cada momento. A partir de ella, se generan diferentes 
+soluciones vecinas mediante movimientos que modifican la ruta, y una de ellas pasa a convertirse en la nueva solución 
+actual. La mejor solución encontrada durante todo el proceso se mantiene de forma independiente, de manera que no se pierde
+aunque la búsqueda se desplace temporalmente hacia soluciones de peor calidad.
+
+Por tanto, en este caso la representación de la solución no introduce ninguna particularidad respecto a las metaheurísticas
+anteriores. La principal diferencia se encuentra en la forma en la que estas soluciones son exploradas y en el uso de mecanismos
+de memoria para guiar la búsqueda.
+
 
 
 

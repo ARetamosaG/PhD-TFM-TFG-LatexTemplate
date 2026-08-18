@@ -1223,6 +1223,27 @@ Devolver $S_{best}$\;
 \subsection{Introducción}
 \label{subsec:ts_intro}
 
+La \ac{TS} es una metaheurística basada en la búsqueda local, que incorpora mecanismos de memoria para evitar que el 
+proceso de optimización quede limitado a una única región del espacio de búsqueda. Su funcionamiento parte de una 
+solución candidata, y explora soluciones vecinas mediante pequeñas modificaciones. El concepto de búsqueda tabú fue
+introducido por el científico estadounidense Fred Glover a finales de los años 80 \cite{glover1986}, formalizado entre
+1989 y 1990 \cite{glover1989} \cite{glover1990}, y posteriormente desarrollado en diferentes trabajos sobre optimización
+en la década de los 90 \cite{cvijovic1995} \cite{glover1997}.
+
+El funcionamiento de la búsqueda tabú se basa en la selección iterativa de movimientos que transforman la solución actual
+en una solución vecina. Para evitar que el algoritmo vuelva inmediatamente sobre sus pasos, determinados movimientos
+se almacenan temporalmente en una estructura denominada \textbf{lista tabú}. Estos movimientos no pueden ser seleccionados
+durante un número de iteraciones, lo que favorece la exploración de regiones nuevas del espacio de búsqueda. 
+
+En el contexto del Problema del Viajante, cada solución representa una ruta completa entre las ciudades, y las soluciones 
+vecinas se obtienen mediante pequeñas modificaciones de dicha ruta. En cada iteración, el algoritmo evalúa los movimientos
+disponibles y selecciona uno de los que no se encuentran restringidos por la lista tabú. De esta forma, el uso de memoria 
+permite continuar la búsqueda incluso si la solución actual se corresponde con un óptimo local, y se evita volver 
+inmediatamente a regiones que ya han sido exploradas.
+
+
+
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

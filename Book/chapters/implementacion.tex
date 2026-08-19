@@ -1,0 +1,257 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Generic template for TFC/TFM/TFG/Tesis
+%
+% $Id: desarrollo.tex,v 1.4 2015/06/05 00:05:18 macias Exp $
+%
+% By:
+%  + Javier Macías-Guarasa.
+%    Departamento de Electrónica
+%    Universidad de Alcalá
+%  + Roberto Barra-Chicote.
+%    Departamento de Ingeniería Electrónica
+%    Universidad Politécnica de Madrid
+% 
+% Based on original sources by Roberto Barra, Manuel Ocaña, Jesús Nuevo, Pedro Revenga, Fernando Herránz and Noelia Hernández. Thanks a lot to all of them, and to the many anonymous contributors found (thanks to google) that provided help in setting all this up.
+%
+% See also the additionalContributors.txt file to check the name of additional contributors to this work.
+%
+% If you think you can add pieces of relevant/useful examples, improvements, please contact us at (macias@depeca.uah.es)
+%
+% You can freely use this template and please contribute with comments or suggestions!!!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Diseño e implementación}
+\label{cha:design}
+
+Este capítulo aborda el diseño e implementación de las técnicas metaheurísticas descritas para la resolución del Problema
+del Viajante. El objetivo es trasladar los conceptos estudiados a implementaciones funcionales que permitan comparar el 
+comportamiento de los diferentes algoritmos bajo unas condiciones comunes.
+
+\section{Entorno de desarrollo}
+\label{sec:dev_env}
+
+El desarrollo e implementación de los algoritmos se va a realizar mediante el lenguaje de programación \textbf{\textit{Python}}.
+Se ha escogido este lenguaje debido a su amplio uso en el ámbito de la computación científica y la optimización, así como a la 
+disponibilidad de librerías que facilitan el tratamiento de datos y la implmentación de los algoritmos estudiados.
+
+Los experimentos se van a ejecutar en un ordenador personal, cuyas principales características de \textit{hardware} y
+\textit{software} se incluyen en la tabla~\ref{tab:hw_sw}. La especificación del entorno permite establecer las condiciones
+bajo las que se han obtenido los resultados experimentales y facilita la reproducibilidad de las pruebas realizadas.
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Características y elementos \textit{hardware} y \textit{software} del entorno experimental.}
+    \label{tab:hw_sw}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Componente} & \textbf{Especificación}\\
+            \hline
+            Fabricante & HP \\
+            \hline
+            Procesador & Intel® Core™ i7-1065G7 CPU @ 1.30GHz  \\
+            \hline
+            GPU  & Intel® Iris® Plus Graphics \\
+            \hline
+            RAM & 16GB \\
+            \hline
+            Memoria & 1TB \\
+            \hline
+            Sistema operativo & Microsoft Windows 11 Home (64 bits)   \\
+            \hline
+            Lenguaje de programación & Python 3.13 \\
+            \hline
+            Entorno de desarrollo & \textit{Visual Studio Code} \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\section{TSPLIB}
+\label{sec:tsplib}
+
+Para evaluar el comportamiento de los algoritmos es necesario disponer de un conjunto de instancias de referencia, que permita
+realizar experimentos reproducibles y comparar los resultados obtenidos con otros trabajos. Para este propósito, se ha utilizado
+\textbf{TSPLIB}, una colección de instancias de problemas de optimización combinatoria ampliamente utilizada en el estudio del 
+Problema del Viajante, así como otros problemas relacionados \cite{tsplib}. Fue publicada en 1991, por el alemán Gerhald Reinelt
+\cite{reinelt1991} \cite{wikipedia2026}.
+
+La colección de instancias para el Problema del Viajante es accesible en \cite{tsp_dataset}. En ella se encuentra una lista de 
+instancias estandarizadas ordenadas por orden alfabético. El nombre para las instancias consta de una palabra y un número:
+\begin{itemize}
+  \item La \textbf{palabra} representa la inicial del autor que diseñó el problema, un acrónimo de la procedencia de los datos o
+  el tipo de problema real del que se extrajo.
+  \item El \textbf{número} indica el total de nodos o ciudades que componen la instancia.
+\end{itemize}
+Por ejemplo, en el caso de la instancia \texttt{berlin52}, se tiene que dicha instancia cuenta con 52 ubicaciones reales de la 
+ciudad de Berlín.
+
+Si se descarga una de estas instancias, por ejemplo \texttt{berlin52}, se obtiene un fichero \texttt{.gz}, que al descomprimirse,
+se obtiene el fichero en su formato \texttt{.tsp}. Este tipo de ficheros se puede abrir con cualquier editor de texto, ya sea el 
+bloc de notas o un entorno de desarrollo cualquiera.
+
+El fichero \texttt{berlin52.tsp} presenta el siguiente aspecto:
+\begin{figure}[htbp]
+  \centering
+\begin{verbatim}
+NAME: berlin52
+TYPE: TSP
+COMMENT: 52 locations in Berlin (Groetschel)
+DIMENSION: 52
+EDGE_WEIGHT_TYPE: EUC_2D
+NODE_COORD_SECTION
+1 565.0 575.0
+2 25.0 185.0
+3 345.0 750.0
+4 945.0 685.0
+5 845.0 655.0
+6 880.0 660.0
+7 25.0 230.0
+...
+50 595.0 360.0
+51 1340.0 725.0
+52 1740.0 245.0
+EOF
+\end{verbatim}
+  \caption{}
+  \label{fig:inst_info}
+\end{figure}
+
+Como se puede observar, cada instancia cuenta con los siguientes campos:
+\begin{itemize}
+  \item \textbf{NAME}: indica el nombre de la instancia, idéntico al del fichero.
+  \item \textbf{TYPE}: el tipo de problema de optimización al que se corresponde la instancia. En todos los casos de este 
+  trabajo será TSP.
+  \item \textbf{COMMENT}: incluye una pequeña frase opcional informando sobre la instancia. En este caso, nos confirma que las
+  52 localizaciones de la instancia pertenecen a la capital alemana.
+  \item \textbf{DIMENSION}: incluye la dimensión de la instancia, esto es, el número de nodos.
+  \item \textbf{EDGE\_WEIGHT\_TYPE}: indica cómo se determinan las instancias. En este caso, los nodos se presentan como \textbf{
+  coordenadas en un plano euclideano de dos dimensiones} (\texttt{EUC\_2D}). Otros valores posibles son \texttt{EXPLICIT} o 
+  \texttt{GEO}, entre otros.
+  \item \textbf{NODE\_COORD\_SECTION}: es la información más importante de la instancia, puesto que se trata de las \textbf{
+  coordenadas de cada una de las localizaciones}. En otras instancias, se incluyen los \textbf{pesos de las aristas} en su lugar.
+\end{itemize}
+
+Además de esta colección de instancias estandarizadas, TSPLIB también cuenta con una sección con los \textbf{resultados óptimos}
+para cada una de estas instancias. Se puede consultar en \cite{tsp_best}. La existencia de esta sección es crucial, puesto que 
+el conocimiento de la solución óptima es clave para calcular la proximidad de los óptimos propuestos por los algoritmos con el 
+óptimo global, y así establecer unas métricas de eficiencia.
+
+\section{TSPLIB95}
+\label{sec:tsplib95}
+
+Para conectar el uso del lenguaje Python y la colección de instancias TSPLIB, se va utilizar una librería de Python llamada
+\textbf{tsplib95}, desarrollada por Robert Grant. Se puede consultar su documentación en \cite{grant_tsplib95} y su código 
+fuente en \cite{grant_github}, al ser una librería \textit{open source}.
+
+Para instalar la librería, basta con ejecutar el siguiente comando en la terminal del \ac{IDE}:
+\begin{verbatim}
+  pip install tsplib95
+\end{verbatim}
+Una vez ejecutado, se puede consultar la versión de la librería, así como más información acerca de ella, con el comando:
+\begin{verbatim}
+  pip show tsplib95
+\end{verbatim}
+El resultado es el siguiente:
+\begin{verbatim}
+  Name: tsplib95
+  Version: 0.7.1
+  Summary: TSPLIB95 works with TSPLIB95 files.
+  Home-page: https://github.com/rhgrant10/tsplib95
+  Author: Robert Grant
+  Author-email: rhgrant10@gmail.com
+  License: Apache Software License 2.0
+  Location: C:\Users\<usuario>\AppData\Local\Programs\Python\Python313\Lib\
+    site-packages
+  Requires: Click, Deprecated, networkx, tabulate
+  Required-by:
+\end{verbatim}
+Se puede confirmar, además de la versión del \textit{software}, su autoría, licencia, y lugar de instalación en el sistema.
+
+\subsection{Uso de la librería}
+\label{subsec:lib_usage}
+
+Para comenzar con el uso de tsplib95, se debe cargar una primera instancia. Esto se realiza mediante la función \texttt{load()}.
+Por ejemplo, para cargar la instancia \texttt{berlin52}, se debe ejecutar:
+
+\begin{verbatim}
+  import tsplib95
+  problem = tsplib95.load("berlin52.tsp")
+\end{verbatim}
+
+Asumiendo que el fichero \texttt{berlin52.tsp} se encuentre en el mismo directorio que el \textit{script} ejecutor de Python.
+
+Una vez cargada la instancia, se pueden realizar una serie de operaciones para conocer más información de la instancia dentro 
+del entorno de desarrollo. Se puede cargar toda la información del problema mediante la orden:
+
+\begin{verbatim}
+  print(problem.render())
+\end{verbatim}
+
+Se obtiene la misma información de la figura~\ref{fig:inst_info}. Se pueden extraer algunos de estos campos de manera individual,
+como el nombre de la instancia:
+
+\begin{verbatim}
+  >>> print(problem.name)
+  berlin52
+\end{verbatim}
+
+El formato en el que se presentan las distancias:
+
+\begin{verbatim}
+>>> print(problem.edge_weight_type)  
+EUC_2D
+\end{verbatim}
+
+Una lista de los nodos de la instancia:
+
+\begin{verbatim}
+  >>> print(list(problem.get_nodes()))
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
+  22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+  41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]
+\end{verbatim}
+
+Se puede crear una objeto del tipo \texttt{networkx.Graph} a partir de la instancia:
+
+\begin{verbatim}
+  graph = problem.get_graph()
+\end{verbatim}
+
+A partir de este objeto, se puede obtener información de tipo grafo. Por ejemplo, información general sobre el propio grafo:
+
+\begin{verbatim}
+  >>> graph.graph
+  {'name': 'berlin52', 'comment': '52 locations in Berlin (Groetschel)', 
+  'type': 'TSP', 'dimension': 52, 'capacity': 0} 
+\end{verbatim}
+
+Su lista de nodos:
+
+\begin{verbatim}
+  >>> graph.nodes
+  NodeView((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 
+  37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52))
+\end{verbatim}
+
+También mediante sentencias \texttt{print}, se puede obtener información general:
+
+\begin{verbatim}
+  >>> print(graph)
+  Graph named 'berlin52' with 52 nodes and 1378 edges
+\end{verbatim}
+
+La lista de nodos:
+
+\begin{verbatim}
+  print(graph.nodes)
+\end{verbatim}
+
+Aunque esta orden da el mismo resultado que \texttt{print(list(problem.get\_nodes()))}, en forma de lista.
+
+%%% Local Variables:
+%%% TeX-master: "../book"
+%%% End:

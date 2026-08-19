@@ -1174,7 +1174,7 @@ A continuación se incluye, además, un breve esquema, en forma de pseudocódigo
 \vspace{1.5em}
 
 \begin{algorithm}[H]
-\caption{Pseudocódigo del recocido simulado propuesto para el TSP}
+\caption{Pseudocódigo del algoritmo de recocido simulado propuesto para el TSP}
 \label{alg:sa}
 \DontPrintSemicolon
 
@@ -1291,9 +1291,58 @@ Por tanto, en este caso la representación de la solución no introduce ninguna 
 anteriores. La principal diferencia se encuentra en la forma en la que estas soluciones son exploradas y en el uso de mecanismos
 de memoria para guiar la búsqueda.
 
+\subsection{Generación de soluciones vecinas}
+\label{subsec:ts_neighbour_sol_gen}
 
+Al igual que en el recocido simulado, la búsqueda tabú genera nuevas soluciones a partir de modificaciones aplicadas a la 
+solución actual. Estas modificaciones reciben el nombre de movimientos, y el conjunto de soluciones que pueden alcanzarse
+mediante un determinado movimiento define el vecindario de la solución \cite{basu2012}.
 
+En el caso del TSP, existen diferentes movimientos que permiten modificar una ruta manteniendo la validez de la
+permutación. Entre los más utilizados se encuentran los siguientes:
+\begin{itemize}
+  \item \textbf{\textit{Inversion}}, o \textbf{\textit{2-opt}}: invierte un segmento entre dos ciudades.
+  \item \textbf{\textit{Insertion}}, o \textbf{\textit{Vertex Insertion}}: extrae una ciudad de su posición y la inserta en
+  una diferente.
+  \item \textbf{\textit{Swap}}, o \textbf{\textit{Vertex Exchange}}: intercambia dos ciudades.
+\end{itemize}
 
+Aunque estos movimientos son idénticos a los descritos en la sección~\ref{subsec:sa_neighbour_sol_gen} del recocido simulado,
+es importante notar las posibles variaciones en la nomenclatura según la literatura. Además, otro detalle clave es que
+su utilización en búsqueda tabú presenta una diferencia importante respecto al recocido simulado. En este caso, los movimientos
+se utilizan para definir un conjunto de soluciones vecinas que pueden ser evaluadas en cada iteración.
+
+A partir de las soluciones generadas, la búsqueda tabú selecciona la mejor solución admisible del vecindario. Para ello, no
+solo se tiene en cuenta la calidad de cada solución, sino también si el movimiento utilizado se encuentra restringido por la
+lista tabú. Este mecanismo permite seleccionar incluso una solución peor que la actual, siempre que constituya la mejor 
+alternativa permitida en el vecindario.
+
+La elección del movimiento utilizado determina el tamaño del vecindario y, por tanto, el coste computacional de su
+exploración. En la literatura se observa una preferencia por movimientos relativamente sencillos, como \textit{Inversion},
+\textit{Insertion} y \textit{Swap}, debido a que permiten construir vecindarios de tamaño cuadrático respecto al número de
+ciudades \cite{basu2012}. Por tanto, en este trabajo se va a utilizar \textbf{\textit{Inversion}} o \textbf{\textit{2-opt}}
+denominado como operador de generación de soluciones vecinas del recocido simulado. Además de ser un movimiento habitual en
+el contexto del TSP, se mantiene una estructura de vecindad común entre ambas metaheurísticas y facilita la comparación de 
+sus resultados.
+
+\subsection{Selección del movimiento}
+\label{subsec:ts_move_selec}
+
+Una vez generado el vecindario de la solución actual, la búsqueda tabú debe determinar el movimiento que se va a aplicar
+para obtener la siguiente solución. Para ello, se evalúan las soluciones generadas y se selecciona la que presenta el mejor
+coste entre las alternativas admisibles. A diferencia del recocido simulado, donde una única solución vecina se evalúa 
+mediante una regla de aceptación, la búsqueda tabú considera un conjunto de soluciones vecinas de forma simultánea. Esto
+permite comparar diferentes movimientos antes de decidir el que se va a aplicar.
+
+En el caso del TSP, para cada movimiento se obtiene una nueva ruta y se calcula su coste. Las soluciones cuyo movimiento
+se encuentra restringido por la lista tabú no se consideran admisibles, salvo que se cumpla una determinada condición de
+aspiración. Entre las soluciones restantes, se selecciona la de menor coste. De esta forma, la búsqueda tabú no necesita que
+la nueva solución sea mejor que la solución actual para continuar la búsqueda. Si todas las soluciones vecinas admisibles 
+presentan un coste superior, se selecciona la mejor de ellas igualmente. Esto permite que el algoritmo abandone un óptimo 
+local y continúe explorando otras regiones del espacio de búsqueda.
+
+El movimiento seleccionado se aplica entonces a la solución actual, y la información correspondiente se actualiza para
+la siguiente iteración.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

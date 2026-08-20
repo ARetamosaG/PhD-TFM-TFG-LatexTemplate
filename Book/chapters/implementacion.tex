@@ -250,7 +250,122 @@ La lista de nodos:
   print(graph.nodes)
 \end{verbatim}
 
-Aunque esta orden da el mismo resultado que \texttt{print(list(problem.get\_nodes()))}, en forma de lista.
+Aunque esta orden da el mismo resultado que \texttt{print(list(problem.get\_nodes()))}, en forma de lista. También se puede
+obtener la lista de las coordenadas de los nodos:
+
+\begin{verbatim}
+  >>> problem.node_coords
+  {1: [565.0, 575.0], 2: [25.0, 185.0], 3: [345.0, 750.0], 
+  4: [945.0, 685.0], 5: [845.0, 655.0], 6: [880.0, 660.0], 
+  7: [25.0, 230.0], 8: [525.0, 1000.0], 9: [580.0, 1175.0], 
+  10: [650.0, 1130.0], 11: [1605.0, 620.0], 
+  ...
+  50: [595.0, 360.0], 51: [1340.0, 725.0], 52: [1740.0, 245.0]}
+\end{verbatim}
+
+Y la distancia entre dos nodos:
+
+\begin{verbatim}
+  >>> problem.get_weight(1, 2)
+  666
+\end{verbatim}
+
+No obstante, este valor depende del tipo de instancia y del método de cálculo de distancias especificado en el fichero
+\texttt{.tsp}. En el caso de \texttt{berlin52}, cuyo tipo de peso es \texttt{EUC\_2D}, la distancia se determina a partir
+de las coordenadas de los nodos.
+
+Todas estas funcionalidades que ofrece \textbf{tsplib95} permiten obtener, desde Python, todos los elementos necesarios
+para trabajar con instancias de TSPLIB sin necesidad de procesar manualmente el contenido de los ficheros \texttt{.tsp}.
+
+\subsection{Cálculo del coste de una ruta}
+\label{subsec:route_cost_calc}
+
+Una vez conocido el entorno de Python y la librería \textbf{tsplib95}, el próximo paso es desarrollar una pequeña función
+que nos permita calcular el coste de una ruta. Una sencilla implementación podría ser la siguiente:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{route_distance.png}}
+  \caption{Función para calcular el coste de una ruta.}
+  \label{fig:route_dist}
+\end{figure}
+
+Con esta función, si se le introduce un problema cualquiera, y una ruta que corresponda a dicho problema, se obtiene la 
+distancia total de esa ruta:
+
+\begin{verbatim}
+  >>> route = list(problem.get_nodes())
+  >>> print(route_distance(route, problem))
+  22205
+\end{verbatim}
+
+Se obtiene que, para una ruta en orden ascendente (desde el nodo 1 hasta el nodo 52), el coste de la ruta es $22205$.
+
+\section{Implementación de metaheurísticas}
+\label{sec:metah_imp}
+
+Una vez visto el lenguaje de programación, la colección de instancias estandarizadas, la librería de Python adaptada, y 
+tras realizar una serie de pequeñas pruebas, se puede comenzar con la implementación de las diferentes metaheurísticas.
+
+\subsection{Algoritmos genéticos}
+\label{subsec:ga_imp}
+
+Para realizar la implementación de los algoritmos genéticos, se va a replicar el mismo esquema teórico descrito en la 
+sección~\ref{subsec:gen_funct}.
+
+Para inicializar la población, se baraja la lista de nodos, y se seleccionan tantos individuos como determine el parámetro
+del tamaño de población:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{init_pop.png}}
+  \caption{Funciones para inicializar la población.}
+  \label{fig:init_pop}
+\end{figure}
+
+Por ejemplo, para una pequeña población de prueba con cinco individuos, se obtiene:
+
+\begin{verbatim}
+  >>> nodes = list(problem.get_nodes())
+  >>> pop = initialise_population(nodes, 5)
+  >>> for ind in pop:
+  >>>   print(ind)
+  [36, 37, 33, 50, 49, 11, 47, ..., 8, 22, 40, 13, 32, 3, 10]
+  [47, 18, 2, 21, 42, 14, 31, ..., 39, 11, 6, 12, 13, 52, 19]
+  [4, 11, 13, 28, 25, 7, 35, ..., 39, 38, 6, 27, 20, 18, 9]
+  [41, 23, 11, 45, 50, 40, 3, ..., 29, 47, 38, 43, 7, 25, 13]
+  [48, 29, 17, 38, 7, 51, 37, 1, ..., 8, 45, 34, 31, 50, 24, 13]
+\end{verbatim}
+
+Para evaluar la población, se hace uso de la función \texttt{route\_distance()} descrita en la 
+sección~\ref{subsec:route_cost_calc}, y se calcula su inversa para obtener la \textit{fitness}:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{fitness.png}}
+  \caption{Función \textit{fitness}.}
+  \label{fig:fitness}
+\end{figure}
+
+La ruta ordenada de \texttt{berlin52} da la siguiente \textit{fitness}:
+
+\begin{verbatim}
+  >>> nodes = list(problem.get_nodes())
+  >>> print(fitness(nodes, problem))
+  4.503490204908804e-05
+\end{verbatim}
+
+El resultado es un número extremadamente bajo, indicando el ínfimo valor de \textit{fitness} que presenta esta ruta.
+
+El operador de selección a implementar es \textbf{torneo}. Se seleccionan $k$ individuos aleatorios, y se determina el 
+ganador según su \textit{fitness}:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{tournament.png}}
+  \caption{Función del operador de selección torneo.}
+  \label{fig:tournament}
+\end{figure}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

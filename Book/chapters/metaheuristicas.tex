@@ -559,7 +559,7 @@ algo más compleja que en otros problemas de optimización.
 En esta última sección se incluye una tabla resumen de los operadores y criterios establecidos para la futura implementación
 del algoritmo genético:
 
-\begin{table}[ht]
+\begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \caption{Operadores y criterios seleccionados para el algoritmo genético.}
     \label{tab:ga_decisions}
@@ -868,7 +868,7 @@ computacional, especialmente cuando aumenta el número de hormigas, de ciudades 
 En esta última sección se incluye una tabla resumen de los principales criterios y parámetros establecidos para la futura
 implementación del algoritmo de colonia de hormigas:
 
-\begin{table}[ht]
+\begin{table}[H]
 \renewcommand{\arraystretch}{1.3}
 \caption{Criterios y parámetros seleccionados para el algoritmo de colonia de hormigas.}
 \label{tab:aco_decisions}
@@ -1144,7 +1144,7 @@ puede hacer que la búsqueda resulte menos eficiente.
 En esta última sección se incluye una tabla resumen de los principales elementos y criterios establecidos para la futura
 implementación del algoritmo de recocido simulado:
 
-\begin{table}[ht]
+\begin{table}[H]
 \renewcommand{\arraystretch}{1.3}
 \caption{Elementos y criterios seleccionados para el recocido simulado.}
 \label{tab:sa_decisions}
@@ -1343,6 +1343,154 @@ local y continúe explorando otras regiones del espacio de búsqueda.
 
 El movimiento seleccionado se aplica entonces a la solución actual, y la información correspondiente se actualiza para
 la siguiente iteración.
+
+\subsection{Lista tabú}
+\label{subsec:ts_tabu_list}
+
+La lista tabú es el mecanismo de memoria principal de la búsqueda tabú. Su objetivo es evitar que el algoritmo deshaga 
+inmediatamente los movimientos realizados en iteraciones anteriores y vuelva repetidamente a soluciones o regiones
+del espacio de búsqueda que ya han sido exploradas.
+
+En el contexto del TSP, la lista tabú puede almacenar temporalmente los movimientos realizados sobre la ruta. Por ejemplo,
+si en una iteración se aplica un movimiento \textit{2-opt} que modifica unas determinadas conexiones entre ciudades, dicho
+movimiento puede ser añadido a la lista tabú durante un número de iteraciones. Mientras permanezca en la lista, el movimiento
+se considera restringido y no puede ser seleccionado.
+
+El número de iteraciones durante las que un movimiento permanece en la lista se denomina \textit{tabu tenure} \cite{basu2012}.
+Una duración demasiado corta puede permitir que el algoritmo vuelva rápidamente sobre movimientos anteriores, reduciendo el
+efecto de la memoria. Por el contrario, una duración excesivamente larga puede restringir demasiado la búsqueda y dificultar 
+la exploración de algunas soluciones.
+
+\subsection{Criterio de aspiración}
+\label{subsec:ts_aspiration}
+
+Aunque un movimiento se encuentre incluido en la lista tabú, la búsqueda puede permitir su selección cuando se cumple una 
+determinada condición, denominada criterio de aspiración. Este mecanismo evita que las restricciones de la lista tabú
+impidan aceptar una solución especialmente prometedora.
+
+El criterio de aspiración más habitual consiste en permitir un movimiento tabú cuando la solución que genera mejora la
+mejor solución encontrada hasta ese momento. De esta forma, una solución que proporciona un nuevo mejor resultado puede ser
+aceptada aunque el movimiento utilizado se encuentre temporalmente restringido \cite{basu2012}.
+
+\subsection{Parámetros del algoritmo}
+\label{subsec:ts_params}
+
+El comportamiento de la búsqueda tabú depende de varios parámetros relacionados con el funcionamiento de la memoria y con
+la duración de la búsqueda. Mediante una configuración adecuada, se puede controlar el equilibrio entre la exploración de
+nuevas soluciones y la cantidad de restricciones impuestas durante el proceso.
+
+Uno de los parámetros principales es el \textbf{\textit{tabu tenure}}, que determina las iteraciones en las que se restringe
+un determinado  movimiento. Este valor controla la duración de las restricciones aplicadas durante la búsqueda.
+
+Otro parámetro que puede afectar al coste computacional es el \textbf{tamaño del vecindario}, que determina el número de
+movimientos que se evalúan en cada iteración. Evaluar un mayor número de movimientos permite disponer de más alternativas
+antes de seleccionar la siguiente solución, aunque también incrementa el coste de cada iteración.
+
+Por último, el \textbf{número máximo de iteraciones} establece el límite de ejecución del algoritmo. También puede utilizarse
+como condición adicional la ausencia de mejoras durante un determinado número de iteraciones, permitiendo finalizar la
+búsqueda cuando no se observa una evolución significativa de la mejor solución encontrada.
+
+\subsection{Ventajas y limitaciones}
+\label{subsec:ts_proscons}
+
+Tras explicar el funcionamiento de la búsqueda tabú, conviene destacar sus principales ventajas y limitaciones. Al igual
+que ocurre con las demás metaheurísticas estudiadas, su rendimiento depende de la configuración utilizada y de las
+características del problema sobre el que se aplica.
+
+Una de las principales ventajas de la búsqueda tabú es su capacidad para continuar la exploración incluso cuando la solución
+actual se encuentra en un óptimo local. El uso de la lista tabú evita volver de inmediato a movimientos anteriores, permitiendo
+dirigir la búsqueda hacia nuevas regiones del espacio de soluciones. Además, su estructura basada en movimientos locales
+se adapta fácilmente al TSP mediante operadores como \textit{2-opt}.
+
+Otra ventaja es que la búsqueda tabú no requiere que cada nueva solución sea mejor que la anterior. Al seleccionar la mejor
+solución admisible del vecindario, el algoritmo puede aceptar soluciones de peor calidad cuando estas permiten continuar
+la exploración. Esto proporciona una mayor flexibilidad que una búsqueda local convencional y reduce la dependencia de la
+solución inicial.
+
+Sin embargo, la búsqueda tabú también presenta algunas limitaciones. En primer lugar, su rendimiento depende de parámetros
+como el \textit{tabu tenure}, el tamaño del vecindario y el número de iteraciones. Una configuración inadecuada puede
+restringir excesivamente la búsqueda o, por el contrario, permitir que se repitan movimientos con demasiada frecuencia.
+
+Además, la evaluación de múltiples soluciones vecinas en cada iteración puede resultar costosa, especialmente cuando aumenta
+el número de ciudades. En el caso del TSP, un vecindario basado en movimientos como \textit{2-opt} puede contener un número
+cuadrático de soluciones, por lo que explorar el vecindario completo en cada iteración puede incrementar considerablemente
+el tiempo de ejecución.
+
+Por último, la búsqueda tabú puede depender de la estrategia utilizada para gestionar la memoria. Una lista tabú demasiado
+restrictiva puede impedir movimientos potencialmente útiles, mientras que una memoria insuficiente puede reducir la capacidad
+del algoritmo para evitar ciclos y explorar nuevas regiones.
+
+\subsection{Resumen}
+\label{subsec:ts_summary}
+
+En esta última sección se incluye una tabla resumen de los principales elementos y criterios establecidos para la futura
+implementación del algoritmo de búsqueda tabú:
+
+\begin{table}[H]
+  \renewcommand{\arraystretch}{1.3}
+  \caption{Operadores y criterios seleccionados para la búsqueda tabú.}
+  \label{tab:ts_decisions}
+  \begin{center}
+    \begin{tabular}{|c|c|}
+      \hline
+      \textbf{Parámetro/Operador} & \textbf{Elección} \\
+      \hline
+      Representación de la solución & Permutación de ciudades \\
+      \hline
+      Solución inicial & Aleatoria \\
+      \hline
+      Movimiento de vecindad & \textit{Inversion} (2-opt) \\
+      \hline
+      Selección del movimiento & Mejor solución admisible \\
+      \hline
+      Memoria tabú & Lista tabú \\
+      \hline
+      Criterio de aspiración & Mejora de la mejor solución global \\
+      \hline
+      Criterio de parada & Nº de iteraciones, invariabilidad en las soluciones, y convergencia \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+A continuación se incluye, además, un breve esquema, en forma de pseudocódigo, del funcionamiento completo del algoritmo:
+
+\vspace{1.5em}
+
+\begin{algorithm}[H]
+\caption{Pseudocódigo de la búsqueda tabú propuesta para el TSP}
+\label{alg:ts}
+\DontPrintSemicolon
+
+\KwData{Solución inicial $S$, número máximo de iteraciones $I_{max}$.}
+\KwResult{Mejor solución encontrada.}
+
+\Begin{
+
+Inicializar la lista tabú;
+
+Evaluar la solución inicial;
+
+Establecer la solución actual y la mejor solución encontrada;
+
+\For{$i \leftarrow 1$ \KwTo $I_{max}$}{
+
+Generar el vecindario mediante movimientos \textit{Inversion};
+
+Evaluar las soluciones vecinas;
+
+Seleccionar la mejor solución admisible;
+
+Actualizar la lista tabú;
+
+Actualizar la mejor solución encontrada si corresponde;
+
+}
+
+Devolver la mejor solución encontrada;
+
+}
+\end{algorithm}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

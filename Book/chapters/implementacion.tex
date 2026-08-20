@@ -34,7 +34,7 @@ comportamiento de los diferentes algoritmos bajo unas condiciones comunes.
 
 El desarrollo e implementación de los algoritmos se va a realizar mediante el lenguaje de programación \textbf{\textit{Python}}.
 Se ha escogido este lenguaje debido a su amplio uso en el ámbito de la computación científica y la optimización, así como a la 
-disponibilidad de librerías que facilitan el tratamiento de datos y la implmentación de los algoritmos estudiados.
+disponibilidad de librerías que facilitan el tratamiento de datos y la implementación de los algoritmos estudiados.
 
 Los experimentos se van a ejecutar en un ordenador personal, cuyas principales características de \textit{hardware} y
 \textit{software} se incluyen en la tabla~\ref{tab:hw_sw}. La especificación del entorno permite establecer las condiciones
@@ -57,7 +57,7 @@ bajo las que se han obtenido los resultados experimentales y facilita la reprodu
             \hline
             RAM & 16GB \\
             \hline
-            Memoria & 1TB \\
+            Almacenamiento & 1TB \\
             \hline
             Sistema operativo & Microsoft Windows 11 Home (64 bits)   \\
             \hline
@@ -75,14 +75,14 @@ bajo las que se han obtenido los resultados experimentales y facilita la reprodu
 Para evaluar el comportamiento de los algoritmos es necesario disponer de un conjunto de instancias de referencia, que permita
 realizar experimentos reproducibles y comparar los resultados obtenidos con otros trabajos. Para este propósito, se ha utilizado
 \textbf{TSPLIB}, una colección de instancias de problemas de optimización combinatoria ampliamente utilizada en el estudio del 
-Problema del Viajante, así como otros problemas relacionados \cite{tsplib}. Fue publicada en 1991, por el alemán Gerhald Reinelt
+Problema del Viajante, así como otros problemas relacionados \cite{tsplib}. Fue publicada en 1991, por el alemán Gerhard Reinelt
 \cite{reinelt1991} \cite{wikipedia2026}.
 
 La colección de instancias para el Problema del Viajante es accesible en \cite{tsp_dataset}. En ella se encuentra una lista de 
 instancias estandarizadas ordenadas por orden alfabético. El nombre para las instancias consta de una palabra y un número:
 \begin{itemize}
-  \item La \textbf{palabra} representa la inicial del autor que diseñó el problema, un acrónimo de la procedencia de los datos o
-  el tipo de problema real del que se extrajo.
+  \item La \textbf{palabra} representa, habitualmente, la inicial del autor que diseñó el problema, un acrónimo de la 
+  procedencia de los datos o el tipo de problema real del que se extrajo.
   \item El \textbf{número} indica el total de nodos o ciudades que componen la instancia.
 \end{itemize}
 Por ejemplo, en el caso de la instancia \texttt{berlin52}, se tiene que dicha instancia cuenta con 52 ubicaciones reales de la 
@@ -115,7 +115,7 @@ NODE_COORD_SECTION
 52 1740.0 245.0
 EOF
 \end{verbatim}
-  \caption{}
+  \caption{Contenido de la instancia \texttt{berlin52.tsp}.}
   \label{fig:inst_info}
 \end{figure}
 
@@ -127,7 +127,7 @@ Como se puede observar, cada instancia cuenta con los siguientes campos:
   \item \textbf{COMMENT}: incluye una pequeña frase opcional informando sobre la instancia. En este caso, nos confirma que las
   52 localizaciones de la instancia pertenecen a la capital alemana.
   \item \textbf{DIMENSION}: incluye la dimensión de la instancia, esto es, el número de nodos.
-  \item \textbf{EDGE\_WEIGHT\_TYPE}: indica cómo se determinan las instancias. En este caso, los nodos se presentan como \textbf{
+  \item \textbf{EDGE\_WEIGHT\_TYPE}: indica cómo se determinan las distancias. En este caso, los nodos se presentan como \textbf{
   coordenadas en un plano euclideano de dos dimensiones} (\texttt{EUC\_2D}). Otros valores posibles son \texttt{EXPLICIT} o 
   \texttt{GEO}, entre otros.
   \item \textbf{NODE\_COORD\_SECTION}: es la información más importante de la instancia, puesto que se trata de las \textbf{
@@ -142,7 +142,7 @@ el conocimiento de la solución óptima es clave para calcular la proximidad de 
 \section{TSPLIB95}
 \label{sec:tsplib95}
 
-Para conectar el uso del lenguaje Python y la colección de instancias TSPLIB, se va utilizar una librería de Python llamada
+Para conectar el uso del lenguaje Python y la colección de instancias TSPLIB, se va a utilizar una librería de Python llamada
 \textbf{tsplib95}, desarrollada por Robert Grant. Se puede consultar su documentación en \cite{grant_tsplib95} y su código 
 fuente en \cite{grant_github}, al ser una librería \textit{open source}.
 
@@ -209,12 +209,12 @@ Una lista de los nodos de la instancia:
 
 \begin{verbatim}
   >>> print(list(problem.get_nodes()))
-  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
-  22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-  41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+  21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
+  39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]
 \end{verbatim}
 
-Se puede crear una objeto del tipo \texttt{networkx.Graph} a partir de la instancia:
+Se puede crear un objeto del tipo \texttt{networkx.Graph} a partir de la instancia:
 
 \begin{verbatim}
   graph = problem.get_graph()

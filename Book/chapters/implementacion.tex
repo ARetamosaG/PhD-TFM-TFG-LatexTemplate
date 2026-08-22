@@ -367,6 +367,101 @@ ganador según su \textit{fitness}:
   \label{fig:tournament}
 \end{figure}
 
+Se puede continuar la ejecución de prueba empleando unos parámetros al azar. Si se escoge una pequeña población de cinco
+individuos nuevamente, y se realiza un torneo con $k=2$:
+
+\begin{verbatim}
+  >>> nodes = list(problem.get_nodes())      
+  >>> population = initialise_population(nodes, 5)
+  >>> print(tournament_selection(population, problem, 2))
+  [5, 24, 40, 14, 11, 44, 17, ..., 31, 4, 21, 29, 45, 8, 10]
+\end{verbatim}
+
+Se obtiene el individuo ganador.
+
+El operador de cruce a implementar es \textbf{\textit{Order Crossover}}. Se copia un segmento del primer progenitor y se 
+rellena el resto con nodos del segundo progenitor respetando su orden, y viceversa. En este caso, se requiere de una función
+auxiliar interna, \texttt{fill\_child()}, encargada de realizar el proceso de relleno del descendiente:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.85\linewidth]{ox_imp.png}}
+  \caption{Función del operador de cruce \textit{Order Crossover}.}
+  \label{fig:ox_imp}
+\end{figure}
+
+Tomando dos individuos aleatorios como progenitores, se puede ver el comportamiento del operador:
+
+\begin{verbatim}
+  >>> parent1 = create_individual(nodes)          
+  >>> parent2 = create_individual(nodes)
+  >>> print(parent1)
+  [15, 48, 1, 12, 11, 8, 22, 47, 25, 26, 2, 37, 52, 
+  9, 51, 42, 18, 49, 23, 33, 39, 27, 28, 29, 6, 21, 
+  50, 40, 43, 7, 4, 31, 35, 16, 24, 3, 46, 13, 45, 
+  36, 10, 19, 5, 20, 44, 14, 17, 38, 32, 30, 34, 41]
+  >>> print(parent2)
+  [36, 28, 26, 35, 7, 31, 13, 48, 6, 40, 39, 43, 3, 
+  21, 22, 45, 50, 4, 16, 38, 41, 17, 37, 18, 34, 42, 
+  46, 47, 5, 33, 23, 49, 44, 9, 51, 15, 52, 20, 11, 
+  24, 14, 1, 8, 29, 2, 10, 12, 19, 25, 32, 27, 30]
+  >>> child1, child2 = ox_crossover(parent1, parent2)
+  >>> print(child1)
+  [13, 48, 6, 40, 11, 8, 22, 47, 25, 26, 39, 43, 3, 
+  21, 45, 50, 4, 16, 38, 41, 17, 37, 18, 34, 42, 46, 
+  5, 33, 23, 49, 44, 9, 51, 15, 52, 20, 24, 14, 1, 
+  29, 2, 10, 12, 19, 32, 27, 30, 36, 28, 35, 7, 31]
+  >>> print(child2)
+  [22, 47, 25, 26, 7, 31, 13, 48, 6, 40, 2, 37, 52, 
+  9, 51, 42, 18, 49, 23, 33, 39, 27, 28, 29, 21, 50, 
+  43, 4, 35, 16, 24, 3, 46, 45, 36, 10, 19, 5, 20, 
+  44, 14, 17, 38, 32, 30, 34, 41, 15, 1, 12, 11, 8]
+\end{verbatim}
+
+Se pueden observar claramente los puntos de corte al comparar los progenitores con los descendientes. En este caso  
+concreto, los índices de corte seleccionados han sido el 4 y el 9. En el caso del primer progenitor, el segmento es
+$[11, 8, 22, 47, 25, 26]$, el cual se encuentra replicado en el primer descendiente. Para el segundo progenitor, el
+segmento es $[7, 31, 13, 48, 6, 40]$, que también se encuentra en el segundo descendiente.
+
+El operador de mutación a implementar es \textbf{\textit{Inversion Mutation}}. Se seleccionan dos puntos aleatorios,
+y se invierte el segmento comprendido entre dichos puntos:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{inversion_imp.png}}
+  \caption{Función del operador de mutación \textit{Inversion Mutation}.}
+  \label{fig:inv_imp}
+\end{figure}
+
+Un valor realista de probabilidad de mutación, por ejemplo $10\%$, tomaría varios intentos para mostrar resultados. Se
+puede fijar este valor a 1, para que \texttt{random.random()} siempre devuelva un número inferior y ver el comportamiento
+del operador:
+
+\begin{verbatim}
+  >>> parent = create_individual(nodes)          
+  >>> print(parent)
+  [31, 35, 30, 17, 14, 13, 39, 41, 37, 43, 23, 2, 33, 
+  3, 15, 51, 12, 49, 24, 26, 48, 18, 44, 38, 21, 1, 
+  20, 45, 4, 19, 6, 7, 5, 9, 50, 27, 42, 36, 10, 
+  11, 22, 47, 8, 25, 32, 28, 46, 29, 34, 52, 40, 16]
+  >>> print(inversion_mutation(parent, 0.1))
+  [31, 35, 30, 17, 14, 13, 39, 41, 37, 43, 23, 2, 33, 
+  3, 15, 51, 12, 49, 24, 26, 48, 18, 44, 38, 21, 1, 
+  20, 50, 9, 5, 7, 6, 19, 4, 45, 27, 42, 36, 10, 
+  11, 22, 47, 8, 25, 32, 28, 46, 29, 34, 52, 40, 16]
+\end{verbatim}
+
+En este caso, se puede ver que el segmento invertido del progenitor ha sido $[45, 4, 19, 6, 7, 5, 9, 50]$.
+
+Una vez implementados todos los operadores, se puede construir el algoritmo completo de la siguiente manera:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.7\linewidth]{ga_imp.png}}
+  \caption{Implementación del algoritmo genético.}
+  \label{fig:ga_imp}
+\end{figure}
+
 %%% Local Variables:
 %%% TeX-master: "../book"
 %%% End:

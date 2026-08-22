@@ -113,6 +113,17 @@
 \definecolor{gray45}{gray}{.45}
 
 
+%%%python
+% Definición de colores agradables y profesionales
+\definecolor{pybackground}{rgb}{0.97, 0.97, 0.98}  % Gris muy claro para el fondo
+\definecolor{pyaltbackground}{rgb}{0.93, 0.94, 0.96} % Tono ligeramente distinto para alternar
+\definecolor{pyframe}{rgb}{0.8, 0.8, 0.85}          % Gris sutil para el marco
+\definecolor{pykeyword}{rgb}{0.13, 0.47, 0.75}       % Azul corporativo para palabras clave
+\definecolor{pycomment}{rgb}{0.25, 0.50, 0.35}       % Verde apagado para comentarios
+\definecolor{pystring}{rgb}{0.75, 0.20, 0.20}       % Rojo/granate suave para strings
+%%%
+
+
 % To draw rectagles in tfm cover
 \usepackage{tikz}
 
@@ -412,6 +423,28 @@
   % ¿ and ¡ are not correctly displayed if inconsolata font is used
   % together with the lstlisting environment. Consider typing code in
   % external files and using \lstinputlisting to display them instead.
+}
+
+\lstdefinestyle{PythonStyle}{
+    language=Python,
+    backgroundcolor=\color{pybackground},
+    rulecolor=\color{pyframe},
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{pykeyword}\bfseries,
+    commentstyle=\color{pycomment}\itshape,
+    stringstyle=\color{pystring},
+    frame=trbl,                          
+    framesep=5pt,                        
+    tabsize=4,
+    showstringspaces=false,
+    numbers=left,                        
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    breaklines=true,                     
+    captionpos=b,
+    % --- MAGIA PARA ALTERNAR COLORES DE FONDO EN CADA LÍNEA ---
+    moredelim=**[is][\colorbox{pyaltbackground}]{\%\{}{\%\}}
 }
 
 \lstdefinestyle{console}

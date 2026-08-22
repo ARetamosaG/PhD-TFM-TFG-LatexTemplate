@@ -282,13 +282,25 @@ para trabajar con instancias de TSPLIB sin necesidad de procesar manualmente el 
 
 Una vez conocido el entorno de Python y la librería \textbf{tsplib95}, el próximo paso es desarrollar una pequeña función
 que nos permita calcular el coste de una ruta. Una sencilla implementación podría ser la siguiente:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def route_distance(route, problem):
 
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.7\linewidth]{route_distance.png}}
-  \caption{Función para calcular el coste de una ruta.}
-  \label{fig:route_dist}
-\end{figure}
+  # Inicializar la distancia total:
+  distance = 0
+
+  # Iterar sobre cada nodo de la ruta:
+  for i in range(len(route) - 1):
+
+      # Añadir la distancia entre el nodo actual y el próximo:
+      distance += problem.get_weight(route[i], route[i+1])
+
+  # Sumar la distancia del último nodo al origen:
+  distance += problem.get_weight(route[-1], route[0])
+
+  # Devolver el valor de la distancia total:
+  return distance
+\end{lstlisting}
 
 Con esta función, si se le introduce un problema cualquiera, y una ruta que corresponda a dicho problema, se obtiene la 
 distancia total de esa ruta:
@@ -315,13 +327,35 @@ sección~\ref{subsec:gen_funct}.
 
 Para inicializar la población, se baraja la lista de nodos, y se seleccionan tantos individuos como determine el parámetro
 del tamaño de población:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+import random
 
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.7\linewidth]{init_pop.png}}
-  \caption{Funciones para inicializar la población.}
-  \label{fig:init_pop}
-\end{figure}
+def create_individual(nodes):
+
+  # Copiar la lista de nodos:
+  individual = nodes.copy()
+
+  # Mezclar la lista de nodos:
+  random.shuffle(individual)
+
+  # Devolver la lista aleatoria:
+  return individual
+
+def initialise_population(nodes, population_size):
+
+  # Inicializar la lista de la población:
+  population = []
+
+  # Iterar según el tamaño establecido para la población:
+  for _ in range(population_size):
+
+      # Añadir un individuo (lista aleatoria de nodos):
+      population.append(create_individual(nodes))
+
+  # Devolver la población:
+  return population
+\end{lstlisting}
 
 Por ejemplo, para una pequeña población de prueba con cinco individuos, se obtiene:
 
@@ -339,13 +373,11 @@ Por ejemplo, para una pequeña población de prueba con cinco individuos, se obt
 
 Para evaluar la población, se hace uso de la función \texttt{route\_distance()} descrita en la 
 sección~\ref{subsec:route_cost_calc}, y se calcula su inversa para obtener la \textit{fitness}:
-
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.7\linewidth]{fitness.png}}
-  \caption{Función \textit{fitness}.}
-  \label{fig:fitness}
-\end{figure}
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def fitness(route, problem):
+  return 1.0 / route_distance(route, problem)
+\end{lstlisting}
 
 La ruta ordenada de \texttt{berlin52} da la siguiente \textit{fitness}:
 
@@ -359,13 +391,19 @@ El resultado es un número extremadamente bajo, indicando el ínfimo valor de \t
 
 El operador de selección a implementar es \textbf{torneo}. Se seleccionan $k$ individuos aleatorios, y se determina el 
 ganador según su \textit{fitness}:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def tournament_selection(population, problem, k=3):
 
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.7\linewidth]{tournament.png}}
-  \caption{Función del operador de selección torneo.}
-  \label{fig:tournament}
-\end{figure}
+  # Se seleccionan k individuos al azar:
+  tournament = random.sample(population, k)
+
+  # El ganador es el que tiene mayor fitness (menor distancia):
+  winner = max(tournament, key=lambda ind: fitness(ind, problem))
+
+  # Devolver el individuo ganador:
+  return winner
+\end{lstlisting}
 
 Se puede continuar la ejecución de prueba empleando unos parámetros al azar. Si se escoge una pequeña población de cinco
 individuos nuevamente, y se realiza un torneo con $k=2$:
@@ -382,13 +420,64 @@ Se obtiene el individuo ganador.
 El operador de cruce a implementar es \textbf{\textit{Order Crossover}}. Se copia un segmento del primer progenitor y se 
 rellena el resto con nodos del segundo progenitor respetando su orden, y viceversa. En este caso, se requiere de una función
 auxiliar interna, \texttt{fill\_child()}, encargada de realizar el proceso de relleno del descendiente:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def ox_crossover(parent1, parent2):
 
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.85\linewidth]{ox_imp.png}}
-  \caption{Función del operador de cruce \textit{Order Crossover}.}
-  \label{fig:ox_imp}
-\end{figure}
+  # Determinar la longitud del progenitor:
+  size = len(parent1)
+
+  # Inicializar los descendientes como 'listas vacías':
+  child1, child2 = [-1]*size, [-1]*size
+  
+  # Seleccionar y ordenar dos puntos de corte aleatorios:
+  point1, point2 = sorted(random.sample(range(size), 2))
+
+  # Copiar el segmento intermedio del progenitor1 al descendiente1:
+  child1[point1:point2+1] = parent1[point1:point2+1]
+
+  # Lo mismo para progenitor2 y descendiente2:
+  child2[point1:point2+1] = parent2[point1:point2+1]
+  
+  # Función auxiliar interna para rellenar el resto:
+  def fill_child(child, alt_parent):
+
+      # Inicializar el puntero de escritura después del segundo punto de corte: 
+      child_pointer = (point2 + 1) % size
+
+      # Iterar por cada nodo en el progenitor alternativo:
+      for node in alt_parent:
+
+          # Comprobar que la ciudad no esté presente ya en la copia del segmento
+          # inicial:
+          if node not in child:
+
+              # Si no está, se inserta en la posición actual:
+              child[child_pointer] = node
+
+              # Avanzar el puntero a la siguiente posición, volviendo a 0 si se
+              # supera la longitud máxima:
+              child_pointer = (child_pointer + 1) % size
+
+      # Devolver el descendiente relleno:
+      return child
+
+  # Extraer y reordenar el progenitor2 desde el siguiente nodo después del segundo 
+  # corte:
+  parent2_ordered = parent2[point2+1:] + parent2[:point2+1]
+
+  # Lo mismo para el progenitor1:
+  parent1_ordered = parent1[point2+1:] + parent1[:point2+1]
+
+  # Rellenar descendiente1 con progenitor2 reordenado:
+  child1 = fill_child(child1, parent2_ordered)
+
+  # Rellenar descendiente2 con progenitor1 reordenado:
+  child2 = fill_child(child2, parent1_ordered)
+
+  # Devolver los descendientes:
+  return child1, child2
+\end{lstlisting}
 
 Tomando dos individuos aleatorios como progenitores, se puede ver el comportamiento del operador:
 
@@ -425,13 +514,25 @@ segmento es $[7, 31, 13, 48, 6, 40]$, que también se encuentra en el segundo de
 
 El operador de mutación a implementar es \textbf{\textit{Inversion Mutation}}. Se seleccionan dos puntos aleatorios,
 y se invierte el segmento comprendido entre dichos puntos:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def inversion_mutation(individual, mutation_prob):
 
-\begin{figure}[H]
-  \centering 
-  {\includegraphics[width=0.7\linewidth]{inversion_imp.png}}
-  \caption{Función del operador de mutación \textit{Inversion Mutation}.}
-  \label{fig:inv_imp}
-\end{figure}
+  # Si se supera el umbral de mutación:
+  if random.random() < mutation_prob:
+
+      # Determinar la longitud del individuo:
+      size = len(individual)
+
+      # Seleccionar y ordenar dos puntos de corte aleatorios:
+      point1, point2 = sorted(random.sample(range(size), 2))
+
+      # Invertir el segmento:
+      individual[point1:point2+1] = reversed(individual[point1:point2+1])
+
+  # Devolver el individuo:
+  return individual
+\end{lstlisting}
 
 Un valor realista de probabilidad de mutación, por ejemplo $10\%$, tomaría varios intentos para mostrar resultados. Se
 puede fijar este valor a 1, para que \texttt{random.random()} siempre devuelva un número inferior y ver el comportamiento

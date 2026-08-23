@@ -555,98 +555,163 @@ del operador:
 En este caso, se puede ver que el segmento invertido del progenitor ha sido $[45, 4, 19, 6, 7, 5, 9, 50]$.
 
 Una vez implementados todos los operadores, se puede construir el algoritmo completo de la siguiente manera:
-
+\newline
 \begin{lstlisting}[style=PythonStyle]
 def genetic_algorithm(
-        problem,
-        pop_size,
-        num_generations,
-        crossover_prob,
-        mutation_prob,
-        num_elites):
+  problem,
+  pop_size,
+  num_generations,
+  crossover_prob,
+  mutation_prob,
+  num_elites):
     
-    # Obtener la lista de nodos del problema:
-    nodes = list(problem.get_nodes()) 
+  # Obtener la lista de nodos del problema:
+  nodes = list(problem.get_nodes()) 
 
-    # Generar la población inicial:
-    population = initialise_population(nodes, pop_size)
+  # Generar la población inicial:
+  population = initialise_population(nodes, pop_size)
 
-    # Inicializar la variable para la mejor ruta encontrada:
-    best_global_solution = None
+  # Inicializar la variable para la mejor ruta encontrada:
+  best_global_solution = None
 
-    # Inicializar la mejor distancia (infinito para garantizar su actualización):
-    best_global_distance = float('inf')
+  # Inicializar la mejor distancia (infinito para garantizar su actualización):
+  best_global_distance = float('inf')
 
-    # Iterar por cada generación:
-    for generation in range(num_generations):
+  # Iterar por cada generación:
+  for generation in range(num_generations):
 
-        # Ordenar la población actual de mayor a menor fitness:
-        population.sort(
-            key=lambda ind: fitness(ind, problem), reverse=True
-        )
+    # Ordenar la población actual de mayor a menor fitness:
+    population.sort(
+        key=lambda ind: fitness(ind, problem), reverse=True
+    )
 
-        # Calcular la distancia del mejor individuo de la generación actual:
-        current_distance = route_distance(population[0], problem)
+    # Calcular la distancia del mejor individuo de la generación actual:
+    current_distance = route_distance(population[0], problem)
 
-        # Si el mejor individuo de la iteración mejora la solución global:
-        if current_distance < best_global_distance:
+    # Si el mejor individuo de la iteración mejora la solución global:
+    if current_distance < best_global_distance:
 
-            # Actualizar la global:
-            best_global_distance = current_distance
+      # Actualizar la global:
+      best_global_distance = current_distance
 
-            # Guardar una copia de la solución:
-            best_global_solution = population[0].copy()
+      # Guardar una copia de la solución:
+      best_global_solution = population[0].copy()
 
-        # Inicializar la lista para la siguiente generación de soluciones:
-        new_population = []
+    # Inicializar la lista para la siguiente generación de soluciones:
+    new_population = []
 
-        # Aplicar elitismo al preservar los 'num_elites' mejores individuos de la 
-        # generación anterior:
-        for i in range(num_elites):
-            new_population.append(population[i].copy())
+    # Aplicar elitismo al preservar los 'num_elites' mejores individuos de la 
+    # generación anterior:
+    for i in range(num_elites):
+      new_population.append(population[i].copy())
 
-        # Aplicar reemplazo generacional hasta completar el tamaño de la población:
-        while len(new_population) < pop_size:
+    # Aplicar reemplazo generacional hasta completar el tamaño de la población:
+    while len(new_population) < pop_size:
 
-            # Seleccionar dos progenitores mediante torneo:
-            parent1 = tournament_selection(population, problem)
-            parent2 = tournament_selection(population, problem)
+      # Seleccionar dos progenitores mediante torneo:
+      parent1 = tournament_selection(population, problem)
+      parent2 = tournament_selection(population, problem)
 
-            # Evaluar probabilidad de cruce y ejecutar si procede:
-            if random.random() < crossover_prob:
-                child1, child2 = ox_crossover(parent1, parent2)
+      # Evaluar probabilidad de cruce y ejecutar si procede:
+      if random.random() < crossover_prob:
+        child1, child2 = ox_crossover(parent1, parent2)
 
-            # Si no se aplica cruce:
-            else:
+      # Si no se aplica cruce:
+      else:
 
-                # Los descendientes se copian:
-                child1, child2 = parent1.copy(), parent2.copy()
+        # Los descendientes se copian:
+        child1, child2 = parent1.copy(), parent2.copy()
 
-            # Aplicar el operador de mutación a cada descendiente:
-            child1 = inversion_mutation(child1, mutation_prob)
-            child2 = inversion_mutation(child2, mutation_prob)
+      # Aplicar el operador de mutación a cada descendiente:
+      child1 = inversion_mutation(child1, mutation_prob)
+      child2 = inversion_mutation(child2, mutation_prob)
 
-            # Insertar el primer descendiente en la nueva población:
-            new_population.append(child1)
+      # Insertar el primer descendiente en la nueva población:
+      new_population.append(child1)
 
-            # Si la población no está completa:
-            if len(new_population) < pop_size:
+      # Si la población no está completa:
+      if len(new_population) < pop_size:
 
-                # Añadir el segundo descendiente:
-                new_population.append(child2)
+        # Añadir el segundo descendiente:
+        new_population.append(child2)
 
-        # Sustituir la población antigua por la nueva:
-        population = new_population
+    # Sustituir la población antigua por la nueva:
+    population = new_population
 
-        # Se imprime la métrica de convergencia alcanzada en la iteración actual:
-        print(
-          f"Generación {generation + 1} | 
-          Mejor distancia: {best_global_distance:.2f}"
-        )
+    # Se imprime la métrica de convergencia alcanzada en la iteración actual:
+    print(
+      f"Generación {generation + 1} | 
+      Mejor distancia: {best_global_distance:.2f}"
+    )
 
-    # Devolver la mejor ruta y su distancia:
-    return best_global_solution, best_global_distance
+  # Devolver la mejor ruta y su distancia:
+  return best_global_solution, best_global_distance
 \end{lstlisting}
+
+Sin embargo, al realizar algunas pruebas experimentales para confirmar su correcto funcionamiento, se puede observar que
+la velocidad del algoritmo es considerablemente lenta, especialmente con las instancias más grandes. Este cuello de botella
+se produce por la función \texttt{get\_weight()} de tsplib95, que realiza varias comprobaciones al llamarse. Más allá de la
+implementación del algoritmo en sí, se pueden agilizar la ejecución realizando un precálculo de la matriz de distancias a un
+\textit{array} de \texttt{NumPy}. De este modo, las consultas pasan a ser accesos a memoria extremadamente rápidos.
+
+La matriz de distancias se puede obtener de la siguiente manera:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+import tsplib95
+import numpy as np
+
+def extract_distance_matrix(problem):
+
+  # Obtener la lista de nodos:
+  nodes = list(problem.get_nodes())
+
+  # Obtener la longitud de la lista (número de nodos):
+  num_nodes = len(nodes)
+  
+  # Mapear los índices a IDs para evitar errores fuera de rango:
+  node_to_idx = {node: i for i, node in enumerate(nodes)}
+  
+  # Inicializar una matriz vacía:
+  matrix = np.zeros((num_nodes, num_nodes), dtype=np.float64)
+  
+  # Rellenar la matriz con los pesos o distancias:
+  for i, u in enumerate(nodes):
+    for j, v in enumerate(nodes):
+      matrix[i, j] = problem.get_weight(u, v)
+          
+  # Devolver la matriz, los nodos y el mapeo:
+  return matrix, nodes, node_to_idx
+\end{lstlisting}
+
+Al contar con la matriz de distancias precalculadas, se acelera el cálculo del coste de la ruta:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def route_distance(route, distance_matrix):
+  # Crear los pares de nodos consecutivos, incluyendo la vuelta al inicio:
+  origins = route
+  destinations = np.roll(route, -1)
+  
+  # Sumar todas las distancias en una misma operación de NumPy:
+  return float(np.sum(distance_matrix[origins, destinations]))
+\end{lstlisting}
+
+El cálculo del \textit{fitness} es idéntico, aunque se debe adaptar la llamada a \texttt{route\_distance()} sustituyendo
+el parámetro \texttt{problem} por la matriz de distancias:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def fitness(route, dist_matrix):
+  return 1.0 / route_distance(route, dist_matrix)
+\end{lstlisting}
+
+Por último, en la selección por torneo también se debe susituir este parámetro.
+
+Una vez realizada esta serie de cambios para precalcular distancias, queda completa la implementación del algoritmo genético.
+
+\subsection{Optimización por colonia de hormigas}
+\label{subsec:aco_imp}
+
+
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

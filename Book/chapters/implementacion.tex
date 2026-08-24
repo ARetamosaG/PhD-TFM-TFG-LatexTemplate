@@ -323,7 +323,7 @@ tras realizar una serie de pequeñas pruebas, se puede comenzar con la implement
 \label{subsec:ga_imp}
 
 Para realizar la implementación de los algoritmos genéticos, se va a replicar el mismo esquema teórico descrito en la 
-sección~\ref{subsec:gen_funct}.
+sección~\ref{sec:ga}.
 
 Para inicializar la población, se baraja la lista de nodos, y se seleccionan tantos individuos como determine el parámetro
 del tamaño de población:
@@ -709,6 +709,276 @@ Una vez realizada esta serie de cambios para precalcular distancias, queda compl
 
 \subsection{Optimización por colonia de hormigas}
 \label{subsec:aco_imp}
+
+Para realizar la implementación del algoritmo de colonia de hormigas, se va a replicar el mismo esquema teórico descrito en la 
+sección~\ref{sec:aco}. Se va a reutilizar la función \texttt{extract\_distance\_matrix()}, ya que ACO también necesita consultar
+repetidamente las distancias entre las ciudades del problema.
+
+Una diferencia respecto a GA es que, en ACO, cada hormiga construye su ruta directamente sobre los índices de la matriz de 
+distancias. Por tanto, se puede reutilizar la función \texttt{route\_distance()} sin necesidad de modificarla. Únicamente es 
+necesario traducir los índices a los identificadores reales de las ciudades en el momento de mostrar la solución final.
+
+El primer elemento es la información heurística $\eta_{ij}$, definida como la inversa de la distancia entre ciudades:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def compute_heuristic_matrix(distance_matrix):
+ 
+  # Calcular la inversa de cada distancia, ignorando el aviso de división por
+  # cero en la diagonal:
+  with np.errstate(divide='ignore'):
+    heuristic = 1.0 / distance_matrix
+ 
+  # Anular la diagonal, ya que una ciudad no tiene conexión consigo misma:
+  np.fill_diagonal(heuristic, 0.0)
+ 
+  # Devolver la matriz de información heurística:
+  return heuristic
+\end{lstlisting}
+
+Retomando el ejemplo de la instancia \texttt{berlin52}, se puede ver la matriz resultado:
+\begin{verbatim}
+  >>> dm, _, _ = extract_distance_matrix(problem)
+  >>> hm = heuristic_matrix(dm)
+  >>> print(hm)
+  [[0.         0.0015015  0.00355872 ... 0.00460829 0.00126743 0.00081967]
+ [0.0015015  0.         0.00154083 ... 0.00167785 0.00070323 0.00058275]
+ [0.00355872 0.00154083 0.         ... 0.00215983 0.00100503 0.00067385]
+ ...
+ [0.00460829 0.00167785 0.00215983 ... 0.         0.00120482 0.00086881]
+ [0.00126743 0.00070323 0.00100503 ... 0.00120482 0.         0.0016    ]
+ [0.00081967 0.00058275 0.00067385 ... 0.00086881 0.0016     0.        ]]
+\end{verbatim}
+
+Se pueden consultar los resultados individuales de la matriz. Por ejemplo, para la conexión entre las ciudades 1 y 2, cuya
+distancia se obtenía anteriormente en la sección~\ref{subsec:lib_usage} mediante \texttt{problem.get\_weight(1, 2)}. El
+resultado era $666$, así que se puede esperar que el siguiente resultado sea equivalente a $1/666$:
+
+\begin{verbatim}
+  >>> print(hm[0,1])
+  0.0015015015015015015
+\end{verbatim}
+
+El siguiente elemento a implementar es la feromona $\tau_{ij}$. El valor inicial debe ser igual para todas las rutas, para
+evitar que ninguna parta con ventaja sobre el resto:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def initialise_pheromone(num_nodes, init_val=1.0):
+ 
+  # Crear una matriz cuadrada con el valor inicial:
+  pheromone = np.full((num_nodes, num_nodes), init_val, dtype=np.float64)
+ 
+  # Anular la diagonal, ya que una ciudad no tiene conexión consigo misma
+  np.fill_diagonal(pheromone, 0.0)
+ 
+  # Devolver la matriz de feromona inicializada:
+  return pheromone
+\end{lstlisting}
+
+Con la información heurística y la feromona, se puede realizar la construcción de la ruta por parte de una única hormiga.
+Dicha hormiga selecciona la siguiente ciudad de entre las que todavía no han sido visitadas, mediante el mecanismo estocástico
+definido por la expresión $\tau_{ij}^{\alpha}\eta_{ij}^{\beta}$:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+import random
+ 
+def build_ant_route(pheromone, heuristic, alpha, beta, num_nodes):
+ 
+  # Seleccionar una ciudad inicial aleatoria:
+  start = random.randrange(num_nodes)
+  route = [start]
+  visited = {start}
+  current = start
+ 
+  # Repetir hasta visitar todas las ciudades:
+  while len(route) < num_nodes:
+ 
+    # Obtener las ciudades que todavía no se han visitado:
+    candidates = [c for c in range(num_nodes) if c not in visited]
+ 
+    # Calcular el peso de cada conexión candidata:
+    weights = [
+        (pheromone[current, c] ** alpha) * (heuristic[current, c] ** beta)
+        for c in candidates
+    ]
+ 
+    # Seleccionar la siguiente ciudad de forma probabilística:
+    next_city = random.choices(candidates, weights=weights, k=1)[0]
+ 
+    # Anadir la ciudad seleccionada a la ruta:
+    route.append(next_city)
+    visited.add(next_city)
+    current = next_city
+ 
+  # Devolver la ruta completa como índices de la matriz de distancias:
+  return route
+\end{lstlisting}
+
+La función \texttt{random.choices()} implementa el mecanismo de $p_{ij}^{k}$, ya que la probabilidad de cada ciudad 
+candidata es proporcional a su peso frente a la suma de los pesos de todos los candidatos. 
+
+Se puede plantear un pequeño ejemplo con valores artificiales de feromona. Suponiendo el siguiente ejemplo, donde $\tau$
+es el valor de feromona, $d$ la distancia de la ciudad candidata a la actual, y $\eta$ la información heurística:
+\begin{verbatim}
+  candidato 6  (idx=5):  tau=2.300, d=326.0, eta=0.00307
+  candidato 13 (idx=12): tau=0.600, d=975.0, eta=0.00103
+  candidato 31 (idx=30): tau=1.000, d=146.0, eta=0.00685
+\end{verbatim}
+
+Utilizando los parámetros $\alpha = 1 $ y $\beta = 3$, las probabilidades resultantes quedan:
+\begin{verbatim}
+  p(1 -> 6)  = 0.1709
+  p(1 -> 13) = 0.0017
+  p(1 -> 31) = 0.8274
+\end{verbatim}
+
+Se puede observar lo siguiente: aunque la conexión a la ciudad 6 cuenta con el mayor valor de feromona, la ciudad 31 
+recibe una probabilidad considerablemente mayor, debido a que su distancia es mucho menor. Esto ocurre porque la información
+heurística está elevada al exponente $\beta = 3$, que amplifica notablemente las diferencias de distancia frente a las de 
+feromona. Con esto se muestra la importancia del equilibro entre explotación de la información heurística y explotación de la
+feromona.
+
+Aplicando la función de construcción de rutas sobre \texttt{berlin52}, con una inicialización de feromona uniforme, se obtiene:
+\begin{verbatim}
+  >>> num_nodes = len(list(problem.get_nodes()))
+  >>> dm, _, _ = extract_distance_matrix(problem)
+  >>> hm = heuristic_matrix(dm)
+  >>> pm = initialise_pheromone(num_nodes, init_val=1.0)
+  >>> route = build_ant_route(pm, hm, alpha=1.0, beta=3.0, 
+  num_nodes=num_nodes)
+  >>> print(route)
+  [46, 26, 35, 34, 33, 31, 48, 0, 21, 20, 30, 17, 19, 
+  49, 15, 38, 39, 37, 47, 5, 4, 23, 14, 3, 24, 36, 
+  42, 44, 18, 43, 9, 8, 25, 27, 12, 28, 11, 50, 45, 
+  13, 51, 7, 40, 2, 16, 1, 6, 41, 29, 22, 32, 10]
+\end{verbatim}
+
+Como todavía no existe información de feromona, la ruta obtenida depende principalmente de la información heurística, es
+decir, de las distancias entre ciudades. No obstante, cada ejecución aislada de esta prueba devolvuelve una ruta diferente,
+ya que la ciudad inicial se selecciona aleatoriamente.
+
+Una vez que una única hormiga es capaz de construir una ruta completa, se puede reproducir el proceso para toda la colonia:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def build_colony_routes(pheromone, heuristic, alpha, beta, num_nodes, num_ants):
+ 
+  # Construir una ruta por cada hormiga de la colonia:
+  return [
+      build_ant_route(pheromone, heuristic, alpha, beta, num_nodes)
+      for _ in range(num_ants)
+  ]
+\end{lstlisting}
+
+Para evaluar las rutas obtenidas, se puede reutilizar directamente la función \texttt(route\_distance()). Tomando un 
+pequeño ejemplo con una colonia de cinco hormigas, las rutas iniciales devuelven las siguientes distancias:
+\begin{verbatim}
+  >>> num_nodes = len(list(problem.get_nodes()))
+  >>> dm, _, _ = extract_distance_matrix(problem)
+  >>> hm = heuristic_matrix(dm)
+  >>> pm = initialise_pheromone(num_nodes, init_val=1.0)
+  >>> routes = build_colony_routes(pm, hm, alpha=1.0, beta=3.0, 
+  num_nodes=num_nodes, num_ants=5)
+  >>> distances = [route_distance(r, dm) for r in routes]
+  >>> print([f"{d:.2f}" for d in distances])
+  ['13576.00', '10690.00', '11210.00', '15073.00', '11720.00']
+\end{verbatim}
+
+Después de construir y evaluar las rutas de todas las hormigas en una iteración, se debe actualizar la matriz de 
+feromona. Esta actualización combina la evaporación de la feromona existente con el depósito realizado por la hormiga,
+en proporción a la calidad de su ruta:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def update_pheromone(pheromone, routes, distances, rho, Q):
+ 
+  # Aplicar la evaporación a toda la matriz de feromona:
+  pheromone *= (1 - rho)
+ 
+  # Recorrer cada hormiga junto con la longitud de su ruta:
+  for route, length in zip(routes, distances):
+ 
+    # Calcular la cantidad de feromona a depositar:
+    deposit = Q / length
+ 
+    # Depositar feromona sobre cada conexión utilizada por la ruta:
+    for i in range(len(route)):
+      a, b = route[i], route[(i + 1) % len(route)]
+      pheromone[a, b] += deposit
+      pheromone[b, a] += deposit
+ 
+  # Devolver la matriz de feromona actualizada:
+  return pheromone
+\end{lstlisting}
+
+Es importante destacar que el depósito se realiza en ambos sentidos de la conexión, ya que se está trabajando con el TSP
+simétrico. El término \texttt{Q / length} implementa directamente la expresión $\Delta\tau_{ij}^{k} = Q/L_k$, sumando dicha
+cantidad únicamente sobre las conexiones efectivamente utilizadas por cada hormiga.
+
+Una vez implementados todos los elementos anteriores, se puede construir el algoritmo de colonia de hormigas al completo de 
+la siguiente manera:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def ant_colony_algorithm(
+  distance_matrix,
+  num_ants,
+  num_iterations,
+  alpha,
+  beta,
+  rho,
+  Q):
+ 
+  # Obtener el numero de ciudades del problema:
+  num_nodes = distance_matrix.shape[0]
+ 
+  # Calcular la informacion heurística:
+  heuristic_matrix = compute_heuristic_matrix(distance_matrix)
+
+  # Inicializar la feromona:
+  pheromone_matrix = initialise_pheromone(num_nodes)
+ 
+  # Inicializar la variable para la mejor ruta encontrada:
+  best_global_solution = None
+ 
+  # Inicializar la mejor distancia (infinito para garantizar su actualización):
+  best_global_distance = float('inf')
+ 
+  # Iterar por cada iteración del algoritmo:
+  for iteration in range(num_iterations):
+ 
+    # Construir las rutas de todas las hormigas de la colonia:
+    routes = [
+        build_ant_route(pheromone_matrix, heuristic_matrix, alpha, beta, num_nodes)
+        for _ in range(num_ants)
+    ]
+ 
+    # Evaluar la longitud de cada ruta construida:
+    distances = [route_distance(route, distance_matrix) for route in routes]
+ 
+    # Determinar la mejor hormiga de la iteración actual:
+    best_iteration_idx = int(np.argmin(distances))
+ 
+    # Si la mejor hormiga de la iteración mejora la solución global:
+    if distances[best_iteration_idx] < best_global_distance:
+ 
+      # Actualizar la distancia global:
+      best_global_distance = distances[best_iteration_idx]
+ 
+      # Guardar una copia de la solución:
+      best_global_solution = routes[best_iteration_idx].copy()
+ 
+    # Actualizar los niveles de feromona mediante evaporación y depósito:
+    pheromone_matrix = update_pheromone(
+        pheromone_matrix, routes, distances, rho, Q
+    )
+ 
+    # Se imprime la metrica de convergencia alcanzada en la iteración actual:
+    print(
+      f"Iteración {iteration + 1} | "
+      f"Mejor distancia: {best_global_distance:.2f}"
+    )
+ 
+  # Devolver la mejor ruta y su distancia:
+  return best_global_solution, best_global_distance
+\end{lstlisting}
+
 
 
 

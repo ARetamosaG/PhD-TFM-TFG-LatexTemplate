@@ -738,7 +738,7 @@ def compute_heuristic_matrix(distance_matrix):
 Retomando el ejemplo de la instancia \texttt{berlin52}, se puede ver la matriz resultado:
 \begin{verbatim}
   >>> dm, _, _ = extract_distance_matrix(problem)
-  >>> hm = heuristic_matrix(dm)
+  >>> hm = compute_heuristic_matrix(dm)
   >>> print(hm)
   [[0.         0.0015015  0.00355872 ... 0.00460829 0.00126743 0.00081967]
  [0.0015015  0.         0.00154083 ... 0.00167785 0.00070323 0.00058275]
@@ -841,7 +841,7 @@ Aplicando la función de construcción de rutas sobre \texttt{berlin52}, con una
 \begin{verbatim}
   >>> num_nodes = len(list(problem.get_nodes()))
   >>> dm, _, _ = extract_distance_matrix(problem)
-  >>> hm = heuristic_matrix(dm)
+  >>> hm = compute_heuristic_matrix(dm)
   >>> pm = initialise_pheromone(num_nodes, init_val=1.0)
   >>> route = build_ant_route(pm, hm, alpha=1.0, beta=3.0, 
   num_nodes=num_nodes)
@@ -873,7 +873,7 @@ pequeño ejemplo con una colonia de cinco hormigas, las rutas iniciales devuelve
 \begin{verbatim}
   >>> num_nodes = len(list(problem.get_nodes()))
   >>> dm, _, _ = extract_distance_matrix(problem)
-  >>> hm = heuristic_matrix(dm)
+  >>> hm = compute_heuristic_matrix(dm)
   >>> pm = initialise_pheromone(num_nodes, init_val=1.0)
   >>> routes = build_colony_routes(pm, hm, alpha=1.0, beta=3.0, 
   num_nodes=num_nodes, num_ants=5)

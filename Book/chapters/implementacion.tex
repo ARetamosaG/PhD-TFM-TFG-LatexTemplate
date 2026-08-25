@@ -979,9 +979,153 @@ def ant_colony_algorithm(
   return best_global_solution, best_global_distance
 \end{lstlisting}
 
+\subsection{Recocido simulado}
+\label{subsec:sa_imp}
 
+Para realizar la implementación del algoritmo de recocido simuladp, se va a replicar el mismo esquema teórico descrito en la 
+sección~\ref{sec:sa}. De nuevo, se van a reutilizar algunas funciones descritas anteriormente, como 
+\texttt{extract\_distance\_matrix()} o \texttt{route\_distance()}. 
 
+Para generar la solución inicial, se puede reutilizar directamente la función \texttt{generate\_individual()} del algoritmo 
+genético, pasando la lista de índices como argumento:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  solution = create_individual(list(range(num_nodes)))
+\end{lstlisting}
 
+A continuación, se debe implementar el operador de generación de soluciones vecinas. Como se comentaba en la 
+sección~\ref{subsec:sa_neighbour_sol_gen}, se emplea \textit{Inversion}. A diferencia del operador de mutación de AG, esta
+operación no depende de ninguna probabilidad, ya que en cada iteración se genera siempre una única solución vecina:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+import random
+
+def generate_neighbour(solution):
+
+  # Realizar una copia de la solución actual:
+  neighbour = solution.copy()
+
+  # Determinar la longitud de la solución:
+  size = len(neighbour)
+
+  # Seleccionar y ordenar dos puntos de corte aleatorios:
+  point1, point2 = sorted(random.sample(range(size), 2))
+
+  # Invertir el segmento comprendido entre ambos puntos:
+  neighbour[point1:point2+1] = reversed(neighbour[point1:point2+1])
+
+  # Devolver la solución vecina:
+  return neighbour
+\end{lstlisting}
+
+Aplicando esta función sobre una solución inicial cualquiera de \texttt{berlin52}, se obtiene:
+\begin{verbatim}
+  >>> num_nodes = len(list(problem.get_nodes()))
+  >>> dm, _, _ = extract_distance_matrix(problem)
+  >>> sol = create_individual(list(range(num_nodes)))
+  >>> print(route_distance(sol, dm))
+  28867.0
+  >>> neigh = generate_neighbour(sol)
+  >>> print(route_distance(neigh, dm))
+  28421.0
+\end{verbatim}
+
+En este caso concreto, la solución vecina obtiene un coste menor que la solución original, por lo que sería aceptada de forma
+directa según la regla de aceptación $\Delta E = 28421 - 28867 = -446 \leq 0$. 
+
+Sin embargo, la solución vecina no siempre mejora a la actual. Cuando $\Delta E > 0$, la aceptación de la solución pasa a 
+depender de una probabilidad determinada por la temperatura actual, según la función de Boltzman: $P(aceptar) = e^{-\Delta 
+E/T}$. Para ver la inflluencia de la temperatura en esta probabilidad, se puede tomar un mismo valor de $\Delta E$, por 
+ejemplo $\Delta E = 50$, y comparar el resultado con dos temperaturas muy distintas:
+
+\begin{verbatim}
+  T = 100  ->  P(aceptar) = e^(-50/100) = e^(-0.5) = 0.6065
+  T = 1    ->  P(aceptar) = e^(-50/1)   = e^(-50)  = 1.93e-22
+\end{verbatim}
+
+Se puede observar que, para una temperatura elevada, la probabilidad de aceptar una solución con el mismo valor de $\Delta E$
+es relativamente alta, en torno al $60\%$. Sin embargo, cuando la temperatura se ha enfriado hasta $T=1$, la probabilidad se
+vuelve prácticamente nula. Esto confirma el comportamiento esperado: al principio de la ejecución, con temperaturas altas, el 
+algoritmo acepta soluciones peores con mayor facilidad, mientras que, a medida que se la temperatura desciende, se vuelve 
+más restrictivo.
+
+El esquema de enfriamento elegido es el exponencial o geométrico. Su implementación es directa, ya que únicamente consiste en
+multiplicar la temperatura actual por el factor $\alpha$ en cada iteración:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  temperature *= alpha
+\end{lstlisting}
+
+Con todos los elementos anteriores, se puede construir el algoritmo de recocido simulado al completo de la siguiente manera:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def simulated_annealing(distance_matrix, initial_temp, final_temp, alpha):
+
+  # Obtener el numero de ciudades del problema:
+  num_nodes = distance_matrix.shape[0]
+
+  # Generar la solución inicial:
+  current_solution = create_individual(list(range(num_nodes)))
+
+  # Evaluar su coste:
+  current_distance = route_distance(current_solution, distance_matrix)
+
+  # Inicializar la mejor solución encontrada con la solución inicial:
+  best_solution = current_solution.copy()
+  best_distance = current_distance
+
+  # Inicializar la temperatura al valor inicial:
+  temperature = initial_temp
+  iteration = 0
+
+  # Repetir mientras la temperatura no alcance el valor final:
+  while temperature > final_temp:
+
+    # Generar una solución vecina mediante inversión:
+    neighbour_solution = generate_neighbour(current_solution)
+    neighbour_distance = route_distance(neighbour_solution, distance_matrix)
+
+    # Calcular la diferencia de coste entre la vecina y la actual:
+    delta_e = neighbour_distance - current_distance
+
+    # Si la solución vecina mejora o iguala a la actual:
+    if delta_e <= 0:
+
+      # Se acepta directamente:
+      current_solution = neighbour_solution
+      current_distance = neighbour_distance
+
+    # Si la solucion vecina es peor:
+    else:
+
+      # Se acepta con una probabilidad dependiente de la temperatura:
+      acceptance_probability = math.exp(-delta_e / temperature)
+      if random.random() < acceptance_probability:
+        current_solution = neighbour_solution
+        current_distance = neighbour_distance
+
+    # Actualizar la mejor solución encontrada:
+    if current_distance < best_distance:
+      best_solution = current_solution.copy()
+      best_distance = current_distance
+
+    # Reducir la temperatura mediante el esquema de enfriamiento exponencial:
+    temperature *= alpha
+
+    iteration += 1
+
+    # Se imprime la métrica de convergencia alcanzada en la iteración actual:
+    print(
+      f"Iteración {iteration} | Temperatura: {temperature:.2f} | "
+      f"Mejor distancia: {best_distance:.2f}"
+    )
+
+  # Devolver la mejor ruta y su distancia:
+  return best_solution, best_distance
+\end{lstlisting}
+
+\subsection{Búsqueda tabú}
+\label{subsec:ts_imp}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

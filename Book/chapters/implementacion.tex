@@ -982,7 +982,7 @@ def ant_colony_algorithm(
 \subsection{Recocido simulado}
 \label{subsec:sa_imp}
 
-Para realizar la implementación del algoritmo de recocido simuladp, se va a replicar el mismo esquema teórico descrito en la 
+Para realizar la implementación del algoritmo de recocido simulado, se va a replicar el mismo esquema teórico descrito en la 
 sección~\ref{sec:sa}. De nuevo, se van a reutilizar algunas funciones descritas anteriormente, como 
 \texttt{extract\_distance\_matrix()} o \texttt{route\_distance()}. 
 
@@ -1126,6 +1126,174 @@ def simulated_annealing(distance_matrix, initial_temp, final_temp, alpha):
 
 \subsection{Búsqueda tabú}
 \label{subsec:ts_imp}
+
+Para realizar la implementación del algoritmo de búsqueda tabú, se va a replicar el mismo esquema teórico descrito en la 
+sección~\ref{sec:ts}. La solución se representa igual que en las metaheurísticas anteriores, mediante índices de la matriz
+de distancias, por lo que se pueden reutilizar directamente funciones como \texttt{extract\_distance\_matrix()}, 
+\texttt{route\_distance()} y \texttt{create\_individual()} para generar la solución inicial.
+
+A diferencia del recocido simulado, donde se genera una única solución vecina en cada iteración, la búsqueda tabú 
+necesita evaluar el vecindario de la solución actual al completo, para seleccionar la mejor alternativa posible. Teniendo
+en cuenta que el operador de vecindad es \textit{Inversion} (\textit{2-opt}), se implementa de la siguiente forma:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def generate_neighbourhood(solution):
+
+  # Determinar la longitud de la solución:
+  size = len(solution)
+  neighbourhood = []
+
+  # Recorrer todos los pares de puntos de corte posibles:
+  for i in range(size - 1):
+    for j in range(i + 1, size):
+
+      # Generar la solución vecina invirtiendo el segmento [i, j]:
+      neighbour = solution.copy()
+      neighbour[i:j+1] = reversed(neighbour[i:j+1])
+
+      # Identificar el movimiento mediante las dos ciudades del corte:
+      move = frozenset((solution[i], solution[j]))
+
+      neighbourhood.append((neighbour, move))
+
+  # Devolver la lista de pares (solución vecina, movimiento):
+  return neighbourhood
+\end{lstlisting}
+
+Cada movimiento se identifica mediante \texttt{frozenset} con las dos ciudades situadas en los puntos de corte, en lugar
+de las posiciones $i$ y $j$. De este modo, si más adelante estas mismas dos ciudades vuelven a aparecer como extremos de 
+un corte, aunque estén en posiciones distintas de la ruta, el movimiento se reconoce como el mismo a efectos de la lista 
+tabú. El uso de \texttt{frozenset} también permite que el orden de las ciudades no importe: $(a, b)$ y $(b, a)$ se tratan 
+como el mismo movimiento.
+
+Aplicando esta función sobre una solución de \texttt{berlin52}, se obtiene un vecindario de tamaño:
+
+\begin{verbatim}
+  >>> sol = create_individual(list(range(num_nodes)))
+  >>> neigh = generate_neighbourhood(sol)
+  >>> print(len(neigh))
+  1326
+\end{verbatim}
+
+El resultado se corresponde con $\binom{52}{2} = 1326$, el número de pares de puntos de corte posibles para una ruta de 
+52 ciudades.
+
+Una vez generado el vecindario, la búsqueda tabú tiene que evaluar cada solución candidata y seleccionar la mejor 
+alternativa posible, pero respetando la lista tabú y el criterio de aspiración. Para implementar la lista tabú, se utiliza 
+un diccionario que asocia cada movimiento con la iteración en la que deja de estar restringido. Con esta estructura, se 
+evita recorrer y decrementar manualmente un contador en cada movimiento almacenado, ya que simplemente se puede comparar la 
+iteración actual con el valor almacenado:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  is_tabu = tabu_list.get(move, -1) > iteration
+\end{lstlisting}
+
+Si el movimiento no está en el diccionario, \texttt{tabu\_list.get(move, -1)} devuelve $-1$, por lo que la comparación
+resulta falsa y el movimiento se considera libre.
+
+Sin embargo, un movimiento restringido puede aceptarse igualmente si la solución que genera mejora la mejor solución
+encontrada hasta el momento. Este criterio de aspiración se comprueba de la siguiente manera:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  aspirant = neighbour_distance < best_distance
+\end{lstlisting} 
+
+De este modo, un movimiento solo se descarta como candidato cuando está restringido y, además, no cumple el criterio de 
+aspiración:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  if is_tabu and not aspirant:
+    continue
+\end{lstlisting}
+
+Para comprender el funcionamiento de este criterio, se puede considerar el siguiente ejemplo. Suponiendo que en la 
+iteración 3 se aplica un movimiento sobre las ciudades $(12, 47)$, con un valor de \textit{tabu tenure} de $10$, por lo que
+este movimiento se restringe hasta la iteración 13:
+\begin{verbatim}
+  tabu_list[frozenset((12, 47))] = 13
+\end{verbatim}
+Si en la iteración 8, este mismo movimiento vuelve a generar una solución con un coste de 7600, y la mejor solución 
+global encontrada hasta el momento tiene un valor de 7620, el movimiento se admite igualmente, a pesar de seguir
+restringido ($8 < 13$), ya que $7600 < 7620$ cumple el criterio de aspiración.
+
+Por último, una vez seleccionado el movimiento a aplicar entre los candidatos admisibles, se añade a la lista tabú, y se
+mantiene restringido durante las próximas \textit{tabu tenure} iteraciones:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+  tabu_list[best_candidate_move] = iteration + tabu_tenure
+\end{lstlisting}
+
+Con todos los elementos anteriores, se puede construir el algoritmo de búsqueda tabú al completo de la siguiente manera:
+\newline
+\begin{lstlisting}[style=PythonStyle]
+def tabu_search(distance_matrix, num_iterations, tabu_tenure):
+
+  # Obtener el número de ciudades del problema:
+  num_nodes = distance_matrix.shape[0]
+
+  # Generar la solución inicial:
+  current_solution = create_individual(list(range(num_nodes)))
+
+  # Evaluar su coste:
+  current_distance = route_distance(current_solution, distance_matrix)
+
+  # Inicializar la mejor solución encontrada con la solución inicial:
+  best_solution = current_solution.copy()
+  best_distance = current_distance
+
+  # Inicializar la lista tabú como un diccionario vacío:
+  tabu_list = {}
+
+  # Iterar según el numero máximo de iteraciones establecido:
+  for iteration in range(num_iterations):
+
+    # Generar el vecindario completo de la solución actual:
+    neighbourhood = generate_neighbourhood(current_solution)
+
+    best_candidate = None
+    best_candidate_distance = float('inf')
+    best_candidate_move = None
+
+    # Evaluar cada solución vecina del vecindario:
+    for neighbour, move in neighbourhood:
+      neighbour_distance = route_distance(neighbour, distance_matrix)
+
+      # Comprobar si el movimiento está actualmente restringido:
+      is_tabu = tabu_list.get(move, -1) > iteration
+
+      # Criterio de aspiración -> se admite un movimiento tabu si mejora la
+      # mejor solucion encontrada hasta el momento:
+      aspirant = neighbour_distance < best_distance
+
+      # Si el movimiento está restringido y no cumple el criterio de aspiración,
+      # se descarta como candidato:
+      if is_tabu and not aspirant:
+        continue
+
+      # Actualizar el mejor candidato admisible encontrado hasta el momento:
+      if neighbour_distance < best_candidate_distance:
+        best_candidate = neighbour
+        best_candidate_distance = neighbour_distance
+        best_candidate_move = move
+
+    # Adoptar el mejor candidato admisible como nueva solución actual:
+    current_solution = best_candidate
+    current_distance = best_candidate_distance
+
+    # Restringir el movimiento aplicado durante tabu_tenure iteraciones:
+    tabu_list[best_candidate_move] = iteration + tabu_tenure
+
+    # Actualizar la mejor solución encontrada, si corresponde:
+    if current_distance < best_distance:
+      best_solution = current_solution.copy()
+      best_distance = current_distance
+
+    # Se imprime la métrica de convergencia alcanzada en la iteración actual:
+    print(f"Iteración {iteration + 1} | Mejor distancia: {best_distance:.2f}")
+
+  # Devolver la mejor ruta y su distancia:
+  return best_solution, best_distance
+\end{lstlisting}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

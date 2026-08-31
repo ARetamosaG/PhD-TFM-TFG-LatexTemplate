@@ -1331,8 +1331,9 @@ cuenta lo siguiente:
   serie de factores a la hora de realizar la comparación de esta metaheurística.
   \item En el recocido simulado, se utiliza un valor de $T=0.025$ sorprendentemente bajo. En esta escala, el algoritmo no 
   aceptaría una solución peor en prácticamente ninguna situación, anulando por completo el propósito de esta metaheurística.
-  Asimismo, tampoco se menciona el valor de temperatura final. Se deben buscar unos valor de $T_{inicial}$ y $T_{final}$ 
-  adecuados.
+  De la misma manera, el valor de $\alpha$ resulta empíricamente muy poco eficiente, ya que la temperatura cae demasiado 
+  rápido, y deja de aceptar soluciones peores casi de inmediato. Asimismo, tampoco se menciona el valor de temperatura final.
+  Se deben buscar unos valores para $T_{inicial}$, $T_{final}$ y $\alpha$ adecuados.
   \item En la búsqueda tabú, se asume que el término \textit{action list} es el equivalente a \textit{tabu tenure}.
 \end{itemize}
 
@@ -1347,8 +1348,14 @@ Para solventar estas cuestiones, se ha decidido lo siguiente:
     \item Probabilidad de mutación: $10\%$.
   \end{itemize}
   \item Para los valores de temperatura inicial y final, se van a utilizar los descritos en \cite{ye2013}:
-  \item Temperatura inicial: $10.000$.
-  \item Temperatura final: $0.1$.
+  \begin{itemize}
+    \item Temperatura inicial: $10.000$.
+    \item Temperatura final: $0.1$.
+  \end{itemize}
+  \item Para el valor de $\alpha$ en recocido simulado, se puede estirar más el valor máximo permitido ($0 < \alpha \leq 1$)
+  de $0.99$ a $0.999$ o $0.9999$, aunque $0.999$ es suficiente para notar una gran mejoría y unos resultados aceptables
+  en comparación al estudio de \cite{halim2019}.
+  
 \end{itemize}
 
 Existen otros tres parámetros que no se mencionan en esta parte de la fuente, pero sí se han incluido en la implementación de
@@ -1441,7 +1448,7 @@ tablas:
             \hline
             Temperatura final & 0.1 \\
             \hline
-            $\alpha$ & 0.99 \\
+            $\alpha$ & 0.999 \\
             \hline
         \end{tabular}
     \end{minipage}
@@ -1483,15 +1490,15 @@ resultado, el algoritmo finaliza.
 Sin embargo, surge ahora el problema de determinar el número de iteraciones sin mejora que señalan un estancamiento del
 algoritmo. Existen dos posibilidades para ello:
 \begin{itemize}
-  \item Seleccionar un valor \textbf{fijo}, por ejemplo: 150 iteraciones.
+  \item Seleccionar un valor \textbf{fijo}, por ejemplo: 100 iteraciones.
   \item Seleccionar un valor \textbf{proporcional al número de iteraciones}, por ejemplo: $\textit{num\_iter} / 10$ iteraciones.
 \end{itemize}
 
 Para simplificar esta decisión, y teniendo en cuenta la relativa velocidad de convergencia de las metaheurísticas observada en
 las diferentes pruebas con \texttt{berlin52}, se ha decidido lo siguiente: los algoritmos finalizarán su ejecución si no se
-consigue mejorar la mejor solución encontrada en \textbf{200 iteraciones}. Se cree que es un valor lo suficientemente permisivo
+consigue mejorar la mejor solución encontrada en \textbf{25 iteraciones}. Se cree que es un valor lo suficientemente permisivo
 como para permitir la posibilidad de mejorar progresivamente a lo largo de la ejecución, y a la vez se limita la posibilidad de 
-que un algoritmo permanezca estancado durante demasiado tiempo, añadiendo tiempo de ejecución ``muerto'' a la estadística final.
+que un algoritmo permanezca estancado durante demasiado tiempo, añadiendo tiempo de ejecución ``muerto'' a la estadística final. 
 
 En la implementación, este valor de estancamiento se ha denominado \texttt{patience}, y se introduce como un argumento más a 
 cada uno de los algoritmos. El criterio de parada se implementa de la siguiente manera: en primer lugar, se inicializa a cero un
@@ -1531,10 +1538,17 @@ Al final de la iteración, y después de imprimir la métrica de convergencia, s
 Para cerrar este capítulo de implementación, se va a explicar el experimento a realizar y cuyos resultados se van a mostrar
 y discutir en la siguiente sección del presente trabajo.
 
-Se va a replicar el diseño experimental de \cite{halim2019}, evaluando las cuatro metaheurísticas sobre las mismas 15 
-instancias de TSPLIB empleadas en dicho estudio. No obstante, debido a que la implementación desarrollada en este trabajo
-resulta notablemente más eficiente, se aumenta el número de repeticiones por instancia de 5 a 30, para dar mayor robustez
-estadística a las comparaciones posteriores.
+Se va a replicar un diseño experimental similar al de \cite{halim2019}, donde se van a evaluar las cuatro metaheurísticas 
+descritas en este trabajo sobre una serie de instancias de TSPLIB. Para evitar demasiadas horas de cómputo, se ha decidido
+escoger seis instancias, distribuidas en diferentes categorías respecto a su tamaño:
+\begin{itemize}
+  \item Instancias pequeñas, donde $num\_nodos < 100$: \texttt{berlin52} y \texttt{eil51}.
+  \item Instancias de tamaño mediano, donde $100 < num\_nodos < 150$: \texttt{kroA100} y \texttt{eil101}.
+  \item Instancias grandes, donde $num\_nodos > 150$: \texttt{rat195} y \texttt{d198}.
+\end{itemize}
+
+
+
 
 %%% Local Variables:
 %%% TeX-master: "../book"

@@ -91,6 +91,118 @@ Mediante un programa diferente de Python, se puede recoger la información de \t
 resultados similar a la del estudio de referencia. Dicha tabla también se exporta a un nuevo fichero auxiliar, 
 \textit{summary.csv}, para consultarse y evaluarse posteriormente.
 
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Resultados del experimento.}
+    \label{tab:exp_results}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Instancia} & \textbf{Algoritmo} & \textbf{Media} &
+            \textbf{Opt \%} & \textbf{$\sigma$} & \textbf{Mejor} &
+            \textbf{Peor} \\
+            \hline
+            \multirow{4}{*}{berlin52} & GA & 8903.40 & 18.05 & 813.46 & 8199.00 & 10034.00 \\
+            \cline{2-7}
+            & ACO & 8210.40 & 8.86 & \textbf{197.21} & 8029.00 & 8542.00 \\
+            \cline{2-7}
+            & SA & 8537.40 & 13.20 & 223.15 & 8288.00 & 8901.00 \\
+            \cline{2-7}
+            & TS & \textbf{8171.00} & \textbf{8.34} & 241.11 & \textbf{7826.00} & 8452.00 \\
+            \hline
+            \multirow{4}{*}{eil51} & GA & 470.40 & 10.42 & 22.31 & 453.00 & 509.00 \\
+            \cline{2-7}
+            & ACO & 481.40 & 13.00 & 8.71 & 470.00 & 488.00 \\
+            \cline{2-7}
+            & SA & 454.00 & 6.57 & 8.34 & 444.00 & 464.00 \\
+            \cline{2-7}
+            & TS & \textbf{441.80} & \textbf{3.71} & \textbf{3.42} & \textbf{438.00} & 447.00 \\
+            \hline
+            \multirow{4}{*}{kroA100} & GA & 41608.40 & 95.51 & 17196.10 & 24551.00 & 61210.00 \\
+            \cline{2-7}
+            & ACO & 26504.00 & 24.54 & \textbf{513.32} & 25909.00 & 27140.00 \\
+            \cline{2-7}
+            & SA & 26857.00 & 26.20 & 918.93 & 25562.00 & 27878.00 \\
+            \cline{2-7}
+            & TS & \textbf{22313.20} & \textbf{4.85} & 600.29 & \textbf{21830.00} & 23331.00 \\
+            \hline
+            \multirow{4}{*}{eil101} & GA & 1219.20 & 93.83 & 359.44 & 826.00 & 1699.00\\
+            \cline{2-7}
+            & ACO & 792.00 & 25.91 & 15.23 & 776.00 & 816.00 \\
+            \cline{2-7}
+            & SA & 878.40 & 39.65 & 59.27 & 815.00 & 951.00 \\
+            \cline{2-7}
+            & TS & \textbf{668.80} & \textbf{6.33} & \textbf{13.55} & \textbf{645.00} & 678.00 \\
+            \hline
+
+        \end{tabular}
+    \end{center}
+\end{table}
+
+En la siguiente tabla se recogen los resultados obtenidos por el estudio de referencia:
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Resultados del estudio de referencia.}
+    \label{tab:ref_results}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Instancia} & \textbf{Algoritmo} & \textbf{Media} &
+            \textbf{Opt \%} & \textbf{$\sigma$} & \textbf{Mejor} &
+            \textbf{Peor} \\
+            \hline
+            \multirow{4}{*}{berlin52} & GA & 7946.40 & 5.36 & 280.66 & 7546.00 & 8269.00 \\
+            \cline{2-7}
+            & ACO & \textbf{7922.32} & 5.04 & \textbf{44.55} & 7872.59 & 7985.41 \\
+            \cline{2-7}
+            & SA & 7960.67 & 5.55 & 44.69 & 7903.77 & 8020.72 \\
+            \cline{2-7}
+            & TS & 7740.10 & \textbf{2.63} & 148.90 & \textbf{7544.37} & 7937.87 \\
+            \hline
+            \multirow{4}{*}{eil51} & GA & 454.10 & 6.60 & 1.35 & 452.90 & 455.90 \\
+            \cline{2-7}
+            & ACO & 467.46 & 9.73 & \textbf{0.91} & 466.54 & 468.43 \\
+            \cline{2-7}
+            & SA & 439.13 & \textbf{3.08} & 2.29 & 437.42 & 443.04 \\
+            \cline{2-7}
+            & TS & \textbf{439.10} & \textbf{3.08} & 4.00 & \textbf{434.01} & 443.58 \\
+            \hline
+            \multirow{4}{*}{kroA100} & GA & 22,726.20 & 6.79 & 504.18 & 22,278.00 & 23,368.00 \\
+            \cline{2-7}
+            & ACO & 22,941.68 & 7.80 & \textbf{29.83} & 22,908.97 & 22,990.15 \\
+            \cline{2-7}
+            & SA & \textbf{22,277.50} & \textbf{4.68} & 708.29 & \textbf{21,837.88} & 22,782.68 \\
+            \cline{2-7}
+            & TS & 22,521.64 & 5.82 & 215.30 & 22,293.45 & 22,794.73 \\
+            \hline
+            \multirow{4}{*}{eil101} & GA & 685.89 & 9.04 & 3.81 & 680.67 & 689.56\\
+            \cline{2-7}
+            & ACO & 752.91 & 19.70 & \textbf{3.66} & 748.03 & 757.40 \\
+            \cline{2-7}
+            & SA & 672.13 & 6.86 & 5.93 & 664.29 & 679.72 \\
+            \cline{2-7}
+            & TS & \textbf{667.61} & \textbf{6.14} & 5.16 & \textbf{661.66} & 674.41 \\
+            \hline
+            \multirow{4}{*}{rat195} & GA & 2414.52 & 3.94 & \textbf{5.90} & 2407.45 & 2420.54 \\
+            \cline{2-7}
+            & ACO & 2465.11 & 6.12 & 40.07 & 2401.43 & 2499.44 \\
+            \cline{2-7}
+            & SA & 2537.99 & 9.25 & 24.82 & 2497.54 & 2560.45 \\
+            \cline{2-7}
+            & TS & \textbf{2373.94} & \textbf{2.19} & 11.66 & \textbf{2359.36} & 2388.40 \\
+            \hline
+            \multirow{4}{*}{d198} & GA & 16,582.86 & 5.09 & 172.00 & 16,405.87 & 16,829.83 \\
+            \cline{2-7}
+            & ACO & 18,031.92 & 14.27 & 155.01 & 17,806.47 & 18,206.47 \\
+            \cline{2-7}
+            & SA & 16,380.49 & 3.81 & 247.95 & \textbf{16,035.16} & 16,728.84 \\
+            \cline{2-7}
+            & TS & \textbf{16,083.48} & \textbf{1.92} & \textbf{32.19} & 16,043.14 & 6,124.63 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
 
 \subsection{Bases de datos utilizadas}
 \label{sec:bases-de-datos-1}

@@ -70,7 +70,6 @@ Como se puede apreciar, se almacenan los siguientes campos: metaheurística ejec
 de ejecución, tiempo de ejecución en segundos, y mejor distancia encontrada.
 
 Por otro lado, el fichero \textit{history.csv} cuenta con un formato similar:
-
 \begin{verbatim}
   algorithm,instance,execution,iteration,distance
   GA,berlin52,1,1,23575.0000
@@ -91,9 +90,53 @@ Mediante un programa diferente de Python, se puede recoger la información de \t
 resultados similar a la del estudio de referencia. Dicha tabla también se exporta a un nuevo fichero auxiliar, 
 \textit{summary.csv}, para consultarse y evaluarse posteriormente.
 
+En la tabla~\ref{tab:time} se recoge el tiempo medio de cada instancia por metaheurística. Este valor no se proporciona en el estudio
+de referencia, pero sí que cobra importancia en el presente trabajo:
+
+\begin{table}[ht]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Tiempo medio de ejecución por metaheurística e instancia.}
+    \label{tab:time}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            & \textbf{GA} & \textbf{ACO} & \textbf{SA} & \textbf{TS} \\
+            \hline
+            \textbf{berlin52} & 15.0482 & 17.2662 & 0.3989 & 3.1461 \\
+            \hline
+            \textbf{eil51} & 11.8802 & 14.4063 & 0.4602 & 3.9246 \\
+            \hline
+            \textbf{kroA100} & 28.0709 & 38.4565 & 0.4510 & 19.3140 \\
+            \hline
+            \textbf{eil101} & 17.9500 & 40.0365 & 0.4052 & 21.1021 \\
+            \hline
+            \textbf{rat195} & 68.7705 & 161.0066 & 0.5629 & 161.1416 \\
+            \hline
+            \textbf{d198} & 63.3372 & 161.0186 & 0.9776 & 232.7889 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Los resultados muestran una tendencia esperable: para las instancias más pequeñas, con menor número de nodos, el tiempo de
+ejecución es menor. Las instancias de tamaño mediano muestran un incremento de tiempo, y por último, las instancias grandes
+cuentan con el mayor tiempo de ejecución en todas las metaheurísticas. Sin embargo, un detalle muy llamativo a mencionar es 
+la gran velocidad del algoritmo de recocido simulado: incluso con las instancias más grandes, su velocidad de ejecución media no
+sobrepasa el segundo. Este dato justifica la ausencia del parámetro \texttt{patience} en este algoritmo, ya que es innecesario: 
+el recocido simulado siempre finaliza cuando se alcanza la temperatura final, y además, ocurre extremadamente rápido en 
+comparación con las otras técnicas. Por otro lado, el algoritmo de colonia de hormigas tiende a ser el más lento de todos, salvo
+en el caso de la instancia \texttt{d198}, para la cual la búsqueda tabú presenta el mayor tiempo de ejecución. Estos valores 
+cobran una notable importancia a la hora de comparar los resultados obtenidos de las mejores rutas, ya que un ejor resultado 
+puede significar un mayor tiempo de ejecución del algoritmo correspondiente, y por tanto, una mayor y mejor exploración del 
+espacio de búsqueda.
+
+En las tablas~\ref{tab:exp_results} y \ref{tab:ref_results} se recogen los resultados obtenidos en el experimento y los 
+proporcionados por el estudio de referencia, respectivamente.
+
+
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \caption{Resultados del experimento.}
+    \caption{Resultados obtenidos tras el experimento.}
     \label{tab:exp_results}
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}
@@ -134,12 +177,25 @@ resultados similar a la del estudio de referencia. Dicha tabla también se expor
             \cline{2-7}
             & TS & \textbf{668.80} & \textbf{6.33} & \textbf{13.55} & \textbf{645.00} & 678.00 \\
             \hline
-
+            \multirow{4}{*}{rat195} & GA & 6345.20 & 173.15 & 968.18 & 4781.00 & 7162.00 \\
+            \cline{2-7}
+            & ACO & 3018.40 & 29.94 & 66.83 & 2957.00 & 3114.00 \\
+            \cline{2-7}
+            & SA & 5043.20 & 117.10 & 219.66 & 4820.00 & 5333.00 \\
+            \cline{2-7}
+            & TS & \textbf{2573.60} & \textbf{10.79} & \textbf{38.06} & \textbf{2515.00} & 2609.00 \\
+            \hline
+            \multirow{4}{*}{d198} & GA & 38968.80 & 146.95 & 4815.63 & 32962.00 & 46354.00 \\
+            \cline{2-7}
+            & ACO & 19552.40 & 23.91 & 598.81 & 18784.00 & 20232.00 \\
+            \cline{2-7}
+            & SA & 30303.40 & 92.04 & 2080.52 & 27866.00 & 32800.00 \\
+            \cline{2-7}
+            & TS & \textbf{16348.60} & \textbf{3.60} & \textbf{147.58} & \textbf{16182.00} & 16570.00 \\
+            \hline
         \end{tabular}
     \end{center}
 \end{table}
-
-En la siguiente tabla se recogen los resultados obtenidos por el estudio de referencia:
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
@@ -204,335 +260,329 @@ En la siguiente tabla se recogen los resultados obtenidos por el estudio de refe
     \end{center}
 \end{table}
 
-\subsection{Bases de datos utilizadas}
-\label{sec:bases-de-datos-1}
-
-Blah, blah, blah.
-
-
-\subsection{Métricas de calidad}
-\label{sec:metricas-de-calidad}
-
-Blah, blah, blah.
-
-En la tabla\ref{pruebaCalc2LaTeX} pongo un ejemplo del uso del conversor de libreoffice a \LaTeX{} (cortesía de Roberto Chamorro). Para usarlo tienes que importar la macro que encontrarás en el directorio \texttt{Tools/calc2latex//calc2latex\_024\_eur\_latex}\footnote{Para ello sigue el proceso de importación que se describe en \url{http://ask.libreoffice.org/en/question/35598/where-are-lo-basic-macros-stored/}, importando Cals y cuando ejecutes la macro hazlo por el punto de entrada \texttt{Main}, después de seleccionar el rango de celdas de la tabla.}
-
-\input{Tools/calc2latex/sample.tex}
-
-
-\subsection{Estrategia y metodología de experimentación}
-\label{sec:estr-y-metod}
-
-Blah, blah, blah.
-
-
-\section{Resultados experimentales}
-\label{sec:result-experim}
-
-A continuación, se muestra un ejemplo de tabla simple (ver tabla \ref{tab:table1}).
-
-\begin{table}
-  % increase table row spacing, adjust to taste
-  \renewcommand{\arraystretch}{1.3}
-  \caption{Comparativa.}
-  \label{tab:table1}
-  \begin{center}
-    % Some packages, such as MDW tools, offer better commands for making tables than the plain LaTeX2e tabular which is used here.
-    \begin{tabular}{|c|c|c|}
-      \hline
-      Method & Training Time & Man-Work (\%)\\
-      \hline
-      Propagation model & $<$ 30 sec & 5\\
-      \hline
-      Manual & 9 h 30 min & 24\\
-      \hline
-      Automatic & 2 h & 10 8\\
-      \hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-Cuando las tablas ocupan más de un página se debe utilizar un tipo especial de tablas denominado \texttt{longtable}. A continuación, se muestra un ejemplo del mismo (ver tabla \ref{table2}).
-
-\begin{center}
-	\begin{longtable}{|c|c|c|c|}
-    \caption[Resultados de la correlación cruzada.]{Resultados de la correlación cruzada.} \label{table2} \\
-    
-    \hline \multicolumn{1}{|c|}{\textbf{Posición Real}} & \multicolumn{1}{c|}{\textbf{Posición estimada}} & \multicolumn{1}{c|}{\textbf{Coef. Correlación}} & \multicolumn{1}{c|}{\textbf{Acierto/Fallo}} \\ \hline 
-    \endfirsthead
-    
-    \multicolumn{4}{c}%
-    {{\bfseries \tablename\ \thetable{} -- continúa en la página anterior}} \\
-    \hline \multicolumn{1}{|c|}{\textbf{Posición Real}} & \multicolumn{1}{c|}{\textbf{Posición estimada}} & \multicolumn{1}{c|}{\textbf{Coef. Correlación}} & \multicolumn{1}{c|}{\textbf{Acierto/Fallo}} \\ \hline 
-    \endhead
-    
-    \hline \multicolumn{4}{|r|}{{Continúa en la página siguiente}} \\ \hline
-    \endfoot
-
-    \hline \hline
-    \endlastfoot
-    
-    \hline	2P0	&	2P0	&	0,004954	&	A	\\
-    \hline	2P1	&	2P4	&	0,005752	&	F	\\
-    \hline	2P2	&	2P2	&	0,005461	&	A	\\
-    \hline	2P3	&	2P0	&	0,004634	&	F	\\
-    \hline	2P5	&	2P4	&	0,005991	&	F	\\
-    \hline	2P6	&	2P16	&	0,004410	&	F	\\
-    \hline	2P7	&	3P9	&	0,008038	&	F	\\
-    \hline	2P8	&	3P9	&	0,003753	&	F	\\
-    \hline	2P9	&	2P7	&	0,004908	&	F	\\
-    \hline	2P10	&	2P10	&	0,007273	&	A	\\
-    \hline	2P14	&	2P16	&	0,006485	&	F	\\
-    \hline	2P15	&	2P15	&	0,004932	&	A	\\
-    \hline	2P16	&	2P16	&	0,006237	&	A	\\
-    \hline	2P17	&	2P15	&	0,005110	&	F	\\
-    \hline	2P18	&	3P18	&	0,006235	&	F	\\
-    \hline	2P19	&	3P18	&	0,004827	&	F	\\
-    \hline	2P20	&	2P20	&	0,006877	&	A	\\
-    \hline	2P22	&	3P18	&	0,003048	&	F	\\
-    \hline	2P24	&	2P24	&	0,006833	&	A	\\
-    \hline	2P25	&	2P25	&	0,004875	&	A	\\
-    \hline	2P26	&	2P31	&	0,005511	&	F	\\
-    \hline	2P27	&	2P28	&	0,004590	&	F	\\
-    \hline	2P30	&	2P31	&	0,005576	&	F	\\
-    \hline	2P31	&	2P31	&	0,007213	&	A	\\
-    \hline	2P32	&	2P35	&	0,003340	&	F	\\
-    \hline	2P34	&	2P34	&	0,004128	&	A	\\
-    \hline	2P36	&	2P35	&	0,003329	&	F	\\
-    \hline	2P37	&	2P37	&	0,003468	&	A	\\
-    \hline	2P39	&	2P38	&	0,002577	&	F	\\
-    \hline	2P40	&	2P43	&	0,004303	&	F	\\
-    \hline	2P41	&	2P41	&	0,001573	&	A	\\
-    \hline	2P42	&	2P41	&	0,000846	&	F	\\
-    \hline	2P44	&	2P44	&	0,002732	&	A	\\
-    \hline	2P45	&	23P45	&	0,001958	&	F	\\
-    \hline	2P47	&	2P34	&	0,002869	&	F	\\
-    \hline	2P48	&	2P43	&	0,004569	&	F	\\
-    \hline	2P49	&	3P51	&	0,001374	&	F	\\
-    \hline	2P50	&	2P34	&	0,002274	&	F	\\
-    \hline	2P51	&	2P63	&	0,003931	&	F	\\
-    \hline	2P52	&	2P55	&	0,003537	&	F	\\
-    \hline	2P53	&	3P56	&	0,003126	&	F	\\
-    \hline	2P54	&	2P67	&	0,005560	&	F	\\
-    \hline	2P56	&	2P55	&	0,002817	&	F	\\
-    \hline	2P57	&	2P67	&	0,006168	&	F	\\
-    \hline	2P58	&	2P58	&	0,005278	&	A	\\
-    \hline	2P60	&	3P66	&	0,004966	&	F	\\
-    \hline	2P61	&	3P61	&	0,004748	&	A	\\
-    \hline	2P64	&	2P67	&	0,005342	&	F	\\
-    \hline	2P66	&	2P4	&	0,004172	&	F	\\
-    \hline	2P67	&	2P67	&	0,005706	&	A	\\
-    \hline	3P0	&	3P0	&	0,003674	&	A	\\
-    \hline	3P61	&	2P61	&	0,003263	&	F	\\
-    \hline	3P64	&	2P67	&	0,003484	&	F	\\
-    \hline	3P65	&	2P67	&	0,002975	&	F	\\
-    \hline	3P66	&	2P58	&	0,005029	&	F	\\
-    \hline	3P67	&	3P67	&	0,003714	&	A	\\
-	\end{longtable}
-\end{center}
-
-En algunas ocasiones, también resulta útil emplear el entorno
-\texttt{subfigure} para añadir múltiples imágenes dentro de la misma
-figura. A continuación, se muestra un ejemplo del uso en la figura
-\ref{fig:fig3}. También se pueden referenciar las sub-figuras de forma
-individual, por ejemplo la sub-figura \ref{fig:fig3b} (usando un método
-de cita), o bien la sub-figura \ref{fig:fig3}.\subref{fig:fig3b} (usando
-otro alternativo).
-
-% For this to work you need to (in preamble.tex):
-% - remove \usepackage{subfig}
-% - add \usepackage{caption}
-% - add \usepackage{subcaption}
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figure2}
-    \caption{Mean Entropy.}
-    \label{fig:fig3a}
-  \end{subfigure}%
-  ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-  % (or a blank line to force the subfigure onto a new line)
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Figure3}
-    \caption{Error Percentage.}
-    \label{fig:fig3b}
-  \end{subfigure}
-  \caption{Optimal trames number in the training data set.}
-  \label{fig:fig3}
-\end{figure}
-
-La figura~\ref{fig:LIdiapRoom} muestra otro ejemplo con referencias a las subfigures en el caption principal.
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.30\textwidth}
-    \includegraphics[width=\textwidth]{roomlayout2}
-    \caption{}
-    \label{fig:RoomLayout}
-  \end{subfigure}%
-  \qquad \qquad %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-  % (or a blank line to force the subfigure onto a new line)
-  \begin{subfigure}[b]{0.425\textwidth}
-    \includegraphics[width=\textwidth]{idiap-seq45-cam2.jpg}
-    \caption{}
-    \label{fig:RoomPicture}
-  \end{subfigure}
-  \caption{Idiap Smart Meeting Room for AV16.3 recordings. (\protect\subref{fig:RoomLayout}) Room layout showing the centered table, and the microphones arranged in two circular arrays. (\protect\subref{fig:RoomPicture}) Sample of recorded video frame showing the arrays area. %\vspace{-0.3cm}
-  }
-  \label{fig:LIdiapRoom}
-\end{figure}
-
-Os incluimos a continuación un párrafo de un artículo en el que hacemos referencia a varias figuras y subfiguras:
-
-\emph{The IDIAP Meeting Room (shown in figure~\ref{fig:LIdiapRoom}) is a $8.2m \times 3.6m \times 2.4m$ rectangular space containing a centrally located $4.8m \times 1.2m$ rectangular table, on top of which two circular microphone arrays of $10 cm$ radius are located, each of them composed by 8 microphones. The centers of the two arrays are separated by $80 cm$ and the origin of coordinates is located in the middle point between the two arrays. The arrays can be also seen in figures~\ref{fig:simureal_positions}.\subref{fig:Simulated_positions}, ~\ref{fig:simureal_positions}.\subref{fig:real_positions_short}, and ~\ref{fig:simureal_positions}.\subref{fig:real_positions_long}, in which only the relevant section of the room is displayed, each one showing different scenarios that were used in the experiments. A detailed description of the meeting room can be found in~\cite{moore2002}.}
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[t]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{angular2-short-improved}
-    \caption{For validation\\with simulated data.}
-    \label{fig:Simulated_positions}
-  \end{subfigure}
-~%add desired spacing between images, e. g. ~, \quad, \qquad,
-  % \hfill etc.
-  % (or a blank line to force the subfigure onto a new line)
-  \begin{subfigure}[t]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{positions1-short-improved}
-    \caption{For validation\\with real data and microphone pairs with $20~cm$ spacing.}
-    \label{fig:real_positions_short}
-  \end{subfigure}
-  ~
-  \begin{subfigure}[t]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{positions2-short-improved}
-    \caption{For validation\\with real data and microphone pairs with
-      $82.46~cm$ spacing.}
-    \label{fig:real_positions_long}
-  \end{subfigure}
-  \caption{Geometrical details for the experiments carried out. Only the
-    relevant section of the room is shown, and microphone pairs are
-    connected by solid lines.}
-  \label{fig:simureal_positions}
-\end{figure}
-
-En la figura~\ref{fig:Sim_angles} mostramos un ejemplo de varias
-figuras organizadas de forma un poco más complejo.
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Sim_seg025_ang090}
-    \caption{$0^{\circ}$}
-    \label{fig:Sim_ang090}
-  \end{subfigure}
-  % add desired spacing between images, e. g. ~, \quad, \qquad etc.
-  % (or a blank line to force the subfigure onto a new line)
-
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Sim_seg025_ang108}
-    \caption{$18^{\circ}$}
-    \label{fig:Sim_ang108}
-  \end{subfigure}
-  % add desired spacing between images, e. g. ~, \quad, \qquad etc.
-  % (or a blank line to force the subfigure onto a new line)
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Sim_seg025_ang126}
-    \caption{$36^{\circ}$}
-    \label{fig:Sim_ang126}
-  \end{subfigure}
-  % add desired spacing between images, e. g. ~, \quad, \qquad etc.
-  % (or a blank line to force the subfigure onto a new line)
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Sim_seg025_ang144}
-    \caption{$54^{\circ}$}
-    \label{fig:Sim_ang144}
-  \end{subfigure}
-  % add desired spacing between images, e. g. ~, \quad, \qquad etc.
-  % (or a blank line to force the subfigure onto a new line)
-
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{Sim_seg025_ang162}
-    \caption{$72^{\circ}$}
-    \label{fig:Sim_ang162}
-  \end{subfigure}
-
-  \caption{Comparison between the steered power response generated by the model (solid line) and that calculated using simulated waveforms in the AV16.3 environment (stems). Results for the speaker in given angles and the array steered from -90º to +90º are shown.}
-  \label{fig:Sim_angles}
-\end{figure}
-
-También es posible incluir el código de una figura en un fichero \texttt{.tex} independiente (para hacer más legible el código del documento principal). Un ejemplo lo tenéis a continuación, incluyendo el texto en inglés del documento original:
-
-\emph{Figure~\ref{fig:SRPvsPatternSelected} includes the results of the comparison, for several speaker positions (1, 2, 4, 6, 8 and 16, emphasized in figure~\ref{fig:simureal_positions}.\subref{fig:real_positions_short}), and selected to provide different acoustic situations, both in terms of distance and angular position with respect to the arrays. All the graphics show the acoustic power map (predicted or calculated) for a regular two-dimensional grid of $10~cm$. The plot is provided from a top view of the room, spanning the full plan at a height of $61~cm$ above the microphone arrays (this height was the ground truth one for sequence 01). For each speaker position shown, three graphics are plotted:}
+Contrastando los valores de ambas tablas, se pueden extraer las siguientes conclusiones:
 
 \begin{itemize}
-  \item \emph{The graphics on the left show the SRP-PHAT acoustic power maps generated by the proposed model (for example, the left graphic in figure~\ref{fig:SRPvsPatternSelected}.\subref{fig:SRPvsModel_Fo1500_position1} for position 1).}
-  \item \emph{The graphics in the middle show the real SRP-PHAT acoustic power maps calculated using the real acoustic waveforms (for example, the middle graphic in figure~\ref{fig:SRPvsPatternSelected}.\subref{fig:SRPvsModel_Fo1500_position1} for position 1), for a single selected frame.}
-  \item \emph{The graphics on the right show the average real SRP-PHAT acoustic power maps, averaging for all the frames in which the user was in the given position (for example, the right graphic in figure~\ref{fig:SRPvsPatternSelected}.\subref{fig:SRPvsModel_Fo1500_position1} for position 1).}
+  \item En cuanto a las instancias pequeñas:
+  \begin{itemize}
+    \item Para \texttt{berlin52}, TS presenta la mejor distancia y el menor \textit{gap}, mientras que ACO cuenta con el mejor
+    $\sigma$ y un buen valor medio en ambas tablas.
+    \item Para \texttt{eil51}, TS presenta los mejores resultados en prácticamente todas las categorías de ambas tablas, 
+    seguido muy de cerca por SA.
+  \end{itemize}
+  Para las instancias pequeñas, se puede destacar la búsqueda tabú como la técnica que presenta los mejores valores.
+
+  \item En cuanto a las instancias de tamaño mediano:
+  \begin{itemize}
+    \item Para \texttt{kroA100}, se pueden observar algunas diferencias: TS destaca como la mejor técnica en el experimento,
+    mientras que los autores obtienen unos mejores valores en SA. ACO presenta el mejor valor para $\sigma$, notablemente
+    superior a las demás técnicas.
+    \item Para \texttt{eil101}, TS cuenta con los mejores valores para casi todas las métricas.
+  \end{itemize}
+  Para las instancias medianas, vuelve a destacar TS como la mejor metaheurística. Por otro lado, GA resalta como la 
+  peor técnica en el presente experimento, mientras que es ACO la que cuenta con peores métricas en el experimento de
+  referencia.
+
+  \item En cuanto a las instancias grandes:
+  \begin{itemize}
+    \item Para \texttt{rat195}, TS presenta los mejores resultados en todas las categorías salvo por el valor de $\sigma$ en el 
+    estudio de referencia, donde GA es el ganador. Aun así, es GA quien presenta unas métricas muy inferiores respecto al 
+    resto de técnicas en este experimento.
+    \item Para \texttt{d198}, TS sigue destacando con unas métricas muy superiores. Sin embargo, ACO resalta como la peor técnica
+    en el estudio de referencia, pero en el presente experimento es la segunda mejor metaheurística.
+  \end{itemize}
+
+  \item Para las instancias grandes, nuevamente destaca TS como la mejor técnica.
 \end{itemize}
 
-\emph{The green point represents the real (ground truth) speaker position, and the black dots represent the positions of the four microphones used. The hyperbolic shapes found in the figure are consistent with the fact that the place of points with equal acoustic power value, for a given microphone pair, is a hyperbola (in our two-dimensional case, being a hyperboloid of revolution in the three-dimensional case).}
+Como conclusión general, se puede afirmar que los resultados obtenidos muestran una tendencia considerablemente similar a los del 
+estudio de referencia, salvo disparidades puntuales. \textit{Grosso modo}, se puede observar como \textbf{la búsqueda tabú
+resulta ser la mejor metaheurística} en ambos casos prácticos. No obstante, es imposible negar la notable diferencia 
+cuantiativa entre ambos experimentos. La principal causa de ello es, sin duda, el papel del parámetro \texttt{patience}:
+en el experimento realizado, el tiempo medio de ejecución para cada caso parte desde apenas unas décimas de segundo, a un 
+máximo de casi 4 minutos. Por otro lado, los autores señalan una limitación en su estudio al comentar que las ejecuciones más
+largas duraron hasta casi 19 horas. Es lógico pensar que, si se relajara el valor del parámetro \texttt{patience}, o si se 
+eliminara directamente, los algoritmos mejorarían aún más los resultados, reduciendo las métricas de mejor distancia encontrada,
+así como la peor distancia, la distancia media, su desviación típica, y el \textit{gap} al óptimo global.
 
-\emph{From figure~\ref{fig:SRPvsPatternSelected}, it can clearly be seen that, again, the predictions closely match the results with real data for the different acoustic conditions, even when the simulations are using fixed and frequency independent average reflection coefficients, and that the acoustic model is based on the simplistic image method model.}
+Aun así, es importante destacar como, salvando el caso del algoritmo genético, el cual destaca como la peor técnica en el 
+presente experimento, los demás resultados presentan una considerable proximidad a los propuestos por los autores, con un 
+tiempo de ejecución drásticamente menor, lo cual es el objetivo principal de las metaheurísticas: se renuncia a encontrar el 
+óptimo global mediante una ejecución mucho más rápida
 
-\input{chapters/figure-ComparisonMap} 
+\section{Diagramas y gráficos comparativos}
+\label{sec:graphs}
 
-\begin{wrapfigure}{r}{0.5\textwidth} 
-\vspace{-20pt}
-  \begin{center}
-    \includegraphics[width=0.4\textwidth]{Figure1}
-    \caption{Ejemplo de figura con wrapfigure.}
-    \label{fig:wrapfigure1}
-  \end{center}
-  \vspace{-20pt}
-  \vspace{1pt}
-\end{wrapfigure} 
+En esta sección, se van a mostrar y discutir una serie de diagramas y gráficos, para comparar diferentes aspectos de las
+ejecuciones, las instancias y las metaheurísticas.
 
-Otra posibilidad es utilizar el entorno \texttt{wrapfig} para hacer que el texto bordee a las figuras, como en la figura~\ref{fig:wrapfigure1}. Añado ahora unas líneas de loren ipsum para que lo veáis bien. \lipsum[1-1]
+\subsection{Gráficas de convergencia por instancia}
+\label{subsec:conv_inst}
 
-% \lipsum[1-4]
-% \begin{wrapfigure}{R}{5cm}
-% \centering
-% \rule{3cm}{7cm}
-% \end{wrapfigure}
-% \lipsum[1-6]
+En este apartado se incluyen seis gráficas que muestran la convergencia de los cuatro algoritmos en cada una de las instancias.
+El eje X indica el número de iteraciones o generaciones alcanzadas, mientras que el eje Y muestra la mejor distancia
+encontrada.
 
-Incluso podemos poner una tabla ``apaisada'', como en la \ref{tab:tablas2006}, donde se muestra un resumen de los resultados obtenidos en una serie de experimentos de localización de locutores.
+\begin{figure}[H]
+    \centering
 
-\clearpage
-% \begin{table}[H]\centering
-\begin{sidewaystable}[hbtp]
-  \begin{center}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_berlin52.png}
+        \caption{Convergencia de \texttt{berlin52}}
+        \label{fig:c_berlin52}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_eil51.png}
+        \caption{Convergencia de \texttt{eil51}}
+        \label{fig:c_eil51}
+    \end{subfigure}
 
-    \begin{tabular}{||l|c|c|c|c|c||}
-      \hline \hline
-      & UKA & ITC & AIT & UPC & IBM\\
-      \hline
-      \hline
-      Pcor & $57.0\pm1.4\%$ & $84.0\pm3.3\%$ & $47.0\pm3.1\%$ & $20.0\pm2.5\%$ & $67.0\pm2.9\%$ \\
-      \hline
-      Bias fine (x:y:z) [mm] & $20:-42:-75$ & $45:27:-41$ & $-27:-77:-40$ & $-59:112:52$ & $91:-69:-38$ \\
-      \hline
-      Bias fine+gross (x,y,z) [mm] & $735:-93:-258$ & $67:439:-134$ & $17:-402:-118$ & $-141:255:39$ & $474:-141:-14$ \\
-      \hline
-      AEE fine [mm] = MOTP & $210$ & $130$ & $266$ & $344$ & $228$ \\
-      \hline
-      Fine+gross [mm] & $1201$ & $632$ & $1006$ & $1188$ & $884$ \\
-      \hline
-      Loc. frames & $5035$ & $22$ & $995$ & $977$ & $1023$ \\
-      \hline
-      Ref. duration (s) & $6287.0$ & $596.0$ & $1143.0$ & $1180.0$ & $1194.0$ \\
-      \hline \hline
-    \end{tabular}
-    \caption{Resultados TEST CLEAR 2006.}
-    \label{tab:tablas2006}
-  \end{center}
-\end{sidewaystable}
-% \end{table}
+    \vspace{0.5cm}
 
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_kroA100.png}
+        \caption{Convergencia de \texttt{kroA100}}
+        \label{fig:c_kroA100}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_eil101.png}
+        \caption{Convergencia de \texttt{eil101}}
+        \label{fig:c_eil101}
+    \end{subfigure}
 
-\section{Conclusiones}
-\label{sec:conclusiones-resultados}
+    \vspace{0.5cm}
 
-Blah, blah, blah.
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_rat195.png}
+        \caption{Convergencia de \texttt{rat195}}
+        \label{fig:c_rat195}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_d198.png}
+        \caption{Convergencia de \texttt{d198}}
+        \label{fig:c_d198}
+    \end{subfigure}
+
+    \caption{Gráficas de convergencia por instancia.}
+    \label{fig:conv_graphs}
+
+\end{figure}
+
+Rápidamente se puede observar como la curva de color verde, correspondiente al recocido simulado, presenta una tendencia
+claramente diferente al resto. Esto vuelve a demostrar su funcionamiento interno: puesto que no cuenta con el criterio adicional
+de parada por estancamiento, su curva de convergencia recorre muchas más iteraciones en el proceso de enfriamiento. Por el
+contrario, los otros algoritmos finalizan cuando alcanzan el umbral de estancamiento, esto es, 25 iteraciones sin mejorar.
+No obstante, se puede realizar un análisis de las otras tres técnicas: GA destaca por ser la que se toma un mayor número de 
+generaciones en converger, mientras que ACO y TS son más rápidas. Nótese como ACO trabaja con generaciones, es decir, 
+múltiples soluciones simultáneas, mientras que TS trabaja con una única solución que se mejora progresivamente, y aun así,
+presentan una velocidad de convergencia ciertamente similar. Aun así, TS presenta la mayor velocidad de ejecución, precisamente
+por su naturaleza.
+
+\subsection{Gráficas de convergencia normalizada por gap\%}
+\label{subsec:conv_gap}
+
+En este apartado se muestran otras cuatro gráficas de convergencia, aunque se sustituye el valor de la mejor distancia
+encontrada con la proximidad o \textit{gap} al óptimo en cada una de las metaheurísticas. De este modo, se puede comprobar si
+un algoritmo escala bien en calidad al incrementar el tamaño de la instancia.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_gap_GA.png}
+        \caption{Convergencia de GA}
+        \label{fig:c_ga}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_gap_ACO.png}
+        \caption{Convergencia de ACO}
+        \label{fig:c_aco}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_gap_SA.png}
+        \caption{Convergencia de SA}
+        \label{fig:c_sa}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{convergencia_gap_TS.png}
+        \caption{Convergencia de TS}
+        \label{fig:c_ts}
+    \end{subfigure}
+
+    \caption{Gráficas de convergencia por gap por metaheurística.}
+    \label{fig:conv_metah}
+
+\end{figure}
+
+En este caso, se pueden apreciar unos resultados muy diferentes a los del apartado anterior. Se puede observar como el 
+algoritmo genético presenta la peor tendencia de convergencia, ya que, a medida que aumenta el tamaño de la instancia, su 
+velocidad de convergencia es peor, y tampoco alcanza el valor de \textit{optimality gap} que presentan las instancias más
+pequeñas, así como las otras metaheurísticas. Por otra parte, ACO cuenta con la mayor velocidad de convergencia en este 
+aspecto para todas las instancias. TS también obtiene una convergencia notablemente buena, y unos valores de \textit{gap}
+muy próximos a cero para todas las instancias.
+
+El caso del recocido simulado es particularmente interesante. Si bien las curvas son muy diferentes entre sí, acaban 
+convergiendo en valores relativamente próximos a cero. De nuevo, se puede apreciar como el comportamiento de este algoritmo
+es, por diseño, claramente diferente a los demás.
+
+\subsection{Diagramas por instancia}
+\label{subsec:boxplot_inst}
+
+En este apartado, se incluyen seis diagramas de caja y bigotes, uno por instancia, donde se evalúa la robustez de cada 
+algoritmo según su \textit{gap} al óptimo.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_berlin52.png}
+        \caption{Diagrama de caja y bigotes para \texttt{berlin52}}
+        \label{fig:bp_berlin52}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_eil51.png}
+        \caption{Diagrama de caja y bigotes para \texttt{eil51}}
+        \label{fig:bp_eil51}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_kroA100.png}
+        \caption{Diagrama de caja y bigotes para \texttt{kroA100}}
+        \label{fig:bp_kroA100}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_eil101.png}
+        \caption{Diagrama de caja y bigotes para \texttt{eil101}}
+        \label{fig:bp_eil101}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_rat195.png}
+        \caption{Diagrama de caja y bigotes para \texttt{rat195}}
+        \label{fig:bp_rat195}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boxplot_gap_d198.png}
+        \caption{Diagrama de caja y bigotes para \texttt{d198}}
+        \label{fig:bp_d198}
+    \end{subfigure}
+
+    \caption{Diagramas de caja y bigotes por instancia.}
+    \label{fig:bp_size}
+
+\end{figure}
+
+De estos diagramas se puede extraer lo siguiente:
+
+Para \texttt{berlin52}, GA obtiene una mediana baja pero caja y bigotes estirados hacia arriba, lo que significa que una
+de las ejecuciones salió muy mal. En efecto, si se consulta el fichero auxiliar \textit{results.csv}, se puede observar que 
+la ejecución número 5 ha devuelto un valor óptimo mucho peor que las otras. Incluso la ejecución 3 es bastante diferente a 
+las iteraciones 1, 2 y 5:
+
+\begin{verbatim}
+  GA,berlin52,1,14.2890,8388.0000
+  GA,berlin52,2,27.2805,8399.0000
+  GA,berlin52,3,10.8290,9497.0000
+  GA,berlin52,4,16.2682,8199.0000
+  GA,berlin52,5,6.5741,10034.0000
+\end{verbatim}
+
+ACO es la técnica más compacta y baja, y TS es ligeramente más ancha pero con un valor de mediana similar. Se observa, por 
+tanto, que ACO es más fiable aunque su media final sea ligeramente peor que TS. Por último, SA tiene la caja colapsada y dos
+\textit{outliers} simétricos, lo cual es una situación parecida a la de GA: tres ejecuciones coincidieron, y dos se desviaron.
+Revisando el fichero auxiliar, se ve como los \textit{outliers} resultan ser la ejecución 2 y 5:
+
+\begin{verbatim}
+  SA,berlin52,1,0.4145,8493.0000
+  SA,berlin52,2,0.3884,8901.0000
+  SA,berlin52,3,0.3998,8489.0000
+  SA,berlin52,4,0.3995,8516.0000
+  SA,berlin52,5,0.3924,8288.0000
+\end{verbatim}
+
+En el caso de \texttt{eil51}, a diferencia del resto de instancias, ACO presenta tanto una mediana como una dispersión superiores
+a las de GA, lo que sugiere que su comportamiento no es uniformemente robusto frente a todas las instancias de tamaño pequeño.
+GA presenta una caja bastante más baja, aunque cuenta con un outlier muy disperso, lo que significa que solamente una ejecución
+se dispersó mucho de la media. En efecto, la culpable es la ejecución 2:
+
+\begin{verbatim}
+  GA,eil51,1,12.5354,461.0000
+  GA,eil51,2,8.3717,509.0000
+  GA,eil51,3,14.2281,453.0000
+  GA,eil51,4,11.8213,469.0000
+  GA,eil51,5,12.4446,460.0000
+\end{verbatim}
+
+SA y TS sí mantienen un aspecto esperable, siendo TS el algoritmo con una caja más compacta y baja.
+
+En \texttt{kroA100} se muestra un patrón extremo: GA tiene una caja descomunal y sin outliers, lo que indica que la ejecución
+ha sido errática en esta instancia. ACO y SA muestran una robustez muy similar, prácticamente indistinguible, y TS vuelve a 
+ser la más baja y estrecha de nuevo, con un \textit{outlier} moderado que no compromete la lectura general de la técnica.
+
+La instancia \texttt{eil101} muestra un comportamiento similar a la anterior, donde GA presenta una caja muy grande y alargada.
+La caja de ACO es muy compacta también, pero la de SA es ligeramente más grande. Y TS es prácticamente lo opuesto a GA, ya que
+prácticamente se aprecia una línea plana y muy baja, con un único \textit{outlier} más bajo. Esta dispersión de resultados es
+mínima respecto a GA, con lo cual se evidencia una dependencia fuerte de la inicialización aleatoria.
+
+Para \texttt{rat195}, los cuatro algoritmos suben en magnitud, al situarse todas las cajas algo más arriba que en instancias
+anteriores. Sin embargo, la robustez se mantiene en lo relativo: GA presenta la caja más ancha, de nuevo sin \textit{outliers},
+demostrando una variabilidad en el algoritmo en sí. ACO mantiene el patrón de caja estrecha, y SA cuenta con una caja de
+anchura similar a la instancia anterior. TS vuelve a ser, con diferencia, la más consistente, con una caja muy pequeña y baja.
+
+Por último, la instancia \texttt{d198} sí que presenta cambios en GA respecto a las anteriores: la caja es mucho más pequeña,
+pero con dos \textit{outliers} muy alejados, así que no se puede realizar ningún consenso sobre cómo de bien o mal van a 
+salir las ejecuciones. ACO mantiene su caja compacta y muy por debajo de GA, SA también cuenta con una caja relativamente
+estrecha y en un lugar similar a la instancia anterior, y TS vuelve a ser una línea plana muy próxima a cero.
+
+Con todo esto, se refuerza lo anterior: TS no solo gana en media, sino que es el único algoritmo cuya fiabilidad no se degrada
+al crecer la instancia. Por el contrario, GA y SA se hacen cada vez menos consistentes según crece el problema.
+
+\subsection{Diagrama de categoría por tamaño}
+\label{subsec:boxplot_cat}
+
+En este apartado se incluye un único diagrama que ilustra el \textit{optimality gap} de cada metaheurística, clasificándolo
+según los tres diferentes tamaños de instancias:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.8\linewidth]{boxplot_categoria_tamano.png}}
+  \caption{Diagrama de caja y bigotes por categoría.}
+  \label{fig:bp_cat}
+\end{figure}
+
+\subsection{Diagrama de tiempo vs tamaño}
+\label{subsec:time_size}
 
 
 %%% Local Variables:

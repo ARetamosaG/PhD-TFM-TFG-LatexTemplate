@@ -119,10 +119,71 @@ del viajante \cite{johnson2012}.
 Es precisamente este último problema clásico, el problema del viajante, el foco de atención de este trabajo. Debido a su alta 
 complejidad computacional, la búsqueda de soluciones exactas deja de ser viable cuando aumenta el tamaño del problema. En este 
 contexto, toman especial relevancia las heurísticas y metaheurísticas, las cuales son estrategias diseñadas para obtener
-soluciones de alta calidad en tiempos de ejecución razonables, pero sin garantizar el óptimo global. A lo largo de este proyecto,
-se estudiarán los fundamentos teóricos de estas técnicas, y se evaluará experimentalmente su comportamiento mediante el 
-desarrollo de un marco de trabajo que permita comparar su rendimiento frente a instancias estandarizadas del Problema del
-Viajante.
+soluciones de alta calidad en tiempos de ejecución razonables, pero sin garantizar el óptimo global. 
+
+\section{Objetivos}
+\label{sec:obj}
+
+El presente trabajo tiene como objetivo general el estudio, implementación y comparación experimental de cuatro 
+metaheurísticas clásicas aplicadas al Problema del Viajante: algoritmos genéticos, optimización mediante colonia de hormigas,
+recocido simulado y búsqueda tabú. Para ello, se desarrolla un marco de trabajo propio en Python que permite ejecutar,
+evaluar y comparar el rendimiento de estas técnicas sobre un conjunto de instancias estandarizadas del Problema del Viajante,
+replicando el diseño experimental de un estudio de referencia en la medida de lo posible.
+
+Con el fin de alcanzar este objetivo general, se plantean los siguientes objetivos específicos:
+\begin{itemize}
+    \item Estudiar los fundamentos teóricos del Problema del Viajante, su complejidad computacional y sus principales 
+    variantes, así como revisar el estado del arte de las técnicas heurísticas y metaheurísticas empleadas para su
+    resolución.
+    \item Analizar el funcionamiento teórico de las cuatro metaheurísticas seleccionadas, justificando los operadores
+    y mecanismos concretos empleados en cada uno de ellas.
+    \item Diseñar e implementar, en Python, las cuatro técnicas sobre una representación común del problema, reutilizando
+    estructuras y funciones compartidas entre ellas siempre que sea posible.
+    \item Seleccionar y justificar los diferentes hiperparámetros de cada algoritmo, apoyándose en la literatura existente
+    en lugar de ajustarlos de forma arbitraria, o específicamente para las instancias evaluadas.
+    \item Diseñar y ejecutar un experimento comparativo sobre un conjunto de instancias estandarizadas, replicando el diseño 
+    de un estudio de referencia y adaptándolo a las limitaciones prácticas de este trabajo.
+    \item Analizar y comparar los resultados obtenidos, tanto entre las propias metaheurísticas implementadas como frente a 
+    los resultados del estudio de referencia, revisando la calidad de las soluciones, el tiempo de ejecución y la robustez
+    de cada técnica.
+    \item Extraer conclusiones sobre el comportamiento comparativo de las metaheurísticas estudiadas, y proponer posibles
+    líneas de trabajo futuras a partir de los resultados obtenidos.
+\end{itemize}
+
+
+\section{Metodología}
+\label{sec:metod}
+
+Para alcanzar los objetivos anteriores, el trabajo se ha estructurado en las siguientes etapas:
+
+\begin{enumerate}
+  \item \textbf{Revisión del estado del arte}: se estudian las principales técnicas exactas, heurísticas y metaheurísticas
+  empleadas históricamente para resolver el Problema del Viajante, así como estudios comparativos previos entre ellas
+  (capítulo~\ref{cha:estudio-teorico}).
+
+  \item \textbf{Estudio del problema}: se formaliza matemáticamente el Problema del Viajante, se analizan sus principales
+  variantes y aplicaciones prácticas, y se estudia la representación de una solución candidata sobre la que operarán las
+  metaheurísticas (capítulo~\ref{cha:desarrollo}).
+
+  \item \textbf{Estudio teórico de las metaheurísticas}: se analiza en detalle el funcionamiento de cada una de las cuatro
+  técnicas seleccionadas, justificando los operadores concretos empleados en cada caso
+  (capítulo~\ref{cha:metah}).
+
+  \item \textbf{Diseño e implementación}: se implementan las cuatro metaheurísticas en Python, junto con las funciones
+  comunes reutilizadas entre ellas, y se seleccionan y justifican los hiperparámetros de cada algoritmo
+  (capítulo~\ref{cha:design}).
+
+  \item \textbf{Diseño experimental y desarrollo de herramientas de apoyo}: se desarrollan los \textit{scripts} necesarios
+  para ejecutar el experimento de forma automatizada, recoger los resultados en ficheros auxiliares, calcular las métricas 
+  de interés y generar las gráficas comparativas.
+
+  \item \textbf{Ejecución del experimento y análisis de resultados}: se ejecutan las cuatro metaheurísticas sobre el
+  conjunto de instancias, y se analizan los resultados obtenidos, comparándolos entre sí y frente al estudio
+  de referencia (capítulo~\ref{cha:resultados}).
+
+  \item \textbf{Conclusiones}: se extraen las conclusiones del trabajo realizado, y se proponen posibles líneas de
+  continuación a partir de los resultados obtenidos (capítulo~\ref{cha:conc}).
+\end{enumerate}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

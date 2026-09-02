@@ -23,26 +23,83 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Conclusiones y líneas futuras}
-\label{cha:concl-y-line}
+\label{cha:conc}
 
-En este apartado se resumen las conclusiones obtenidas y se proponen futuras líneas de investigación que se deriven del trabajo.
-
-La estructura del capítulo es...
-
+En esta última sección del documento se va a realizar lo siguiente. En primer lugar, se van a realizar una serie de comentarios,
+a modo de conclusión, sobre el trabajo desarrollado y acerca de los resultados del experimento. Seguidamente, se van a describir
+una serie de líneas de continuación para continuar y mejorar el presente trabajo.
 
 \section{Conclusiones}
-\label{sec:conclusiones}
+\label{sec:conc}
 
-Para añadir una referencia a un autor, se puede utilizar el paquete \texttt{cite}. En el trabajo \cite{armani03}, se muestra un trabajo...
+Este trabajo ha permitido implementar cuatro metaheurísticas clásicas para el Problema del Viajante desde cero, y evaluar
+su comportamiento replicando, en la medida de lo posible, el diseño experimental de un estudio de referencia \cite{halim2019}. 
+Los resultados obtenidos muestran una tendencia relativa consistente con dicho estudio: la búsqueda tabú se posiciona como la 
+técnica más fiable en términos de calidad de solución, seguida por la colonia de hormigas, mientras que el algoritmo genético 
+es, con diferencia, el más sensible tanto al tamaño de la instancia como a la configuración de sus hiperparámetros.
 
-Veamos finalmente si funciona una cita inline... al paper de Leticia \fullcite{monasterio2022}... (esto substituye la funcionalidad de bibentry...).
+Precisamente esta sensibilidad sea, quizás, la conclusión más relevante del trabajo. No es casual que TS haya resultado ser
+la técnica más consistente: su ajuste depende, esencialmente, de dos parámetros (\textit{tabu tenure} y número de iteraciones),
+frente a los muchos más grados de libertad de GA (tamaño de población, probabilidades de cruce y mutación, tamaño de
+torneo, número de élites), sin contar que estos operadores pueden, además, sustituirse por otros de naturaleza muy distinta
+(cruce OX frente a PMX, mutación por inversión frente a intercambio, etc.). Un espacio de configuración más amplio implica
+más formas de que una elección de hiperparámetros resulte inadecuada, y esto se hace especialmente visible al introducir
+un criterio de parada por estancamiento común a las cuatro técnicas: un mismo valor de \texttt{patience} puede resultar
+perfectamente razonable para una metaheurística y catastrófico para otra, como se ha comprobado con GA en las instancias
+de mayor tamaño. En otras palabras, buena parte de la diferencia observada entre algoritmos no refleja necesariamente una
+superioridad intrínseca de unas técnicas sobre otras, sino la distinta dificultad de encontrar una configuración de
+hiperparámetros única que funcione razonablemente bien para todas las instancias evaluadas.
 
+En cuanto al objetivo original del trabajo, replicar un estudio comparativo bajo un presupuesto computacional mucho más
+reducido, los resultados respaldan la decisión tomada: aunque las métricas absolutas de calidad son peores que las del
+estudio de referencia (cuyas ejecuciones llegaron a durar hasta 19 horas), la clasificación relativa entre algoritmos se
+mantiene estable en gran medida. Esto sugiere que un presupuesto computacional ajustado permite obtener conclusiones
+cualitativamente similares sin necesidad de una inversión de tiempo desproporcionada, lo cual es coherente con el propio
+propósito de las metaheurísticas: renunciar a la garantía del óptimo global a cambio de tiempos de ejecución razonables.
 
 \section{Líneas futuras}
-\label{sec:lineas-futuras}
+\label{sec:fut-lin}
 
-Pues eso.
+A partir del trabajo realizado, se pueden identificar varias líneas de continuación que podrían ampliar o mejorar los 
+resultados obtenidos:
 
+\begin{itemize}
+  \item \textbf{Hiperparámetros dependientes de la escala de la instancia}. A lo largo de este trabajo, se ha identificado
+  en repetidas ocasiones que ciertos hiperparámetros (la temperatura inicial de SA, la constante $Q$ de ACO, o el propio
+  \texttt{patience}) dependen de la escala del problema, y un valor fijo no es igualmente adecuado para instancias de
+  tamaños muy distintos. Una línea de trabajo natural consistiría en derivar estos valores automáticamente a partir de
+  características de la propia instancia, como la distancia media entre ciudades o el número de nodos, en lugar de fijarlos
+  previamente.
+
+  \item \textbf{Metaheurísticas híbridas}. Habiendo implementado y validado las cuatro técnicas clásicas de forma
+  independiente, un siguiente paso natural sería combinar sus mecanismos, siguiendo el ejemplo de trabajos como
+  \cite{jingyan2012} o \cite{xu2023}. Dada la robustez observada en TS frente al crecimiento de la instancia, y la buena
+  capacidad exploratoria de ACO, una hibridación entre ambas podría resultar especialmente prometedora.
+
+  \item \textbf{Selección automática de metaheurística}. Como se ha comprobado, ninguna técnica resulta óptima en todos
+  los escenarios. Empleando el marco de trabajo ya desarrollado, se podría explorar un enfoque de meta-aprendizaje, similar
+  al de \cite{kanda2016}, que seleccione automáticamente la metaheurística más adecuada en función de las características
+  de cada instancia.
+
+  \item \textbf{Ampliación del experimento}. Aumentar el número de repeticiones permitiría aplicar pruebas de significancia 
+  estadística (ANOVA, test de Tukey) similares a las del estudio de referencia, en lugar de limitarse a estadística puramente
+  descriptiva. Asimismo, también sería interesante incorporar las instancias de mayor tamaño del estudio original (hasta 442 
+  nodos) una vez se aborde la siguiente línea futura.
+
+  \item \textbf{Optimización del coste computacional de la búsqueda tabú}. Como ya se apuntaba en el capítulo de
+  implementación, TS recalcula el coste completo de la ruta para cada vecino evaluado. Implementar un cálculo incremental,
+  que solo tenga en cuenta la variación de coste de las dos conexiones modificadas por cada movimiento \textit{2-opt},
+  reduciría notablemente su coste por iteración, actualmente el más elevado de las cuatro técnicas.
+
+  \item \textbf{Extensión a otras variantes del problema}. El trabajo se ha limitado al TSP simétrico. Sería interesante
+  evaluar el comportamiento de estas mismas metaheurísticas frente a variantes como el TSP asimétrico, el TSP con ventanas
+  de tiempo, o el TSP con múltiples viajantes, descritas en el capítulo~\ref{cha:desarrollo}, para comprobar si las
+  conclusiones obtenidas se generalizan a otros contextos.
+
+  \item \textbf{Aplicación a un caso real}. Por último, más allá de las instancias estandarizadas de TSPLIB, resultaría
+  valioso aplicar el marco de trabajo desarrollado a un caso de uso real, como la planificación de rutas logísticas u otras
+  aplicaciones ya mencionadas en la sección~\ref{sec:aplicaciones}.
+\end{itemize}
 
 %%% Local Variables:
 %%% TeX-master: "../book"

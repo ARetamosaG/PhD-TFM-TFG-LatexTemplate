@@ -581,9 +581,49 @@ según los tres diferentes tamaños de instancias:
   \label{fig:bp_cat}
 \end{figure}
 
+De este diagrama se pueden extraer unas conclusiones similares a las de apartados anteriores. En primer lugar, vuelve a 
+destacar la búsqueda tabú como el único algoritmo que no se degrada según crece el tamaño de las instancias evaluadas, al
+mostrar siempre una caja plana y baja. ACO muestra un comportamiento ciertamente estable, manteniéndose a una altura similar
+en el caso de las instancias medianas y grandes. Estos dos algoritmos, guiados más por la heurística de las hormigas y el 
+esfuerzo de búsqueda que por ``golpes de suerte'' como una inicialización buena o una mutación favorable, describen unos 
+resultados más consistentes.
+
+Por el contrario, SA sí que sufre un gran salto entre la segunda y tercera categoría. Esto se debe, de nuevo, a la naturaleza 
+del algoritmo y su condición de parada. Además, se tiene que tener en cuenta el hecho de que no aumentan las iteraciones 
+disponibles para explorar al mismo tiempo que la instancia del problema. En otras palabras, el algoritmo dispone del mismo 
+número de iteraciones en las tres categorías para explorar espacios de búsqueda muy diferentes en cuanto a tamaño se refiere.
+Finalmente, el algoritmo genético destaca como la técnica con peor rendimiento de las cuatro. Es precisamente estas mejoras
+afortunadas en los operadores de cruce y mutación los que degradan el algoritmo cuanto más crece la instancia evaluada. 
+Asimismo, el parámetro de parada por estancamiento también juega un papel importante para este algoritmo, y también es 
+responsable de restringir al algoritmo de seguir buscando mejores soluciones, o esperar a un cruce o mutación que mejore la
+búsqueda a lo largo de las siguientes iteraciones.
+
 \subsection{Diagrama de tiempo vs tamaño}
 \label{subsec:time_size}
 
+En este último gráfico se puede observar el incremento de tiempo que sufren las diferentes metaheurísticas cuando aumenta el 
+tamaño de la instancia:
+
+\begin{figure}[H]
+  \centering 
+  {\includegraphics[width=0.8\linewidth]{tiempo_vs_tamano.png}}
+  \caption{Diagrama de tiempo de ejecución vs tamaño de instancia.}
+  \label{fig:diag_timesize}
+\end{figure}
+
+Se puede observar como SA cuenta con una línea muy plana y próxima al cero, ya que, como se podía comprobar con los resultados
+cuantitativos, ninguna ejecución pasaba de un segundo de duración. Las otras tres técnicas siguen una tendencia similar, 
+aunque es cierto que TS comienza siendo la segunda más rápida en instancias pequeñas, y a medida que crece el tamaño de las 
+instancias, es la meteaheurística que más se degrada. GA describe el comportamiento opuesto: es la técnica más lenta en 
+instancias pequeñas (junto a ACO), y la segunda más rápida para las instancias más grandes. ACO, por su parte, muestra el 
+cremiento más lineal del experimento, describiendo una línea recta casi perfecta.
+
+Resulta interesante comprobar como el criterio de instancias pequeñas, medianas o grandes no implica un comportamiento
+estrictamente similar en cada uno de los problemas comprendidos en estas categorías. Por ejemplo, existe una notable diferencia
+entre las dos instancias medianas en el algoritmo genético, y también entre las dos instancias más grandes para el algoritmo 
+del recocido simulado. Esto se debe, claro está, a la casuística del problema, y al reducido número de ejecuciones que se han 
+realizado en el experimento. A medida que se tomaran más datos, las disparidades en este gráfico, y en varios de los anteriores,
+se verían notablemente más reducidas.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

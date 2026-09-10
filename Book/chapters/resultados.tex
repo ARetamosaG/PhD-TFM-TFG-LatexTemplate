@@ -260,7 +260,27 @@ proporcionados por el estudio de referencia, respectivamente.
     \end{center}
 \end{table}
 
-Contrastando los valores de ambas tablas, se pueden extraer las siguientes conclusiones:
+En estas tablas, la columna \textit{Opt \%} recoge el \textit{optimality gap}, esto es, la desviación porcentual entre
+la media de las mejores distancias obtenidas en las diferentes ejecuciones y el óptimo global conocido de la instancia. Se
+calcula de la siguiente manera:
+
+\begin{equation}
+    Gap (\%) = \frac{L - L^*}{L^*} \times 100
+\end{equation}
+
+Siendo $L$ la media de las mejores distancias, y $L^*$ el óptimo global. Además, es importante señalar que este valor se calcula
+sobre la media de las ejecuciones, y no sobre la mejor distancia encontrada, ni sobre cada ejecución individual.
+
+Antes de llevar a cabo los primeros contrastes entre las tablas, conviene recalcar la siguiente idea: al tratarse de solo cinco
+ejecuciones por cada combinación de algoritmo e instancia, la desviación típica reportada debe interpretarse con cautela, ya 
+que una única ejecución atípica puede desplazar sensiblemente la media.
+
+Además, se debe advertir que todas las comparaciones realizadas en este capítulo son de carácter descriptivo y cualitativo:
+medias, \textit{gaps}, diagramas, etc. No se ha aplicado ningún contraste estadístico o cuantitativo, tales como \textit{t-test},
+ANOVA... que confirme formalmente estas diferencias entre técnicas.
+
+Teniendo en consideración estos dos matices, se pueden contrastar los valores de ambas tablas y extraer las siguientes 
+conclusiones:
 
 \begin{itemize}
   \item En cuanto a las instancias pequeñas:
@@ -274,41 +294,50 @@ Contrastando los valores de ambas tablas, se pueden extraer las siguientes concl
 
   \item En cuanto a las instancias de tamaño mediano:
   \begin{itemize}
-    \item Para \texttt{kroA100}, se pueden observar algunas diferencias: TS destaca como la mejor técnica en el experimento,
-    mientras que los autores obtienen unos mejores valores en SA. ACO presenta el mejor valor para $\sigma$, notablemente
-    superior a las demás técnicas.
+    \item Para \texttt{kroA100}, se pueden observar algunas diferencias: TS destaca como la técnica con mejores métricas en el
+    experimento, mientras que los autores obtienen unos mejores valores en SA. ACO presenta el mejor valor para $\sigma$, 
+    notablemente superior a las demás técnicas.
     \item Para \texttt{eil101}, TS cuenta con los mejores valores para casi todas las métricas.
   \end{itemize}
-  Para las instancias medianas, vuelve a destacar TS como la mejor metaheurística. Por otro lado, GA resalta como la 
-  peor técnica en el presente experimento, mientras que es ACO la que cuenta con peores métricas en el experimento de
-  referencia.
+  Para las instancias medianas, vuelve a destacar TS como la metaheurística con mejores resultados. Por otro lado, GA resalta
+  como la técnica con peores métricas en el presente experimento, mientras que es ACO la que cuenta con peores métricas en el
+  experimento de referencia.
 
   \item En cuanto a las instancias grandes:
   \begin{itemize}
     \item Para \texttt{rat195}, TS presenta los mejores resultados en todas las categorías salvo por el valor de $\sigma$ en el 
     estudio de referencia, donde GA es el ganador. Aun así, es GA quien presenta unas métricas muy inferiores respecto al 
     resto de técnicas en este experimento.
-    \item Para \texttt{d198}, TS sigue destacando con unas métricas muy superiores. Sin embargo, ACO resalta como la peor técnica
-    en el estudio de referencia, pero en el presente experimento es la segunda mejor metaheurística.
+    \item Para \texttt{d198}, TS sigue destacando con unas métricas muy superiores. Sin embargo, ACO resalta como la técnica con
+    peores resultados en el estudio de referencia, pero en el presente experimento es la segunda metaheurística con mejores 
+    métricas.
   \end{itemize}
 
-  \item Para las instancias grandes, nuevamente destaca TS como la mejor técnica.
+  \item Para las instancias grandes, nuevamente destaca TS como la técnica con mejores resultados. Se tiene que tener en cuenta, 
+  no obstante, que los valores de GA, y las conclusiones obtenidas a partir de ellos, deben interpretarse con reserva, ya que el
+  criterio de parada por estancamiento (\textit{patience}), calibrado sobre una instancia pequeña, resulta especialmente
+  desfavorable para este algoritmo en instancias de mayor tamaño.
 \end{itemize}
 
 Como conclusión general, se puede afirmar que los resultados obtenidos muestran una tendencia considerablemente similar a los del 
 estudio de referencia, salvo disparidades puntuales. \textit{Grosso modo}, se puede observar como \textbf{la búsqueda tabú
-resulta ser la mejor metaheurística} en ambos casos prácticos. No obstante, es imposible negar la notable diferencia 
+muestra los mejores resultados de forma consistente} en ambos casos prácticos. No obstante, es imposible negar la notable diferencia 
 cuantitativa entre ambos experimentos. La principal causa de ello es, sin duda, el papel del parámetro \texttt{patience}:
 en el experimento realizado, el tiempo medio de ejecución para cada caso parte desde apenas unas décimas de segundo, a un 
 máximo de casi 4 minutos. Por otro lado, los autores señalan una limitación en su estudio al comentar que las ejecuciones más
-largas duraron hasta casi 19 horas. Es lógico pensar que, si se relajara el valor del parámetro \texttt{patience}, o si se 
-eliminara directamente, los algoritmos mejorarían aún más los resultados, reduciendo las métricas de mejor distancia encontrada,
-así como la peor distancia, la distancia media, su desviación típica, y el \textit{gap} al óptimo global.
+largas duraron hasta casi 19 horas. Este desequilibrio en el ``presupuesto computacional'' podría, además, favorecer a las
+técnicas que convergen más rápido, como TS, frente a otras que dependen de más iteraciones para explorar su capacidad exploratoria,
+como GA o ACO. Sin embargo, cuantificar este efecto queda fuera del alcance de este trabajo. Por tanto, es lógico pensar que, si
+se relajara el valor del parámetro \texttt{patience}, o si se eliminara directamente, los algoritmos mejorarían aún más los 
+resultados, reduciendo las métricas de mejor distancia encontrada, así como la peor distancia, la distancia media, su desviación
+típica, y el \textit{gap} al óptimo global.
 
-Aun así, es importante destacar como, salvando el caso del algoritmo genético, el cual destaca como la peor técnica en el 
-presente experimento, los demás resultados presentan una considerable proximidad a los propuestos por los autores, con un 
-tiempo de ejecución drásticamente menor, lo cual es el objetivo principal de las metaheurísticas: se renuncia a encontrar el 
-óptimo global mediante una ejecución mucho más rápida
+Aun así, es importante destacar como, salvando el caso del algoritmo genético, el cual destaca como la técnica con peores 
+resultados en el presente experimento, los demás resultados presentan una considerable proximidad a los propuestos por los 
+autores, con un tiempo de ejecución drásticamente menor, lo cual es el objetivo principal de las metaheurísticas: se renuncia 
+a encontrar el óptimo global mediante una ejecución mucho más rápida.
+
+\newpage
 
 \section{Diagramas y gráficos comparativos}
 \label{sec:graphs}
@@ -384,8 +413,9 @@ contrario, los otros algoritmos finalizan cuando alcanzan el umbral de estancami
 No obstante, se puede realizar un análisis de las otras tres técnicas: GA destaca por ser la que se toma un mayor número de 
 generaciones en converger, mientras que ACO y TS son más rápidas. Nótese como ACO trabaja con generaciones, es decir, 
 múltiples soluciones simultáneas, mientras que TS trabaja con una única solución que se mejora progresivamente, y aun así,
-presentan una velocidad de convergencia ciertamente similar. Aun así, TS presenta la mayor velocidad de ejecución, precisamente
-por su naturaleza.
+presentan una velocidad de convergencia ciertamente similar. 
+
+\newpage
 
 \subsection{Gráficas de convergencia normalizada por gap\%}
 \label{subsec:conv_gap}
@@ -442,6 +472,8 @@ muy próximos a cero para todas las instancias.
 El caso del recocido simulado es particularmente interesante. Si bien las curvas son muy diferentes entre sí, acaban 
 convergiendo en valores relativamente próximos a cero. De nuevo, se puede apreciar como el comportamiento de este algoritmo
 es, por diseño, claramente diferente a los demás.
+
+\newpage
 
 \subsection{Diagramas por instancia}
 \label{subsec:boxplot_inst}
@@ -568,6 +600,8 @@ estrecha y en un lugar similar a la instancia anterior, y TS vuelve a ser una l�
 Con todo esto, se refuerza lo anterior: TS no solo gana en media, sino que es el único algoritmo cuya fiabilidad no se degrada
 al crecer la instancia. Por el contrario, GA y SA se hacen cada vez menos consistentes según crece el problema.
 
+\newpage
+
 \subsection{Diagrama de categoría por tamaño}
 \label{subsec:boxplot_cat}
 
@@ -598,6 +632,8 @@ Asimismo, el parámetro de parada por estancamiento también juega un papel impo
 responsable de restringir al algoritmo de seguir buscando mejores soluciones, o esperar a un cruce o mutación que mejore la
 búsqueda a lo largo de las siguientes iteraciones.
 
+\newpage
+
 \subsection{Diagrama de tiempo vs tamaño}
 \label{subsec:time_size}
 
@@ -624,6 +660,10 @@ entre las dos instancias medianas en el algoritmo genético, y también entre la
 del recocido simulado. Esto se debe, claro está, a la casuística del problema, y al reducido número de ejecuciones que se han 
 realizado en el experimento. A medida que se tomaran más datos, las disparidades en este gráfico, y en varios de los anteriores,
 se verían notablemente más reducidas.
+
+Por último, cabe resaltar lo siguiente: los tiempos de ejecución no deben interpretarse exclusivamente como una medida de 
+eficiencia intrínseca de cada metaheurística, puesto que también dependen, y además en gran medida, de las decisiones de
+implementación adoptadas.
 
 %%% Local Variables:
 %%% TeX-master: "../book"

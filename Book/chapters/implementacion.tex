@@ -837,7 +837,9 @@ Se puede observar lo siguiente: aunque la conexión a la ciudad 6 cuenta con el 
 recibe una probabilidad considerablemente mayor, debido a que su distancia es mucho menor. Esto ocurre porque la información
 heurística está elevada al exponente $\beta = 3$, que amplifica notablemente las diferencias de distancia frente a las de 
 feromona. Con esto se muestra la importancia del equilibrio entre explotación de la información heurística y explotación de la
-feromona.
+feromona. No obstante, es importante destacar que este valor $\beta = 3$ utilizado en la presente sección explicativa es
+meramente ilustrativo. En el experimento definitivo se emplea $\beta = 1$, según se recoge en la 
+tabla~\ref{tab:aco_hyperparams}.
 
 Aplicando la función de construcción de rutas sobre \texttt{berlin52}, con una inicialización de feromona uniforme, se obtiene:
 \begin{verbatim}
@@ -1371,7 +1373,9 @@ los algoritmos. Por tanto, requieren un valor y su debida justificación:
   la ruta para obtener la cantidad de feromona depositada por la hormiga. Sin embargo, la cuestión con esta variable es que 
   \texttt{Q} depende de la escala de la instancia, y no es posible determinar un valor ``genérico'' para el experimento. Por 
   tanto, se va a establecer un valor de \texttt{Q = 100}, el cual ha sido validado empíricamente sobre \texttt{berlin52}
-  durante la fase de implementación.
+  durante la fase de implementación. Es necesario señalar que esta decisión resulta ser una excepción al criterio general 
+  adoptado en esta sección, ya que no existe, en la literatura, un valor de referencia independiente de la escala del problema.
+  Por tanto, se opta por este compromiso ante la falta de alternativas mejores.
 \end{itemize}
 
 Teniendo en cuenta todo lo anterior, se pueden recopilar todos los hiperparámetros a utilizar en el trabajo en las siguientes
@@ -1543,7 +1547,7 @@ descritas en este trabajo sobre una serie de instancias de TSPLIB. Para evitar d
 escoger seis instancias, distribuidas en diferentes categorías respecto a su tamaño:
 \begin{itemize}
   \item Instancias pequeñas, donde $num\_nodos < 100$: \texttt{berlin52} y \texttt{eil51}.
-  \item Instancias de tamaño mediano, donde $100 < num\_nodos < 150$: \texttt{kroA100} y \texttt{eil101}.
+  \item Instancias de tamaño mediano, donde $100 \leq num\_nodos \leq 150$: \texttt{kroA100} y \texttt{eil101}.
   \item Instancias grandes, donde $num\_nodos > 150$: \texttt{rat195} y \texttt{d198}.
 \end{itemize}
 

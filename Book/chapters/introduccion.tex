@@ -100,12 +100,17 @@ clasificarlos según su dificultad computacional. Esta clasificación dio lugar 
 cuales agrupan los problemas en función de los recursos necesarios para resolverlos y verificar sus soluciones. La primera 
 de ellas es la clase P\footnote{\textit{Polynomial time}.}, y abarca los problemas que se pueden resolver aplicando un
 algoritmo en tiempo polinómico, esto es, desde $O(1)$ hasta $O(n^k)$\footnote{Siendo \textit{k} un entero.}. La siguiente 
-clase es la NP\footnote{\textit{Nondeterministic Polynomial time}.}, cuyos problemas son aquellos que se pueden verificar\footnote{
-Un problema verificable es aquel que, dada una solución candidata, se puede verificar dicha solución en tiempo 
-polinómico.} en tiempo polinómico, pero encontrar la solución correcta u óptima requiere un tiempo superior al polinómico, 
-aunque inferior al exponencial \cite{cormen2009}. La resolución de estos problemas suele basarse en un enfoque híbrido entre
-un algoritmo y una heurística. Finalmente, la clase NP-completo incluye aquellos problemas con una complejidad temporal 
-superior a la exponencial. Además, no cuentan con ningún algoritmo eficiente que corra en tiempo polinómico. 
+clase es la NP\footnote{\textit{Nondeterministic Polynomial time}.}, cuyos problemas son aquellos que se pueden 
+verificar\footnote{Un problema verificable es aquel que, dada una solución candidata, se puede verificar dicha solución en 
+tiempo polinómico.} en tiempo polinómico si es correcta, aunque no se conoce ningún algoritmo capaz de encontrar dicha 
+solución en tiempo polinómico \cite{cormen2009}. Junto a esta clase, resulta necesario introducir un concepto relacionado pero
+distinto, que permite comparar el grado de dificultad entre problemas: el concepto de NP-difícil. Un problema es NP-difícil si 
+es, como mínimo, tan difícil de resolver como cualquier problema de la clase NP. Formalmente, esto significa que cualquier 
+problema de NP puede transformarse o reducirse en él usando un procedimiento que tarda un tiempo polinómico. Combinando estos 
+dos últimos términos se llega a la tercera y última clase: la NP-completo. Un problema es NP-completo si pertenece a la clase NP,
+y además, es NP-difícil \cite{cormen2009}. Los problemas NP-completos son, por tanto, los más difíciles dentro de NP: no se 
+conoce ningún algoritmo exacto que se ejecute en tiempo polinómico para ninguno de ellos, y sus mejores algoritmos exactos 
+conocidos son, generalmente, de orden exponencial.
 
 El concepto de NP-completitud apareció por primera vez en 1971, introducido por el científico norteamericano Stephen Cook. En su 
 artículo \cite{cook1971} establece que el problema de satisfacibilidad booleana es NP-completo. Este problema consiste en 

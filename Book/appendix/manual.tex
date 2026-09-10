@@ -34,20 +34,31 @@
 
 Todo el código desarrollado para este proyecto, tanto la implementación de las metaheurísticas expuesta en el
 capítulo~\ref{cha:design}, como los programas de Python auxiliares para el análisis comparativo y generación de gráficas,
-se puede encontrar en el siguiente repostitorio de GitHub:
+se puede encontrar en el siguiente repositorio de GitHub:
 
-INSERTAR ENLACE CUANDO ESTÉ FINALIZADO
+\url{https://github.com/ARetamosaG/TFG}
 
-Asimismo, también se puede encontrar lo siguiente:
+En este repositorio se puede encontrar lo siguiente:
 
 \begin{itemize}
-  \item Un subdirectorio con las instancias de TSPLIB empleadas en el experimento. No obstante, estas se pueden obtener 
-  desde \cite{tsplib}, aunque algunas se extrajeron desde \cite{shredder_github}, debido a que no estaban disponibles en la
-  página oficial.
-  \item Un subdirectorio con los ficheros \textit{csv} auxiliares generados durante el experimento. Como apunte, el fichero
-  \textit{history.csv} es considerablemente extenso, puesto que contiene una línea por cada iteración/generación habida 
-  durante todo el experimento. Al ejecutar seis instancias, cinco veces cada una, con cuatro metaheurísticas, en total hay
-  120 ejecuciones, cada una con decenas o cientos de iteraciones.
+  \item Un subdirectorio \textit{algorithms}: contiene el código fuente de las cuatro metaheurísticas.
+  \item Un subdirectorio \textit{experiment\_results}: contiene los ficheros \textit{csv} auxiliares generados durante el 
+  experimento. Como apunte, el fichero \textit{history.csv} es considerablemente extenso, puesto que contiene una línea por 
+  cada iteración/generación habida durante todo el experimento. Al ejecutar seis instancias, cinco veces cada una, con cuatro
+  metaheurísticas, en total hay 120 ejecuciones, cada una con decenas o cientos de iteraciones.
+  \item Un subdirectorio \textit{graphs}: contiene todas las gráficas y diagramas mostradas en este documento.
+  \item Un subdirectorio \textit{instances}: contiene las instancias de TSPLIB empleadas en el experimento. No obstante, estas 
+  se pueden obtener desde \cite{tsplib}, aunque algunas se extrajeron desde \cite{shredder_github}, debido a que no estaban
+  disponibles en la página oficial.
+  \item Un subdirectorio \textit{scripts}: contiene una serie de ficheros \textit{.py}, encargados de ejecutar el experimento,
+  analizar los ficheros \textit{csv} resultado, generar las gráficas y calcular el tiempo medio de ejecución por instancia y 
+  algoritmo.
+\end{itemize}
+
+Asimismo, también se pueden encontrar dos ficheros \textit{.pdf} relacionados con este trabajo:
+\begin{itemize}
+  \item El fichero de \textbf{anteproyecto}.
+  \item La \textbf{memoria} del trabajo, esto es, el presente documento.
 \end{itemize}
 
 %%% Local Variables:

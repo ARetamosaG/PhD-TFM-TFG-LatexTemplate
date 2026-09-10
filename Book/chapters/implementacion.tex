@@ -705,7 +705,7 @@ def fitness(route, dist_matrix):
   return 1.0 / route_distance(route, dist_matrix)
 \end{lstlisting}
 
-Por último, en la selección por torneo también se debe susituir este parámetro.
+Por último, en la selección por torneo también se debe sustituir este parámetro.
 
 Una vez realizada esta serie de cambios para precalcular distancias, queda completa la implementación del algoritmo genético.
 
@@ -836,7 +836,7 @@ Utilizando los parámetros $\alpha = 1 $ y $\beta = 3$, las probabilidades resul
 Se puede observar lo siguiente: aunque la conexión a la ciudad 6 cuenta con el mayor valor de feromona, la ciudad 31 
 recibe una probabilidad considerablemente mayor, debido a que su distancia es mucho menor. Esto ocurre porque la información
 heurística está elevada al exponente $\beta = 3$, que amplifica notablemente las diferencias de distancia frente a las de 
-feromona. Con esto se muestra la importancia del equilibro entre explotación de la información heurística y explotación de la
+feromona. Con esto se muestra la importancia del equilibrio entre explotación de la información heurística y explotación de la
 feromona.
 
 Aplicando la función de construcción de rutas sobre \texttt{berlin52}, con una inicialización de feromona uniforme, se obtiene:
@@ -1037,7 +1037,7 @@ directa según la regla de aceptación $\Delta E = 28421 - 28867 = -446 \leq 0$.
 
 Sin embargo, la solución vecina no siempre mejora a la actual. Cuando $\Delta E > 0$, la aceptación de la solución pasa a 
 depender de una probabilidad determinada por la temperatura actual, según la función de Boltzman: $P(aceptar) = e^{-\Delta 
-E/T}$. Para ver la inflluencia de la temperatura en esta probabilidad, se puede tomar un mismo valor de $\Delta E$, por 
+E/T}$. Para ver la influencia de la temperatura en esta probabilidad, se puede tomar un mismo valor de $\Delta E$, por 
 ejemplo $\Delta E = 50$, y comparar el resultado con dos temperaturas muy distintas:
 
 \begin{verbatim}
@@ -1051,7 +1051,7 @@ vuelve prácticamente nula. Esto confirma el comportamiento esperado: al princip
 algoritmo acepta soluciones peores con mayor facilidad, mientras que, a medida que se la temperatura desciende, se vuelve 
 más restrictivo.
 
-El esquema de enfriamento elegido es el exponencial o geométrico. Su implementación es directa, ya que únicamente consiste en
+El esquema de enfriamiento elegido es el exponencial o geométrico. Su implementación es directa, ya que únicamente consiste en
 multiplicar la temperatura actual por el factor $\alpha$ en cada iteración:
 \newline
 \begin{lstlisting}[style=PythonStyle]

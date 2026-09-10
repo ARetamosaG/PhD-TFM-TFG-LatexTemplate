@@ -269,7 +269,7 @@ van a considerar instancias de tamaño moderado, la selección por torneo sigue 
 \label{subsec:cross}
 
 El objetivo del operador de cruce consiste en combinar la información genética de dos individuos para generar nuevos
-descendientes. La idea fundamental se basa en que las mejores características presentes en ambos progenitorse puedan heredarse
+descendientes. La idea fundamental se basa en que las mejores características presentes en ambos progenitores puedan heredarse
 a la vez, aumentando así la probabilidad de obtener soluciones de mayor calidad que las ya existentes. 
 
 En el contexto del TSP, este proceso es considerablemente más complejo que en otros problemas de optimización. Debido a que cada
@@ -351,7 +351,7 @@ OX es el operador de cruce con mejor rendimiento, al obtener siempre la mejor so
 evaluación.
 
 Por tanto, en este trabajo se va a utilizar \textbf{Order Crossover} (OX) como operador de cruce. Además de presentar el 
-mejor rendimiento medio en el estudio comaprativo, OX también conserva el orden relativo de las ciudades, siempre genera 
+mejor rendimiento medio en el estudio comparativo, OX también conserva el orden relativo de las ciudades, siempre genera 
 permutaciones válidas, y requiere una implementación más sencilla que otros operadores como CX o ERX. 
 \begin{figure}[H]
   \centering 
@@ -448,14 +448,14 @@ decisiones tomadas respecto a los operadores de cruce y mutación están respald
 
 Una vez se han generado los descendientes mediante los operadores de selección, cruce y mutación, es necesario decidir los
 individuos que formarán la población de la siguiente generación. Este proceso recibe el nombre de reemplazo, y determina
-las soluciones que permanencen en la población, y las que son descartadas. La estrategia elegida influye en la velocidad 
+las soluciones que permanecen en la población, y las que son descartadas. La estrategia elegida influye en la velocidad 
 de convergencia del algoritmo y en el mantenimiento de la diversidad genética.
 
 Principalmente existen las siguientes dos estrategias:
 
 \begin{itemize}
   \item \textbf{Reemplazo Generacional} (\textit{Generational Replacement}): se reemplaza la anterior población al completo.
-  Esta estragegia, aunque es el esquema más sencillo, puede causar que el mejor miembro de la población no consiga reproducirse
+  Esta estrategia, aunque es el esquema más sencillo, puede causar que el mejor miembro de la población no consiga reproducirse
   en la siguiente generación. Por tanto, se suele combinar con una estrategia elitista, donde el mejor cromosoma, o varios de 
   los mejores, se copian a la siguiente generación. 
   \item \textbf{Reemplazo Estacionario} (\textit{Steady-State Replacement}): se reemplazan unos pocos cromosomas en cada 
@@ -946,7 +946,7 @@ método específicamente al Problema del Viajante.
 El funcionamiento del recocido simulado parte de una solución candidata, a partir de la cual se generan nuevas soluciones
 mediante pequeñas modificaciones, denominadas soluciones vecinas. Si una nueva solución mejora la solución actual, se acepta
 directamente. Sin embargo, a diferencia de otros métodos de búsqueda local, el recocido simulado sí permite ocasionalmente
-soluciones de peor calidad. Esta caracerística permite escapar de óptimos locales y continuar explorando otras regiones del 
+soluciones de peor calidad. Esta característica permite escapar de óptimos locales y continuar explorando otras regiones del 
 espacio de búsqueda. La probabilidad de aceptar una solución peor depende de la temperatura actual del algoritmo, siendo mayor
 al principio y reduciéndose progresivamente durante el proceso de enfriamiento.
 
@@ -1050,7 +1050,7 @@ mismo tiempo una implementación más sencilla que el operador híbrido.
 \label{subsec:acceptance_rule}
 
 Una vez generada la solución vecina, el algoritmo debe decidir si esta solución va a sustituir a la actual. Esta decisión
-es una de las principales diferencias respecto a los algoritmos trdicionales de búsqueda local, debido a que no se aceptan 
+es una de las principales diferencias respecto a los algoritmos tradicionales de búsqueda local, debido a que no se aceptan 
 únicamente las soluciones que mejoran la actual.
 
 Si la solución vecina presenta un coste menor que la solución actual, se acepta directamente. En cambio, cuando la nueva 
@@ -1077,7 +1077,7 @@ haciendo que el algoritmo se centre en soluciones de mejor calidad.
 
 Para realizar esta decisión, se toma un valor aleatorio $r$ en el intervalo $[0, 1]$. Si la solución es peor, se acepta
 cuando $r < P(aceptar)$. En caso contrario, la solución se descarta. Cuando una solución peor es aceptada, pasa a convertirse
-en la solución actual, permitiendo continuar la búsqueda desde una región difernte del espacio de soluciones. De esta forma, 
+en la solución actual, permitiendo continuar la búsqueda desde una región diferente del espacio de soluciones. De esta forma, 
 el algoritmo puede escapar de óptimos locales durante las primeras etapas de búsqueda, cuando la temperatura es elevada
 \cite{peralta2015}.
 
